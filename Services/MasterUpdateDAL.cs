@@ -133,12 +133,12 @@ namespace TMS_Api.Services
             return msg;
         }
 
-        public async Task<ResponseMessage> DeleteTruckType(string id)
+        public async Task<ResponseMessage> DeleteTruckType(int id)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                TruckType type = await _context.TruckType.FromSqlRaw("SELECT * FROM TruckType WHERE Description=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                TruckType type = await _context.TruckType.FromSqlRaw("SELECT * FROM TruckType WHERE TypeCode=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                 if (type == null)
                 {
                     msg.MessageContent = "Data not found.";
