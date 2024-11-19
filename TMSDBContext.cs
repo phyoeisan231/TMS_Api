@@ -34,6 +34,8 @@ namespace TMS_Api
         public DbSet<TransporterType> TransporterType { get; set; }
         public DbSet<Transporter> Transporter { get; set; }
         public DbSet<Gate> Gate { get; set; }
+        public DbSet<WeightBridge> WeightBridge { get; set; }
+        public DbSet<Trip> Trip { get; set; }
 
     }
 }

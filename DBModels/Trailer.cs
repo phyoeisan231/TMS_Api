@@ -10,11 +10,10 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "varchar(25)")]
         public string VehicleRegNo { get; set; } = null!;
         [Column(TypeName = "Decimal")]
-        public decimal? UnladenWeight { get; set; }
+        public decimal? TrailerWeight { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remarks { get; set; }
-        [Column(TypeName = "float")]
-        public float? Flowrate { get; set; }
+        
         [Column(TypeName = "varchar(30)")]
         public string? TrailerType { get; set; }
         [Column(TypeName = "varchar(10)")]
@@ -23,19 +22,17 @@ namespace TMS_Api.DBModels
         public Boolean? IsBlack { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
-        [Column(TypeName = "varchar(50)")]
-        public string? LoadingType { get; set; }
+        
         [Column(TypeName = "datetime")]
         public DateTime? BlackDate { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? BlackRemovedDate { get; set; }
-        [Column(TypeName = "int")]
-        public int? CompartmentNo { get; set; }
+        
         [Column(TypeName = "varchar(25)")]
         public string? DriverLicenseNo { get; set; }
  
         [Column(TypeName = "datetime")]
-        public DateTime? LastLoadingDate { get; set; }
+        public DateTime? LastPassedDate { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? VehicleBackRegNo { get; set; }
 

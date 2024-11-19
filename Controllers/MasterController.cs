@@ -26,7 +26,6 @@ namespace TMS_Api.Controllers
 
         //For Testing
 
-
         [AllowAnonymous]
         [HttpGet]
         public IActionResult GetTesting()
@@ -59,11 +58,12 @@ namespace TMS_Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTruckType(int id)
+        public async Task<IActionResult> DeleteTruckType(string id)
         {
             ResponseMessage msg = await _updateDAL.DeleteTruckType(id);
             return Ok(msg);
         }
+
         #endregion
 
         #region Trailer Type Nov_11_2024

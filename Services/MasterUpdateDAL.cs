@@ -522,7 +522,7 @@ namespace TMS_Api.Services
                 else
                 {
                     gate.Name = info.Name;
-                    gate.Location = info.Location;
+                    gate.Yard = info.Yard;
                     gate.Active = info.Active;
                     gate.UpdatedDate = GetLocalStdDT();
                     gate.UpdatedUser = info.UpdatedUser;
@@ -615,9 +615,6 @@ namespace TMS_Api.Services
                 else
                 {
                     truck.VehicleRegNo = info.VehicleRegNo;
-                    truck.TotalNrDomeCover = info.TotalNrDomeCover;
-                    truck.TotalNrLoadCoupling = info.TotalNrLoadCoupling;
-                    truck.TotalNrCabinet = info.TotalNrCabinet;
                     truck.TruckType = info.TruckType;
                     truck.Transporter = info.Transporter;
                     truck.Remarks = info.Remarks;
@@ -625,16 +622,11 @@ namespace TMS_Api.Services
                     truck.IsBlack = info.IsBlack;
                     truck.BlackDate = info.BlackDate;
                     truck.BlackRemovedDate = info.BlackRemovedDate;
-                    truck.TotalNrFootValve = info.TotalNrFootValve;
                     truck.VehicleBackRegNo = info.VehicleBackRegNo;
-                    truck.UnladenWeight = info.UnladenWeight;
-                    truck.LoadingType = info.LoadingType;
-                    truck.Flowrate = info.Flowrate;
-                    truck.OtherSealPlace = info.OtherSealPlace;
+                    truck.TruckWeight = info.TruckWeight;
                     truck.DriverLicenseNo = info.DriverLicenseNo;
-                    truck.LastLoadingDate = info.LastLoadingDate;
-                    //truck.TruckWeight = info.TruckWeight;
-                    //truck.DriverName = info.DriverName;
+                    truck.LastPassedDate = info.LastPassedDate;
+                    //truck.Name = info.Name;
                     //truck.ContainerType=info.ContainerType;
                     //truck.ContainerSize=info.ContainerSize;
                     truck.UpdatedDate = GetLocalStdDT();
@@ -730,20 +722,17 @@ namespace TMS_Api.Services
                 else
                 {
                     trailer.VehicleRegNo = info.VehicleRegNo;
-                    trailer.UnladenWeight = info.UnladenWeight;
-                    trailer.Flowrate = info.Flowrate;
+                    trailer.TrailerWeight = info.TrailerWeight;
                     trailer.TrailerType = info.TrailerType;
                     trailer.Transporter = info.Transporter;
                     trailer.Remarks = info.Remarks;
                     trailer.Active = info.Active;
-                    trailer.CompartmentNo = info.CompartmentNo;
                     trailer.VehicleBackRegNo = info.VehicleBackRegNo;
-                    trailer.LoadingType = info.LoadingType;
                     trailer.IsBlack = info.IsBlack;
                     trailer.DriverLicenseNo = info.DriverLicenseNo;
                     trailer.BlackRemovedDate = info.BlackRemovedDate;
                     trailer.BlackDate = info.BlackDate;
-                    trailer.LastLoadingDate = info.LastLoadingDate;
+                    trailer.LastPassedDate = info.LastPassedDate;
                     trailer.UpdatedDate = GetLocalStdDT();
                     trailer.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
 
