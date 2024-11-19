@@ -59,7 +59,7 @@ namespace TMS_Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTruckType(string id)
+        public async Task<IActionResult> DeleteTruckType(int id)
         {
             ResponseMessage msg = await _updateDAL.DeleteTruckType(id);
             return Ok(msg);
