@@ -11,6 +11,10 @@ namespace TMS_Api.DBModels
         public string VehicleRegNo { get; set; } = null!;
         [Column(TypeName = "Decimal")]
         public decimal? UnladenWeight { get; set; }
+
+        //[Column(TypeName = "Decimal")]
+        //public decimal? TruckWeight { get; set; }
+
         [Column(TypeName = "varchar(max)")]
         public string? Remarks { get; set; }
         [Column(TypeName = "float")]
@@ -32,6 +36,10 @@ namespace TMS_Api.DBModels
 
         [Column(TypeName = "varchar(25)")]
         public string? DriverLicenseNo { get; set; }
+
+        //[Column(TypeName = "varchar(50)")]
+        //public string? Name { get; set; }//Driver Name
+
         [Column(TypeName = "datetime")]
         public DateTime? LastLoadingDate { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -54,6 +62,11 @@ namespace TMS_Api.DBModels
         public string? BlackRemovedReason { get; set; }
         [Column(TypeName = "int")]
         public int? CompartmentNo { get; set; }
+        //[Column(TypeName = "varchar(25)")]
+        //public string? ContainerType { get; set; }
+
+        //[Column(TypeName = "int")]
+        //public int? ContainerSize { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

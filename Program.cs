@@ -71,6 +71,11 @@ builder.Services.AddScoped<MasterQueryDAL>();
 builder.Services.AddScoped<MasterUpdateDAL>();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
+
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

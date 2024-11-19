@@ -46,5 +46,8 @@ namespace TMS_Api.DBModels
         public DateTime? CreatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? CreatedUser { get; set; }
+
+        //[Column(TypeName ="varchar(25")]
+        //public string? SAPID { get; set; }
     }
 }
