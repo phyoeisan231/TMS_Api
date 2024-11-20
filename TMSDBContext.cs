@@ -31,7 +31,7 @@ namespace TMS_Api
         public DbSet<Trailer> Trailer { get; set; }
         public DbSet<Driver> Driver { get; set; }
         public DbSet<TransporterType> TransporterType { get; set; }
-        //public DbSet<Transporter> Transporter { get; set; }
+        public DbSet<Transporter> Transporter { get; set; }
         public DbSet<Gate> Gate { get; set; }
         public DbSet<Yard> Yard { get; set; }
         public DbSet<TruckJobType> TruckJobType { get; set; }

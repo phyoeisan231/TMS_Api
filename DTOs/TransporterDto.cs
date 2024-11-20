@@ -3,6 +3,7 @@
     public class TransporterDto
     {
         public string TransporterID { get; set; } = null!;
+        public int? SrNo { get; set; }
         public string? TransporterName { get; set; }
         public string? Address { get; set; }
         public string? ContactNo { get; set; }

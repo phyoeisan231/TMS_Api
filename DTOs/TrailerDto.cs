@@ -6,7 +6,7 @@ namespace TMS_Api.DTOs
         public string VehicleRegNo { get; set; } = null!;
         public string? ContainerType { get; set; }
         public int? ContainerSize { get; set; }
-        public string? TransporterCode { get; set; }
+        public string? TransporterID { get; set; }
         public decimal? TrailerWeight { get; set; }
         public string? Remarks { get; set; }
         public Boolean? IsBlack { get; set; }

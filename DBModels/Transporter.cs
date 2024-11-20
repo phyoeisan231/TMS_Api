@@ -9,6 +9,8 @@ namespace TMS_Api.DBModels
         [Key]
         [Column(TypeName = "varchar(25)")]
         public string TransporterID { get; set; } = null!;
+        [Column(TypeName = "int")]
+        public int? SrNo { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string? TransporterName { get; set; }
         [Column(TypeName = "varchar(250)")]
@@ -43,7 +45,7 @@ namespace TMS_Api.DBModels
         public DateTime? CreatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? CreatedUser { get; set; }
-        [Column(TypeName = "varchar(25")]
+        [Column(TypeName = "varchar(25)")]
         public string? SAPID { get; set; }
     }
 }

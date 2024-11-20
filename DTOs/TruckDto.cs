@@ -8,7 +8,7 @@ namespace TMS_Api.DTOs
         public int? ContainerSize { get; set; }
         public decimal? TruckWeight { get; set; }
         public string? TypeID { get; set; }
-        public string? TransporterCode { get; set; }
+        public string? TransporterID { get; set; }
         public Boolean? Active { get; set; }
         public string? DriverLicenseNo { get; set; }
         public DateTime? LastPassedDate { get; set; }
