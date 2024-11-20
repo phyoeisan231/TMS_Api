@@ -7,17 +7,20 @@ namespace TMS_Api.DBModels
     public class TransporterType
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int TypeCode { get; set; } = 0!;
+        [Column(TypeName = "varchar(25)")]
+        public string TypeID { get; set; } = null!;
         [Column(TypeName = "varchar(50)")]
-        public string? TypeName { get; set; }
-        [Column(TypeName = "varchar(100)")]
-        public string? Remarks { get; set; }
+        public string? Description { get; set; }
+
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? UpdatedUser { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? CreatedDate { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? CreatedUser { get; set; }
     }
 }

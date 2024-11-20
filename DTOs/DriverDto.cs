@@ -1,4 +1,5 @@
-﻿namespace TMS_Api.DTOs
+﻿
+namespace TMS_Api.DTOs
 {
     public class DriverDto
     {
@@ -11,7 +12,7 @@
         public Boolean? Active { get; set; }
         public DateTime? LicenseExpiration { get; set; }
         public string? LicenseClass { get; set; }
-        public string? Transporter { get; set; }
+        public string? TransporterCode { get; set; }
         public string? Remarks { get; set; }
         public Boolean? IsBlack { get; set; }
         public DateTime? BlackDate { get; set; }

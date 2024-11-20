@@ -12,8 +12,8 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    [Migration("20241112035810_AddGate")]
-    partial class AddGate
+    [Migration("20241120075342_UpdateDriver")]
+    partial class UpdateDriver
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -276,8 +276,8 @@ namespace TMS_Api.Migrations
                     b.Property<string>("Remarks")
                         .HasColumnType("varchar(max)");
 
-                    b.Property<string>("Transporter")
-                        .HasColumnType("varchar(100)");
+                    b.Property<string>("TransporterID")
+                        .HasColumnType("varchar(25)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime");
@@ -292,11 +292,8 @@ namespace TMS_Api.Migrations
 
             modelBuilder.Entity("TMS_Api.DBModels.Gate", b =>
                 {
-                    b.Property<int>("GateId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GateId"));
+                    b.Property<string>("GateID")
+                        .HasColumnType("varchar(25)");
 
                     b.Property<bool?>("Active")
                         .HasColumnType("bit");
@@ -307,9 +304,6 @@ namespace TMS_Api.Migrations
                     b.Property<string>("CreatedUser")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Location")
-                        .HasColumnType("varchar(30)");
-
                     b.Property<string>("Name")
                         .HasColumnType("varchar(30)");
 
@@ -319,7 +313,10 @@ namespace TMS_Api.Migrations
                     b.Property<string>("UpdatedUser")
                         .HasColumnType("varchar(50)");
 
-                    b.HasKey("GateId");
+                    b.Property<string>("YardID")
+                        .HasColumnType("varchar(25)");
+
+                    b.HasKey("GateID");
 
                     b.ToTable("Gate");
                 });
@@ -344,8 +341,11 @@ namespace TMS_Api.Migrations
                     b.Property<string>("BlackRemovedReason")
                         .HasColumnType("varchar(max)");
 
-                    b.Property<int?>("CompartmentNo")
+                    b.Property<int?>("ContainerSize")
                         .HasColumnType("int");
+
+                    b.Property<string>("ContainerType")
+                        .HasColumnType("varchar(25)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime");
@@ -356,29 +356,20 @@ namespace TMS_Api.Migrations
                     b.Property<string>("DriverLicenseNo")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<double?>("Flowrate")
-                        .HasColumnType("float");
-
                     b.Property<bool?>("IsBlack")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("LastLoadingDate")
+                    b.Property<DateTime?>("LastPassedDate")
                         .HasColumnType("datetime");
-
-                    b.Property<string>("LoadingType")
-                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Remarks")
                         .HasColumnType("varchar(max)");
 
-                    b.Property<string>("TrailerType")
-                        .HasColumnType("varchar(30)");
+                    b.Property<decimal?>("TrailerWeight")
+                        .HasColumnType("Decimal(18,5)");
 
-                    b.Property<string>("Transporter")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<decimal?>("UnladenWeight")
-                        .HasColumnType("Decimal");
+                    b.Property<string>("TransporterID")
+                        .HasColumnType("varchar(25)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime");
@@ -394,59 +385,13 @@ namespace TMS_Api.Migrations
                     b.ToTable("Trailer");
                 });
 
-            modelBuilder.Entity("TMS_Api.DBModels.TrailerType", b =>
+            modelBuilder.Entity("TMS_Api.DBModels.TransporterType", b =>
                 {
-                    b.Property<int>("TypeCode")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TypeCode"));
+                    b.Property<string>("TypeID")
+                        .HasColumnType("varchar(25)");
 
                     b.Property<bool?>("Active")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("UpdatedUser")
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("TypeCode");
-
-                    b.ToTable("TrailerType");
-                });
-
-            modelBuilder.Entity("TMS_Api.DBModels.Transporter", b =>
-                {
-                    b.Property<string>("TransporterCode")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<bool?>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<DateTime?>("BlackDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("BlackReason")
-                        .HasColumnType("varchar(max)");
-
-                    b.Property<DateTime?>("BlackRemovedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("BlackRemovedReason")
-                        .HasColumnType("varchar(max)");
-
-                    b.Property<string>("ContactNo")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("ContactPerson")
-                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime");
@@ -454,22 +399,7 @@ namespace TMS_Api.Migrations
                     b.Property<string>("CreatedUser")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<bool?>("IsBlack")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("NotUseReason")
-                        .HasColumnType("varchar(max)");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("varchar(max)");
-
-                    b.Property<string>("TransporterName")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("TransporterType")
+                    b.Property<string>("Description")
                         .HasColumnType("varchar(50)");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -478,9 +408,9 @@ namespace TMS_Api.Migrations
                     b.Property<string>("UpdatedUser")
                         .HasColumnType("varchar(50)");
 
-                    b.HasKey("TransporterCode");
+                    b.HasKey("TypeID");
 
-                    b.ToTable("Transporter");
+                    b.ToTable("TransporterType");
                 });
 
             modelBuilder.Entity("TMS_Api.DBModels.Truck", b =>
@@ -503,8 +433,11 @@ namespace TMS_Api.Migrations
                     b.Property<string>("BlackRemovedReason")
                         .HasColumnType("varchar(max)");
 
-                    b.Property<int?>("CompartmentNo")
+                    b.Property<int?>("ContainerSize")
                         .HasColumnType("int");
+
+                    b.Property<string>("ContainerType")
+                        .HasColumnType("varchar(25)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime");
@@ -515,44 +448,23 @@ namespace TMS_Api.Migrations
                     b.Property<string>("DriverLicenseNo")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<double?>("Flowrate")
-                        .HasColumnType("float");
-
                     b.Property<bool?>("IsBlack")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("LastLoadingDate")
+                    b.Property<DateTime?>("LastPassedDate")
                         .HasColumnType("datetime");
-
-                    b.Property<string>("LoadingType")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("OtherSealPlace")
-                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Remarks")
                         .HasColumnType("varchar(max)");
 
-                    b.Property<int>("TotalNrCabinet")
-                        .HasColumnType("int");
+                    b.Property<string>("TransporterID")
+                        .HasColumnType("varchar(25)");
 
-                    b.Property<int>("TotalNrDomeCover")
-                        .HasColumnType("int");
+                    b.Property<decimal?>("TruckWeight")
+                        .HasColumnType("decimal(18,5)");
 
-                    b.Property<int>("TotalNrFootValve")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalNrLoadCoupling")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Transporter")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("TruckType")
+                    b.Property<string>("TypeID")
                         .HasColumnType("varchar(30)");
-
-                    b.Property<decimal?>("UnladenWeight")
-                        .HasColumnType("Decimal");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime");
@@ -568,16 +480,75 @@ namespace TMS_Api.Migrations
                     b.ToTable("Truck");
                 });
 
-            modelBuilder.Entity("TMS_Api.DBModels.TruckType", b =>
+            modelBuilder.Entity("TMS_Api.DBModels.TruckEntryType", b =>
                 {
-                    b.Property<int>("TypeCode")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TypeCode"));
+                    b.Property<string>("TypeID")
+                        .HasColumnType("varchar(25)");
 
                     b.Property<bool?>("Active")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UpdatedUser")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("TypeID");
+
+                    b.ToTable("TruckEntryType");
+                });
+
+            modelBuilder.Entity("TMS_Api.DBModels.TruckJobType", b =>
+                {
+                    b.Property<string>("TypeID")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UpdatedUser")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("TypeID");
+
+                    b.ToTable("TruckJobType");
+                });
+
+            modelBuilder.Entity("TMS_Api.DBModels.TruckType", b =>
+                {
+                    b.Property<string>("TypeID")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Description")
                         .HasColumnType("varchar(30)");
@@ -588,9 +559,65 @@ namespace TMS_Api.Migrations
                     b.Property<string>("UpdatedUser")
                         .HasColumnType("varchar(50)");
 
-                    b.HasKey("TypeCode");
+                    b.HasKey("TypeID");
 
                     b.ToTable("TruckType");
+                });
+
+            modelBuilder.Entity("TMS_Api.DBModels.WeightBridge", b =>
+                {
+                    b.Property<string>("WeightBridgeID")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("GateID")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UpdatedUser")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("WeightBridgeID");
+
+                    b.ToTable("WeightBridge");
+                });
+
+            modelBuilder.Entity("TMS_Api.DBModels.Yard", b =>
+                {
+                    b.Property<string>("YardID")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("CreatedUser")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("UpdatedUser")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("YardID");
+
+                    b.ToTable("Yard");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -2,13 +2,13 @@
 {
     public class TransporterDto
     {
-        public string TransporterCode { get; set; } = null!;
+        public string TransporterID { get; set; } = null!;
         public string? TransporterName { get; set; }
         public string? Address { get; set; }
         public string? ContactNo { get; set; }
         public string? Email { get; set; }
         public string? ContactPerson { get; set; }
-        public string? TransporterType { get; set; }
+        public string? TypeID { get; set; }
         public Boolean? Active { get; set; }
         public Boolean? IsBlack { get; set; }
         public DateTime? BlackDate { get; set; }
@@ -21,7 +21,7 @@
         public string? UpdatedUser { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
-        //public string? SAPID { get; set; }
+        public string? SAPID { get; set; }
 
     }
 }

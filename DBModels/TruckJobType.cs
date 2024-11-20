@@ -3,17 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class WeightBridge
+    public class TruckJobType
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string WeightBridgeID { get; set; } = null!;
+        public string TypeID { get; set; } = null!;
+        [Column(TypeName = "varchar(50)")]
+        public string? Description { get; set; }
 
-        [Column(TypeName = "varchar(30)")]
-        public string? Name { get; set; }
-        [Column(TypeName = "varchar(25)")]
-        public string? GateID { get; set; }
-
+        [Column(TypeName = "bit")]
+        public Boolean? Active { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

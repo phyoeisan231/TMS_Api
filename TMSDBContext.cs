@@ -29,13 +29,14 @@ namespace TMS_Api
         public DbSet<TruckType> TruckType { get; set; }
         public DbSet<Truck> Truck { get; set; }
         public DbSet<Trailer> Trailer { get; set; }
-        public DbSet<TrailerType> TrailerType { get; set; }
         public DbSet<Driver> Driver { get; set; }
         public DbSet<TransporterType> TransporterType { get; set; }
-        public DbSet<Transporter> Transporter { get; set; }
+        //public DbSet<Transporter> Transporter { get; set; }
         public DbSet<Gate> Gate { get; set; }
+        public DbSet<Yard> Yard { get; set; }
+        public DbSet<TruckJobType> TruckJobType { get; set; }
+        public DbSet<TruckEntryType> TruckEntryType { get; set; }
         public DbSet<WeightBridge> WeightBridge { get; set; }
-        public DbSet<Trip> Trip { get; set; }
-
+        //public DbSet<Trip> Trip { get; set; }
     }
 }

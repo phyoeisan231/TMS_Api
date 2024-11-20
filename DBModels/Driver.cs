@@ -27,8 +27,8 @@ namespace TMS_Api.DBModels
         public DateTime? LicenseExpiration { get; set; }
         [Column(TypeName = "varchar(2)")]
         public string? LicenseClass { get; set; }
-        [Column(TypeName = "varchar(100)")]
-        public string? Transporter { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? TransporterID { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remarks { get; set; }
         [Column(TypeName = "bit")]

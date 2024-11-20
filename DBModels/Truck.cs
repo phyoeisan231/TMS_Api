@@ -9,51 +9,46 @@ namespace TMS_Api.DBModels
         [Key]
         [Column(TypeName = "varchar(25)")]
         public string VehicleRegNo { get; set; } = null!;
+        [Column(TypeName = "varchar(25)")]
+        public string? ContainerType { get; set; }
 
-        [Column(TypeName = "decimal")]
+        [Column(TypeName = "int")]
+        public int? ContainerSize { get; set; }
+
+        [Column(TypeName = "decimal(18,5)")]
         public decimal? TruckWeight { get; set; }
-
-        [Column(TypeName = "varchar(max)")]
-        public string? Remarks { get; set; }
         
         [Column(TypeName = "varchar(30)")]
-        public string? TruckType { get; set; }
+        public string? TypeID { get; set; }
 
-        [Column(TypeName = "varchar(10)")]
-        public string? Transporter { get; set; }
-
-        [Column(TypeName = "bit")]
-        public Boolean? IsBlack { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? TransporterID { get; set; }
 
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
-        
-        [Column(TypeName = "datetime")]
-        public DateTime? BlackDate { get; set; }
-
-        [Column(TypeName = "datetime")]
-        public DateTime? BlackRemovedDate { get; set; }
-
         [Column(TypeName = "varchar(25)")]
         public string? DriverLicenseNo { get; set; }
-
-        //[Column(TypeName = "varchar(50)")]
-        //public string? Name { get; set; }//Driver Name
 
         [Column(TypeName = "datetime")]
         public DateTime? LastPassedDate { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? VehicleBackRegNo { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? IsBlack { get; set; }
+
+        [Column(TypeName = "datetime")]
+        public DateTime? BlackDate { get; set; }
+
+        [Column(TypeName = "datetime")]
+        public DateTime? BlackRemovedDate { get; set; }     
 
         [Column(TypeName = "varchar(max)")]
         public string? BlackReason { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? BlackRemovedReason { get; set; }
-        //[Column(TypeName = "varchar(25)")]
-        //public string? ContainerType { get; set; }
 
-        //[Column(TypeName = "int")]
-        //public int? ContainerSize { get; set; }
+        [Column(TypeName = "varchar(max)")]
+        public string? Remarks { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

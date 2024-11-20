@@ -7,8 +7,8 @@ namespace TMS_Api.DBModels
     public class Transporter
     {
         [Key]
-        [Column(TypeName = "varchar(10)")]
-        public string TransporterCode { get; set; } = null!;
+        [Column(TypeName = "varchar(25)")]
+        public string TransporterID { get; set; } = null!;
         [Column(TypeName = "varchar(100)")]
         public string? TransporterName { get; set; }
         [Column(TypeName = "varchar(250)")]
@@ -19,25 +19,22 @@ namespace TMS_Api.DBModels
         public string? Email { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? ContactPerson { get; set; }
-        [Column(TypeName = "varchar(50)")]
-        public string? TransporterType { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? TypeID { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? IsBlack { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? BlackDate { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? BlackRemovedDate { get; set; }
-
-        [Column(TypeName = "varchar(max)")]
-        public string? Remarks { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? BlackReason { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? BlackRemovedReason { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? BlackRemovedDate { get; set; }
         [Column(TypeName = "varchar(max)")]
-        public string? NotUseReason { get; set; }
+        public string? Remarks { get; set; }   
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
@@ -46,8 +43,7 @@ namespace TMS_Api.DBModels
         public DateTime? CreatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? CreatedUser { get; set; }
-
-        //[Column(TypeName ="varchar(25")]
-        //public string? SAPID { get; set; }
+        [Column(TypeName = "varchar(25")]
+        public string? SAPID { get; set; }
     }
 }

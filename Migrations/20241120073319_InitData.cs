@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TMS_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class initdata : Migration
+    public partial class InitData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -65,7 +65,7 @@ namespace TMS_Api.Migrations
                     Active = table.Column<bool>(type: "bit", nullable: true),
                     LicenseExpiration = table.Column<DateTime>(type: "datetime", nullable: true),
                     LicenseClass = table.Column<string>(type: "varchar(2)", nullable: true),
-                    Transporter = table.Column<string>(type: "varchar(100)", nullable: true),
+                    TransporterCode = table.Column<string>(type: "varchar(25)", nullable: true),
                     Remarks = table.Column<string>(type: "varchar(max)", nullable: true),
                     IsBlack = table.Column<bool>(type: "bit", nullable: true),
                     BlackDate = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -83,24 +83,40 @@ namespace TMS_Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Gate",
+                columns: table => new
+                {
+                    GateID = table.Column<string>(type: "varchar(25)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(30)", nullable: true),
+                    YardID = table.Column<string>(type: "varchar(25)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    CreatedUser = table.Column<string>(type: "varchar(50)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gate", x => x.GateID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Trailer",
                 columns: table => new
                 {
                     VehicleRegNo = table.Column<string>(type: "varchar(25)", nullable: false),
-                    UnladenWeight = table.Column<decimal>(type: "Decimal(18,0)", nullable: true),
+                    ContainerType = table.Column<string>(type: "varchar(25)", nullable: true),
+                    ContainerSize = table.Column<int>(type: "int", nullable: true),
+                    TransporterCode = table.Column<string>(type: "varchar(25)", nullable: true),
+                    TrailerWeight = table.Column<decimal>(type: "Decimal(18,5)", nullable: true),
                     Remarks = table.Column<string>(type: "varchar(max)", nullable: true),
-                    Flowrate = table.Column<double>(type: "float", nullable: true),
-                    TrailerType = table.Column<string>(type: "varchar(30)", nullable: true),
-                    Transporter = table.Column<string>(type: "varchar(10)", nullable: true),
                     IsBlack = table.Column<bool>(type: "bit", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: true),
-                    LoadingType = table.Column<string>(type: "varchar(50)", nullable: true),
+                    DriverLicenseNo = table.Column<string>(type: "varchar(25)", nullable: true),
+                    LastPassedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    VehicleBackRegNo = table.Column<string>(type: "varchar(25)", nullable: true),
                     BlackDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     BlackRemovedDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    CompartmentNo = table.Column<int>(type: "int", nullable: true),
-                    DriverLicenseNo = table.Column<string>(type: "varchar(25)", nullable: true),
-                    LastLoadingDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    VehicleBackRegNo = table.Column<string>(type: "varchar(25)", nullable: true),
                     BlackReason = table.Column<string>(type: "varchar(max)", nullable: true),
                     BlackRemovedReason = table.Column<string>(type: "varchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -114,40 +130,12 @@ namespace TMS_Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TrailerType",
+                name: "TransporterType",
                 columns: table => new
                 {
-                    TypeCode = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "varchar(30)", nullable: true),
+                    TypeID = table.Column<string>(type: "varchar(25)", nullable: false),
+                    Description = table.Column<string>(type: "varchar(50)", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TrailerType", x => x.TypeCode);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Transporter",
-                columns: table => new
-                {
-                    TransporterCode = table.Column<string>(type: "varchar(10)", nullable: false),
-                    TransporterName = table.Column<string>(type: "varchar(100)", nullable: true),
-                    Address = table.Column<string>(type: "varchar(250)", nullable: true),
-                    ContactNo = table.Column<string>(type: "varchar(100)", nullable: true),
-                    Email = table.Column<string>(type: "varchar(50)", nullable: true),
-                    ContactPerson = table.Column<string>(type: "varchar(50)", nullable: true),
-                    TransporterType = table.Column<string>(type: "varchar(50)", nullable: true),
-                    Active = table.Column<bool>(type: "bit", nullable: true),
-                    IsBlack = table.Column<bool>(type: "bit", nullable: true),
-                    BlackDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    BlackRemovedDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Remarks = table.Column<string>(type: "varchar(max)", nullable: true),
-                    BlackReason = table.Column<string>(type: "varchar(max)", nullable: true),
-                    BlackRemovedReason = table.Column<string>(type: "varchar(max)", nullable: true),
-                    NotUseReason = table.Column<string>(type: "varchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -155,7 +143,7 @@ namespace TMS_Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transporter", x => x.TransporterCode);
+                    table.PrimaryKey("PK_TransporterType", x => x.TypeID);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,27 +151,21 @@ namespace TMS_Api.Migrations
                 columns: table => new
                 {
                     VehicleRegNo = table.Column<string>(type: "varchar(25)", nullable: false),
-                    UnladenWeight = table.Column<decimal>(type: "Decimal(18,0)", nullable: true),
-                    Remarks = table.Column<string>(type: "varchar(max)", nullable: true),
-                    Flowrate = table.Column<double>(type: "float", nullable: true),
-                    TruckType = table.Column<string>(type: "varchar(30)", nullable: true),
-                    Transporter = table.Column<string>(type: "varchar(10)", nullable: true),
-                    IsBlack = table.Column<bool>(type: "bit", nullable: true),
+                    ContainerType = table.Column<string>(type: "varchar(25)", nullable: true),
+                    ContainerSize = table.Column<int>(type: "int", nullable: true),
+                    TruckWeight = table.Column<decimal>(type: "decimal(18,5)", nullable: true),
+                    TypeID = table.Column<string>(type: "varchar(30)", nullable: true),
+                    TransporterCode = table.Column<string>(type: "varchar(25)", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: true),
-                    LoadingType = table.Column<string>(type: "varchar(50)", nullable: true),
+                    DriverLicenseNo = table.Column<string>(type: "varchar(25)", nullable: true),
+                    LastPassedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    VehicleBackRegNo = table.Column<string>(type: "varchar(25)", nullable: true),
+                    IsBlack = table.Column<bool>(type: "bit", nullable: true),
                     BlackDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     BlackRemovedDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    DriverLicenseNo = table.Column<string>(type: "varchar(25)", nullable: true),
-                    LastLoadingDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    VehicleBackRegNo = table.Column<string>(type: "varchar(25)", nullable: true),
-                    TotalNrDomeCover = table.Column<int>(type: "int", nullable: false),
-                    TotalNrLoadCoupling = table.Column<int>(type: "int", nullable: false),
-                    TotalNrFootValve = table.Column<int>(type: "int", nullable: false),
-                    TotalNrCabinet = table.Column<int>(type: "int", nullable: false),
-                    OtherSealPlace = table.Column<string>(type: "varchar(50)", nullable: true),
                     BlackReason = table.Column<string>(type: "varchar(max)", nullable: true),
                     BlackRemovedReason = table.Column<string>(type: "varchar(max)", nullable: true),
-                    CompartmentNo = table.Column<int>(type: "int", nullable: true),
+                    Remarks = table.Column<string>(type: "varchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
                     UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -195,19 +177,88 @@ namespace TMS_Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TruckType",
+                name: "TruckEntryType",
                 columns: table => new
                 {
-                    TypeCode = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "varchar(30)", nullable: true),
+                    TypeID = table.Column<string>(type: "varchar(25)", nullable: false),
+                    Description = table.Column<string>(type: "varchar(50)", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true)
+                    UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    CreatedUser = table.Column<string>(type: "varchar(50)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TruckType", x => x.TypeCode);
+                    table.PrimaryKey("PK_TruckEntryType", x => x.TypeID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TruckJobType",
+                columns: table => new
+                {
+                    TypeID = table.Column<string>(type: "varchar(25)", nullable: false),
+                    Description = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    CreatedUser = table.Column<string>(type: "varchar(50)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TruckJobType", x => x.TypeID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TruckType",
+                columns: table => new
+                {
+                    TypeID = table.Column<string>(type: "varchar(25)", nullable: false),
+                    Description = table.Column<string>(type: "varchar(30)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    CreatedUser = table.Column<string>(type: "varchar(50)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TruckType", x => x.TypeID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WeightBridge",
+                columns: table => new
+                {
+                    WeightBridgeID = table.Column<string>(type: "varchar(25)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(30)", nullable: true),
+                    GateID = table.Column<string>(type: "varchar(25)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    CreatedUser = table.Column<string>(type: "varchar(50)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WeightBridge", x => x.WeightBridgeID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Yard",
+                columns: table => new
+                {
+                    YardID = table.Column<string>(type: "varchar(25)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(30)", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    UpdatedUser = table.Column<string>(type: "varchar(50)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    CreatedUser = table.Column<string>(type: "varchar(50)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Yard", x => x.YardID);
                 });
 
             migrationBuilder.CreateTable(
@@ -321,9 +372,9 @@ namespace TMS_Api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "6189b896-baaf-42a6-bb5e-8b93f565b05a", null, "WBUser", "WBUSER" },
-                    { "89860b07-a585-4614-9f68-586b8d06be6a", null, "Admin", "ADMIN" },
-                    { "bb7ee60a-d625-4d56-940e-1fa3a994d8dc", null, "GateUser", "GATEUSER" }
+                    { "4748e16c-642e-4aff-9cf1-db0b86d523f1", null, "Admin", "ADMIN" },
+                    { "898546bc-8ce0-467f-91bf-54a7ed88e818", null, "GateUser", "GATEUSER" },
+                    { "e5d54789-70aa-414a-84e0-894857bd8e2d", null, "WBUser", "WBUSER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -388,19 +439,31 @@ namespace TMS_Api.Migrations
                 name: "Driver");
 
             migrationBuilder.DropTable(
+                name: "Gate");
+
+            migrationBuilder.DropTable(
                 name: "Trailer");
 
             migrationBuilder.DropTable(
-                name: "TrailerType");
-
-            migrationBuilder.DropTable(
-                name: "Transporter");
+                name: "TransporterType");
 
             migrationBuilder.DropTable(
                 name: "Truck");
 
             migrationBuilder.DropTable(
+                name: "TruckEntryType");
+
+            migrationBuilder.DropTable(
+                name: "TruckJobType");
+
+            migrationBuilder.DropTable(
                 name: "TruckType");
+
+            migrationBuilder.DropTable(
+                name: "WeightBridge");
+
+            migrationBuilder.DropTable(
+                name: "Yard");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

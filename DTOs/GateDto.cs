@@ -4,7 +4,7 @@
     {
         public int GateId { get; set; } = 0!;
         public string? Name { get; set; }
-        public string? Yard { get; set; }
+        public string? YardID { get; set; }
         public Boolean? Active { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? CreatedUser { get; set; }

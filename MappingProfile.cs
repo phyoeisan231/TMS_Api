@@ -10,7 +10,6 @@ namespace TMS_Api
         {
 			CreateMap<UserForRegistrationDto, IdentityUser>().ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email));
             CreateMap<TruckType, TruckTypeDto>().ReverseMap();
-            CreateMap<TrailerType, TrailerTypeDto>().ReverseMap();
             CreateMap<TransporterType, TransporterTypeDto>().ReverseMap();
             CreateMap<Transporter, TransporterDto>().ReverseMap();
             CreateMap<Gate, GateDto>().ReverseMap();
