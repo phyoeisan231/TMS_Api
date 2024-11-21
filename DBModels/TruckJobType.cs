@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class TruckJobType
+    public class TruckJobType//Rail,WH,ICD,Other
     {
         [Key]
         [Column(TypeName = "varchar(25)")]

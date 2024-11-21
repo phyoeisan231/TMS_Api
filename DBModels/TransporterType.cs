@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class TransporterType
+    public class TransporterType//Company/Gate
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string TypeID { get; set; } = null!;
+        public string TypeID { get; set; } = null!;//auto or not
         [Column(TypeName = "varchar(50)")]
         public string? Description { get; set; }
 

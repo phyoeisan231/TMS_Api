@@ -1,19 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class Gate
+    public class WaitingArea
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string GateID { get; set; } = null!;//auto or not
+        public string AreaID { get; set; } = null!;//auto or not 
         [Column(TypeName = "varchar(30)")]
         public string? Name { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? YardID { get; set; }
-        [Column(TypeName = "varchar(25)")]
-        public string? Type { get; set; }//InBound,OutBound,Both
+
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
 
