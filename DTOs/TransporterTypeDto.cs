@@ -2,7 +2,7 @@
 {
     public class TransporterTypeDto
     {
-        public string TypeCode { get; set; } = null!;
+        public string TypeID { get; set; } = null!;
         public string? Description { get; set; }
         public string? Remarks { get; set; }
         public Boolean? Active { get; set; }

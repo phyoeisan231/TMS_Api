@@ -185,8 +185,8 @@ namespace TMS_Api.Services
             }
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
-
         }
+
         public async Task<GateDto> GetGateId(string id)
         {
             GateDto gateDto = new GateDto();
@@ -294,6 +294,62 @@ namespace TMS_Api.Services
             }
 
             return driverDto;
+        }
+
+        #endregion
+        #region Yard Nov_20_24
+        public async Task<DataTable> GetYardList(string active)
+        {
+            string sql = "";
+            if (active == "All" || active == null)
+            {
+                sql = @"SELECT * from Yard Order By Name";
+            }
+            else
+            {
+                sql = @"SELECT * from Yard Where Active='" + active + "'";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+
+        }
+
+        //public async Task<DataTable> GetYardList(string active)
+        //{
+        //    string sql = "";
+        //    if (active == "All" || active == null)
+        //    {
+        //        sql = @"SELECT * from Yard ORDER BY Name";
+        //    }
+        //    else if (active == "true")  // Assuming "active" refers to true
+        //    {
+        //        sql = @"SELECT * from Yard WHERE Active = 1 ORDER BY Name";
+        //    }
+        //    else if (active == "false")  // Assuming "active" refers to false
+        //    {
+        //        sql = @"SELECT * from Yard WHERE Active = 0 ORDER BY Name";
+        //    }
+        //    DataTable dt = await GetDataTableAsync(sql);
+        //    return dt;
+        //}
+
+        public async Task<YardDto> GetYardID(string id)
+        {
+            YardDto yardDto = new YardDto();
+            try
+            {
+                Yard yard = await _context.Yard.FromSqlRaw("SELECT * FROM Yard WHERE YardID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                if (yard != null)
+                {
+                    yardDto = _mapper.Map<YardDto>(yard);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return yardDto;
         }
 
         #endregion

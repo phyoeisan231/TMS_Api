@@ -158,7 +158,6 @@ namespace TMS_Api.Controllers
             return Ok(transporterTypes);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> SaveTransporter([FromForm] TransporterDto info)
         {
@@ -344,6 +343,43 @@ namespace TMS_Api.Controllers
             return Ok(msg);
         }
         #endregion
+
+        #region Yard Nov_20_2024
+        [HttpGet]
+        public async Task<IActionResult> GetYardList(string active)
+        {
+            DataTable dt=await _queryDAL.GetYardList(active);
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetYardID(string id)
+        {
+            YardDto yardDto=await _queryDAL.GetYardID(id);
+            return Ok(yardDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveYard(YardDto info)
+        {
+            ResponseMessage msg=await _updateDAL.SaveYard(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateYard(YardDto info)
+        {
+            ResponseMessage msg=await _updateDAL.UpdateYard(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteYard(string id)
+        {
+            ResponseMessage msg=await _updateDAL.DeleteYard(id);
+            return Ok(msg);
+        }
+        #endregion 
 
 
     }

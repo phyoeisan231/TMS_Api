@@ -378,17 +378,28 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Transporter transporter = await _context.Transporter.FromSqlRaw("SELECT Top 1 * FROM Transporter Order By TransporterID Desc", new SqlParameter("@name", info.TransporterID)).SingleOrDefaultAsync();
-                if (transporter != null)
+                Transporter duplicate = await _context.Transporter.FromSqlRaw("SELECT Top 1* FROM Transporter WHERE REPLACE(TransporterName,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.TransporterName)).SingleOrDefaultAsync();
+                if (duplicate != null)
                 {
-                    info.SrNo = transporter.SrNo + 1;
-                    info.TransporterID = "TC" + info.SrNo?.ToString("-0000");
+                    msg.Status = false;
+                    msg.MessageContent = "Transporter Name duplicate";
+                    return msg;
                 }
                 else
                 {
-                    info.TransporterID = "TC" + "-0001";
-                    info.SrNo = 1;
+                    Transporter transporter = await _context.Transporter.FromSqlRaw("SELECT Top 1 * FROM Transporter Order By TransporterID Desc", new SqlParameter("@name", info.TransporterID)).SingleOrDefaultAsync();
+                    if (transporter != null)
+                    {
+                        info.SrNo = transporter.SrNo + 1;
+                        info.TransporterID = "TC" + info.SrNo?.ToString("-0000");
+                    }
+                    else
+                    {
+                        info.TransporterID = "TC" + "-0001";
+                        info.SrNo = 1;
+                    }
                 }
+
                 Transporter data = _mapper.Map<Transporter>(info);
                 data.CreatedDate = GetLocalStdDT();
                 _context.Transporter.Add(data);
@@ -483,6 +494,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
+                
                 Gate data = await _context.Gate.FromSqlRaw("SELECT Top 1 * FROM Gate WHERE REPLACE(Name,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
                 if (data != null)
                 {
@@ -491,13 +503,23 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    Gate gate = _mapper.Map<Gate>(info);
-                    gate.UpdatedDate = GetLocalStdDT();
-                    _context.Gate.Add(gate);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully added";
+                    Gate gateIdTest = await _context.Gate.FromSqlRaw("SELECT Top 1* FROM Gate Order By GateID Desc", new SqlParameter("@name", info.GateID)).SingleOrDefaultAsync();
+                    if (gateIdTest != null)
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "ID duplicate!";
+                    }
+                    else
+                    {
+                        Gate gate = _mapper.Map<Gate>(info);
+                        gate.UpdatedDate = GetLocalStdDT();
+                        _context.Gate.Add(gate);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully added";
+                    }
                 }
+                
             }
             catch (DbUpdateException e)
             {
@@ -511,7 +533,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Gate gate = await _context.Gate.FromSqlRaw("SELECT * FROM Gate WHERE REPLACE(Name,' ','')=REPLACE(@name,' ','') ", new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
+                Gate gate = await _context.Gate.FromSqlRaw("SELECT * FROM Gate WHERE REPLACE(GateID,' ','')=REPLACE(@gID,' ','') ", new SqlParameter("@gID", info.GateID)).SingleOrDefaultAsync();
                 if (gate == null)
                 {
                     msg.Status = false;
@@ -542,7 +564,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Gate gate = await _context.Gate.FromSqlRaw("SELECT * FROM Gate WHERE  REPLACE(Name,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                Gate gate = await _context.Gate.FromSqlRaw("SELECT * FROM Gate WHERE  REPLACE(GateID,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                 if (gate == null)
                 {
                     msg.Status = false;
@@ -582,8 +604,9 @@ namespace TMS_Api.Services
                 else
                 {
                     Truck data = _mapper.Map<Truck>(info);
+                    data.CreatedUser = info.CreatedUser;
                     data.CreatedDate = GetLocalStdDT();
-                    data.CreatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    //data.CreatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
                     _context.Truck.Add(data);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
@@ -627,7 +650,8 @@ namespace TMS_Api.Services
                     truck.ContainerType = info.ContainerType;
                     truck.ContainerSize = info.ContainerSize;
                     truck.UpdatedDate = GetLocalStdDT();
-                    truck.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    truck.UpdatedUser=info.UpdatedUser;
+                    //truck.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
 
                     await _context.SaveChangesAsync();
                     msg.MessageContent = "Successfully updated";
@@ -718,6 +742,8 @@ namespace TMS_Api.Services
                 else
                 {
                     trailer.VehicleRegNo = info.VehicleRegNo;
+                    trailer.ContainerType = info.ContainerType;
+                    trailer.ContainerSize = info.ContainerSize;
                     trailer.TrailerWeight = info.TrailerWeight;
                     trailer.TransporterID = info.TransporterID;
                     trailer.Remarks = info.Remarks;
@@ -878,6 +904,107 @@ namespace TMS_Api.Services
             return msg;
         }
 
+        #endregion
+
+        #region Yard Nov_2_2024
+        public async Task<ResponseMessage> SaveYard(YardDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+
+                Yard data = await _context.Yard.FromSqlRaw("SELECT Top 1 * FROM Yard WHERE REPLACE(Name,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
+                if (data != null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Name duplicate!";
+                }
+                else
+                {
+                    Yard yardIDTest = await _context.Yard.FromSqlRaw("SELECT Top 1* FROM Yard WHERE REPLACE(YardID,'','')=REPLACE(@yID,'','')", new SqlParameter("@yID", info.YardID)).SingleOrDefaultAsync();
+                    if (yardIDTest != null)
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "YardID duplicate!";//For User Input ID Testing
+                    }
+                    else
+                    {
+                        Yard yard = _mapper.Map<Yard>(info);
+                        yard.UpdatedDate = GetLocalStdDT();
+                        _context.Yard.Add(yard);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully added";
+                    }
+                }
+                
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+        public async Task<ResponseMessage> UpdateYard(YardDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                Yard yard = await _context.Yard.FromSqlRaw("SELECT * FROM Yard WHERE REPLACE(YardID,' ','')=REPLACE(@yID,' ','') ", new SqlParameter("@yID", info.YardID)).SingleOrDefaultAsync();
+                if (yard == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                }
+                else
+                {
+                    yard.Name = info.Name;
+                    yard.YardID = info.YardID;
+                    yard.Active = info.Active;
+                    yard.UpdatedDate = GetLocalStdDT();
+                    yard.UpdatedUser = info.UpdatedUser;
+                    _context.Yard.Update(yard);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully updated";
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+        public async Task<ResponseMessage> DeleteYard(string id)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                Yard data = await _context.Yard.FromSqlRaw("SELECT Top 1* FROM Yard WHERE REPLACE(YardID,'','')=REPLACE(@yID,'','')", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                if(data == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                }
+                else
+                {
+                    _context.Yard.Remove(data);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Removed";
+                    return msg;
+                }
+            }
+            catch(DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+
+        }
         #endregion
 
     }
