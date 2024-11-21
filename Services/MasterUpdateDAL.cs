@@ -75,26 +75,22 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                TruckType data = await _context.TruckType.FromSqlRaw("SELECT Top 1 * FROM TruckType WHERE  REPLACE(Description,' ','')=REPLACE(@name,' ','')", new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
-
+                TruckType data = await _context.TruckType.FromSqlRaw("SELECT TOP 1 * FROM TruckType WHERE REPLACE(Description, ' ', '') = REPLACE(@name, ' ', '') AND TypeID = @typeId",new SqlParameter("@name", info.Description),new SqlParameter("@typeId", info.TypeID)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Name duplicate!";
+                    msg.MessageContent = "Data already In !";
                 }
                 else
                 {
-
                     TruckType type = _mapper.Map<TruckType>(info);
                     type.UpdatedDate = GetLocalStdDT();
                     _context.TruckType.Add(type);
-
                     await _context.SaveChangesAsync();
                     msg.Status = true;
                     msg.MessageContent = "Successfully added!";
                 }
             }
-
             catch (DbUpdateException e)
             {
                 msg.MessageContent += e.Message;
@@ -116,11 +112,11 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-
+                    type.Description = info.Description;
                     type.Active = info.Active;
                     type.UpdatedDate = GetLocalStdDT();
                     type.UpdatedUser = info.UpdatedUser;
-
+                    _context.TruckType.Update(type);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
                     msg.MessageContent = "Successfully updated!";
@@ -506,11 +502,11 @@ namespace TMS_Api.Services
                     Gate gateIdTest = await _context.Gate.FromSqlRaw("SELECT Top 1* FROM Gate Order By GateID Desc", new SqlParameter("@name", info.GateID)).SingleOrDefaultAsync();
                     if (gateIdTest != null)
                     {
-                        msg.Status = false;
-                        msg.MessageContent = "ID duplicate!";
-                    }
-                    else
-                    {
+                    //    msg.Status = false;
+                    //    msg.MessageContent = "ID duplicate!";
+                    //}
+                    //else
+                    //{
                         Gate gate = _mapper.Map<Gate>(info);
                         gate.UpdatedDate = GetLocalStdDT();
                         _context.Gate.Add(gate);

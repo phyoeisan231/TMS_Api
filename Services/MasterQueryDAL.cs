@@ -85,14 +85,12 @@ namespace TMS_Api.Services
             string sql = "";
             if (active == "All" || active == null)
             {
-                sql = @"SELECT * from TruckType";
+                sql = @"SELECT * from TruckType Order By Description";
             }
             else
             {
                 sql = @"SELECT * from TruckType where Active='" + active + "'";
             }
-
-
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
@@ -177,7 +175,7 @@ namespace TMS_Api.Services
             string sql = "";
             if (active == "All" || active == null)
             {
-                sql = @"SELECT * from Gate Order By Name";
+                sql = @"SELECT * from Gate Order By GateID";
             }
             else
             {

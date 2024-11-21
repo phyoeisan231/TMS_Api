@@ -3,9 +3,13 @@ namespace TMS_Api.DTOs
 {
     public class TruckTypeDto
     {
-        public string TypeCode { get; set; } = null!;
+        public string TypeID { get; set; } = null!;
         public string? Description { get; set; }
         public Boolean? Active { get; set; }
         public string? UpdatedUser { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string? CreatedUser { get; set; }
+        public DateTime? CreatedDate { get; set; }
+
     }
 }

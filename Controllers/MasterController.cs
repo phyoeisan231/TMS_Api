@@ -35,7 +35,7 @@ namespace TMS_Api.Controllers
 
         #region Truck Type Nov_11_2024
 
-        [Authorize(Roles = "Admin,GateUser")]
+        //[Authorize(Roles = "Admin,GateUser")]
         [HttpGet]
         public async Task<IActionResult> GetTruckTypeList(string active)
         {
