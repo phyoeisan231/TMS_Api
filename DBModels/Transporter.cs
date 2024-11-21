@@ -8,7 +8,7 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string TransporterID { get; set; } = null!;
+        public string TransporterID { get; set; } = null!;//TC0001
         [Column(TypeName = "int")]
         public int? SrNo { get; set; }
         [Column(TypeName = "varchar(100)")]

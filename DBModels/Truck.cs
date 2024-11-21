@@ -46,6 +46,8 @@ namespace TMS_Api.DBModels
         public string? BlackReason { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? BlackRemovedReason { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? IsRGL { get; set; }
 
         [Column(TypeName = "varchar(max)")]
         public string? Remarks { get; set; }

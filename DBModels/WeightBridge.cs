@@ -7,12 +7,12 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string WeightBridgeID { get; set; } = null!;
+        public string WeightBridgeID { get; set; } = null!;//auto or not
 
         [Column(TypeName = "varchar(30)")]
         public string? Name { get; set; }
         [Column(TypeName = "varchar(25)")]
-        public string? GateID { get; set; }
+        public string? YardID { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }

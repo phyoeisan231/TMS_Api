@@ -852,7 +852,6 @@ namespace TMS_Api.Services
                     driver.LicenseClass = info.LicenseClass;
                     driver.ContactNo = info.ContactNo;
                     driver.Email = info.Email;
-                    driver.TransporterID = info.TransporterID;
                     driver.Remarks = info.Remarks;
                     driver.IsBlack = info.IsBlack;
                     driver.BlackDate = info.BlackDate;
