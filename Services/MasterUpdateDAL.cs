@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Data.Common;
 using TMS_Api.DBModels;
 using TMS_Api.DTOs;
 
@@ -1356,6 +1357,320 @@ namespace TMS_Api.Services
 
 
         #endregion
+
+        #region WaitingArea Nov_27_2024
+        public async Task<ResponseMessage> SaveWaitingArea(WaitingAreaDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                bool nameExists = await _context.WaitingArea.AnyAsync(wa => wa.Name == info.Name && wa.YardID == info.YardID);
+
+                if (nameExists)
+                {
+                    msg.MessageContent = "A Waiting Area with this Name already exists for this YardID.";
+                    return msg;
+                }
+                WaitingArea waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT Top 1* FROM WaitingArea WHERE YardID=@yid Order By AreaID DESC", new SqlParameter("@yid", info.YardID)).SingleOrDefaultAsync();
+                int srNo = 1;
+                string id = string.IsNullOrEmpty(info.YardID) ? "" : info.YardID;
+                if (waitingArea != null)
+                {
+                    string srNoPart = waitingArea.AreaID.Substring(info.YardID.Length + 4);
+                    if(int.TryParse(srNoPart,out srNo)){
+                        srNo++;
+                    }
+                }
+                string newAreaID = $"{id}Pool{srNo}";
+                info.AreaID = newAreaID;
+                WaitingArea data = _mapper.Map<WaitingArea>(info);
+                data.CreatedDate = GetLocalStdDT();
+                data.CreatedUser = info.CreatedUser;
+                _context.WaitingArea.Add(data);
+                await _context.SaveChangesAsync();
+                msg.Status = true;
+                msg.MessageContent = "Successfully added";
+
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+        public async Task<ResponseMessage> UpdateWaitingArea(WaitingAreaDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                WaitingArea waitingArea = await _context.WaitingArea.SingleOrDefaultAsync(wa => wa.AreaID == info.AreaID);
+                if (waitingArea == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                    return msg;
+                }
+                else
+                {
+                    waitingArea.AreaID = info.AreaID;
+                    waitingArea.Name = info.Name;
+                    waitingArea.YardID = info.YardID;
+                    waitingArea.Active = info.Active;
+                    waitingArea.UpdatedUser = info.UpdatedUser;
+                    waitingArea.UpdatedDate = GetLocalStdDT();
+                    await _context.SaveChangesAsync();
+                    msg.MessageContent = "Successfully Updated";
+                    return msg;
+                }
+            }
+            catch(DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+        }
+        public async Task<ResponseMessage> DeleteWaitingArea(string id)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                WaitingArea waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT * FROM WaitingArea Where AreaID=@aID", new SqlParameter("@aID", id)).SingleOrDefaultAsync();
+                if (waitingArea == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                }
+                else
+                {
+                    _context.WaitingArea.Remove(waitingArea);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Removed";
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+
+        #endregion
+
+        #region PCategory Nov_27_2024
+        public async Task<ResponseMessage> SavePCategory(PCategoryDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                // Check if either CategoryName or PCCode is duplicated
+                PCategory duplicateCheck = await _context.PCategory
+                    .FromSqlRaw("SELECT TOP 1 * FROM PCategory WHERE REPLACE(CategoryName, ' ', '') = REPLACE(@name, ' ', '') OR REPLACE(PCCode, '', '') = REPLACE(@pCode, '', '')",
+                     new SqlParameter("@name", info.CategoryName),new SqlParameter("@pCode", info.PCCode)).SingleOrDefaultAsync();
+
+                if (duplicateCheck != null)
+                {
+                    if (duplicateCheck.CategoryName == info.CategoryName)
+                    {
+                        msg.MessageContent = "Name Duplicate!";
+                    }
+                    else if (duplicateCheck.PCCode == info.PCCode)
+                    {
+                        msg.MessageContent = "ID Duplicate!";
+                    }
+
+                    msg.Status = false;
+                    return msg;
+                }
+
+                PCategory newCategory = _mapper.Map<PCategory>(info);
+                newCategory.CreatedDate = GetLocalStdDT();
+                newCategory.CreatedUser = info.CreatedUser;
+
+                _context.PCategory.Add(newCategory);
+                await _context.SaveChangesAsync();
+
+                msg.Status = true;
+                msg.MessageContent = "Successfully added";
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+
+            return msg;
+        }
+        public async Task<ResponseMessage> UpdatePCategory(PCategoryDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                PCategory pCategory = await _context.PCategory.SingleOrDefaultAsync(tt => tt.PCCode == info.PCCode);
+                if (pCategory == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                    return msg;
+                }
+                else
+                {
+                    pCategory.PCCode = info.PCCode;
+                    pCategory.CategoryName = info.CategoryName;
+                    pCategory.InboundWeight = info.InboundWeight;
+                    pCategory.OutboundWeight = info.OutboundWeight;
+                    pCategory.Active = info.Active;
+                    pCategory.GroupName = info.GroupName;
+                    pCategory.UpdatedDate = GetLocalStdDT();
+                    //pCategory.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    await _context.SaveChangesAsync();
+                    msg.Message = "Successfully Updated";
+                    msg.Status = true;
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+        }
+        public async Task<ResponseMessage> DeletePCategory(string id)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                PCategory pCategory = await _context.PCategory.FromSqlRaw("SELECT * FROM PCategory Where PCCode=@pCode", new SqlParameter("@pCode", id)).SingleOrDefaultAsync();
+                if (pCategory == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                }
+                else
+                {
+                    _context.PCategory.Remove(pCategory);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Removed";
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+
+        #endregion
+
+        #region PCard Nov_27_2024
+        public async Task<ResponseMessage> SavePCard(PCardDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                PCard card = await _context.PCard.FromSqlRaw("SELECT Top 1* FROM PCard WHERE YardID=@yid And GroupName=@gname Order By CardNo Desc", new SqlParameter("@yid", info.YardID), new SqlParameter("@gname", info.GroupName)).SingleOrDefaultAsync();
+                int srNo = 1;
+                string id = string.IsNullOrEmpty(info.YardID) ? "" : info.YardID + "-";
+                string sg = string.IsNullOrEmpty(info.GroupName) ? "" : info.GroupName.Substring(0, 1) + "-";
+                id += sg;
+                if (card != null)
+                {
+                    srNo = int.Parse(card.CardNo.Substring(id.Length)) + 1;
+                    id += srNo.ToString("000");
+                }
+                else
+                {
+                    id += srNo.ToString("000");
+                }
+                info.CardNo = id;
+                PCard data = _mapper.Map<PCard>(info);
+                data.CreatedDate = GetLocalStdDT();
+                data.CreatedUser = info.CreatedUser;
+                _context.PCard.Add(data);
+                await _context.SaveChangesAsync();
+                msg.Status = true;
+                msg.MessageContent = "Successfully added";
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+        public async Task<ResponseMessage> UpdatePCard(PCardDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                PCard pCard = await _context.PCard.SingleOrDefaultAsync(tt => tt.CardNo == info.CardNo);
+                if (pCard == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                    return msg;
+                }
+                else
+                {
+                    pCard.CardNo = info.CardNo;
+                    pCard.YardID = info.YardID;
+                    pCard.GroupName = info.GroupName;
+                    pCard.Active = info.Active;
+                    pCard.IsUse = info.IsUse;
+                    pCard.VehicleRegNo = info.VehicleRegNo;
+                    pCard.CardIssueDate = info.CardIssueDate;
+                    pCard.CardReturnDate = info.CardReturnDate;
+                    pCard.UpdatedDate = GetLocalStdDT();
+                    pCard.CreatedUser = info.CreatedUser;
+                    //pCategory.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    await _context.SaveChangesAsync();
+                    msg.Message = "Successfully Updated";
+                    msg.Status = true;
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+        }
+        public async Task<ResponseMessage> DeletePCard(string id)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                PCard pCard = await _context.PCard.FromSqlRaw("SELECT * FROM PCard Where CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
+                if (pCard == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                }
+                else
+                {
+                    _context.PCard.Remove(pCard);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Removed";
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+
+        #endregion
+
 
     }
 

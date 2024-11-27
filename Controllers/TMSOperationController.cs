@@ -21,14 +21,6 @@ namespace TMS_Api.Controllers
             _queryDAL = queryDAL;
             _updateDAL = updateDAL;
         }
-
-        #region PCard Nov_27_2024
-        [HttpPost]
-        public async Task<IActionResult> SavePCard(PCardDto info)
-        {
-            ResponseMessage msg = await _updateDAL.SavePCard(info);
-            return Ok(msg);
-        }
-        #endregion
+        
     }
 }

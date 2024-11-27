@@ -389,11 +389,56 @@ namespace TMS_Api.Services
         #endregion
 
         #region WaitingArea Nov_26_2024
-        
+        public async Task<DataTable> GetWaitingAreaList(string active)
+        {
+            string sql = "";
+            if (active == "All" || active == null)
+            {
+                sql = @"SELECT * from WaitingArea Order By AreaID";
+            }
+            else
+            {
+                sql = @"SELECT * from WaitingArea Where Active='" + active + "'";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
 
         #endregion
 
+        #region PCategory Nov_27_2024
+        public async Task<DataTable> GetPCategoryList(string active)
+        {
+            string sql = "";
+            if (active == "All" || active == null)
+            {
+                sql = @"SELECT * from PCategory Order By PCCode";
+            }
+            else
+            {
+                sql = @"SELECT * from PCategory Where Active='" + active + "'";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+        #endregion
 
+        #region PCard Nov_27_2024
+        public async Task<DataTable> GetPCardList(string active)
+        {
+            string sql = "";
+            if (active == "All" || active == null)
+            {
+                sql = @"SELECT * from PCard Order By CardNo";
+            }
+            else
+            {
+                sql = @"SELECT * from PCard Where Active='" + active + "'";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+        #endregion
 
 
 

@@ -474,35 +474,97 @@ namespace TMS_Api.Controllers
 
         #endregion
 
-        //#region Waiting Area Nov_26_2024
-        //[HttpGet]
-        //public async Task<IActionResult> GetWaitingAreaList(string active)
-        //{
-        //    DataTable dt = await _queryDAL.GetWaitingAreaList(active);
-        //    return Ok(dt);
-        //}
+        #region Waiting Area Nov_26_2024
+        [HttpGet]
+        public async Task<IActionResult> GetWaitingAreaList(string active)
+        {
+            DataTable dt = await _queryDAL.GetWaitingAreaList(active);
+            return Ok(dt);
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> SaveWaitingArea(WaitingAreaDto info)
-        //{
-        //    ResponseMessage msg = await _updateDAL.SaveWaitingArea(info);
-        //    return Ok(msg);
-        //}
+        [HttpPost]
+        public async Task<IActionResult> SaveWaitingArea(WaitingAreaDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveWaitingArea(info);
+            return Ok(msg);
+        }
 
-        //[HttpPut]
-        //public async Task<IActionResult> UpdateWaitingArea(WaitingAreaDto info)
-        //{
-        //    ResponseMessage msg = await _updateDAL.UpdateWaitingArea(info);
-        //    return Ok(msg);
-        //}
+        [HttpPut]
+        public async Task<IActionResult> UpdateWaitingArea(WaitingAreaDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdateWaitingArea(info);
+            return Ok(msg);
+        }
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteWaitingArea(string id)
-        //{
-        //    ResponseMessage msg = await _updateDAL.DeleteWaitingArea(id);
-        //    return Ok(msg);
-        //}
-        //#endregion
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteWaitingArea(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteWaitingArea(id);
+            return Ok(msg);
+        }
+        #endregion
+
+        #region PCategory Nov_27_2024
+        [HttpGet]
+        public async Task<IActionResult> GetPCategoryList(string active)
+        {
+            DataTable dt = await _queryDAL.GetPCategoryList(active);
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SavePCategory(PCategoryDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SavePCategory(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdatePCategory(PCategoryDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdatePCategory(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePCategory(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeletePCategory(id);
+            return Ok(msg);
+        }
+        #endregion
+
+        #region PCard Nov_27_2024
+
+        [HttpGet]
+        public async Task<IActionResult> GetPCardList(string active)
+        {
+            DataTable dt = await _queryDAL.GetPCardList(active);
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SavePCard(PCardDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SavePCard(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdatePCard(PCardDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdatePCard(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePCard(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeletePCard(id);
+            return Ok(msg);
+        }
+        #endregion
+
 
 
     }

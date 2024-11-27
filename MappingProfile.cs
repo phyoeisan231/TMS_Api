@@ -21,6 +21,7 @@ namespace TMS_Api
             CreateMap<TruckEntryType, TruckEntryTypeDto>().ReverseMap();
             CreateMap<TruckJobType, TruckJobTypeDto>().ReverseMap();
             CreateMap<WaitingArea, WaitingAreaDto>().ReverseMap();
+            CreateMap<PCategory, PCategoryDto>().ReverseMap();
             CreateMap<PCard, PCardDto>().ReverseMap();
         }
     }
