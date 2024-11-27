@@ -43,7 +43,6 @@ namespace TMS_Api.Services
                 return (p == 4) || (p == 6) || (p == 128);
             }
         }
-
         public DateTime GetLocalStdDT()
         {
             if (!IsLinux)
@@ -85,7 +84,7 @@ namespace TMS_Api.Services
             string sql = "";
             if (active == "All" || active == null)
             {
-                sql = @"SELECT * from TruckType Order By Description";
+                sql = @"SELECT * from TruckType Order By TypeID";
             }
             else
             {
@@ -122,7 +121,7 @@ namespace TMS_Api.Services
             string sql = "";
             if (active == "All" || active == null)
             {
-                sql = @"SELECT * from TransporterType Order By TypeName";
+                sql = @"SELECT * from TransporterType Order By Description";
             }
             else
             {
@@ -141,16 +140,16 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
-        public async Task<string[]> GetTransporterNames()
-        {
-            return await _context.Transporter.Where(t => t.Active == true).OrderBy(t => t.TransporterName).Select(t => t.TransporterName).ToArrayAsync();
-        }
+        //public async Task<string[]> GetTransporterNames()
+        //{
+        //    return await _context.Transporter.Where(t => t.Active == true).OrderBy(t => t.TransporterName).Select(t => t.TransporterName).ToArrayAsync();
+        //}
         public async Task<TransporterDto> GetTransporterId(string id)
         {
             TransporterDto transporterDto = new TransporterDto();
             try
             {
-                Transporter data = await _context.Transporter.FromSqlRaw("SELECT * FROM Transporter WHERE TransporterCode=@code", new SqlParameter("@code", id)).SingleOrDefaultAsync();
+                Transporter data = await _context.Transporter.FromSqlRaw("SELECT * FROM Transporter WHERE TransporterID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     transporterDto = _mapper.Map<TransporterDto>(data);
@@ -161,10 +160,6 @@ namespace TMS_Api.Services
                 Console.WriteLine(e);
             }
             return transporterDto;
-        }
-        public async Task<string[]> GetOnlyTransporterTypes()
-        {
-            return await _context.TransporterType.Where(t => t.Active == true).OrderBy(t => t.Description).Select(t => t.Description).ToArrayAsync();
         }
 
         #endregion
@@ -184,7 +179,6 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
-
         public async Task<GateDto> GetGateId(string id)
         {
             GateDto gateDto = new GateDto();
@@ -231,10 +225,6 @@ namespace TMS_Api.Services
             }
             return truckDto;
         }
-        public async Task<string[]> GetOnlyTruckTypes()
-        {
-            return await _context.TruckType.Where(t => t.Active == true).OrderBy(t => t.Description).Select(t => t.Description).ToArrayAsync();
-        }
 
         #endregion
 
@@ -274,34 +264,35 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
-        public async Task<DriverDto> GetDriverId(string id)
-        {
-            DriverDto driverDto = new DriverDto();
-            try
-            {
+        //public async Task<DriverDto> GetDriverId(string id)
+        //{
+        //    DriverDto driverDto = new DriverDto();
+        //    try
+        //    {
 
-                Driver data = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE LicenseNo=@lId", new SqlParameter("@lId", id)).SingleOrDefaultAsync();
-                if (data != null)
-                {
-                    driverDto = _mapper.Map<DriverDto>(data);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+        //        Driver data = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE LicenseNo=@lId", new SqlParameter("@lId", id)).SingleOrDefaultAsync();
+        //        if (data != null)
+        //        {
+        //            driverDto = _mapper.Map<DriverDto>(data);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex);
+        //    }
 
-            return driverDto;
-        }
+        //    return driverDto;
+        //}
 
         #endregion
+
         #region Yard Nov_20_24
         public async Task<DataTable> GetYardList(string active)
         {
             string sql = "";
             if (active == "All" || active == null)
             {
-                sql = @"SELECT * from Yard Order By Name";
+                sql = @"SELECT * from Yard Order By YardID";
             }
             else
             {
@@ -311,44 +302,94 @@ namespace TMS_Api.Services
             return dt;
 
         }
-
-        //public async Task<DataTable> GetYardList(string active)
+        //public async Task<YardDto> GetYardID(string id)
         //{
-        //    string sql = "";
-        //    if (active == "All" || active == null)
+        //    YardDto yardDto = new YardDto();
+        //    try
         //    {
-        //        sql = @"SELECT * from Yard ORDER BY Name";
+        //        Yard yard = await _context.Yard.FromSqlRaw("SELECT * FROM Yard WHERE YardID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+        //        if (yard != null)
+        //        {
+        //            yardDto = _mapper.Map<YardDto>(yard);
+        //        }
         //    }
-        //    else if (active == "true")  // Assuming "active" refers to true
+        //    catch (Exception ex)
         //    {
-        //        sql = @"SELECT * from Yard WHERE Active = 1 ORDER BY Name";
+        //        Console.WriteLine(ex);
         //    }
-        //    else if (active == "false")  // Assuming "active" refers to false
-        //    {
-        //        sql = @"SELECT * from Yard WHERE Active = 0 ORDER BY Name";
-        //    }
-        //    DataTable dt = await GetDataTableAsync(sql);
-        //    return dt;
+
+        //    return yardDto;
         //}
 
-        public async Task<YardDto> GetYardID(string id)
+        #endregion
+
+        #region TruckEntryType Nov_22_2024
+        public async Task<DataTable> GetTruckEntryTypeList(string active)
         {
-            YardDto yardDto = new YardDto();
+            string sql = "";
+            if (active == "All" || active == null)
+            {
+                sql = @"SELECT * from TruckEntryType Order By TypeID";
+            }
+            else
+            {
+                sql = @"SELECT * from TruckEntryType where Active='" + active + "'";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+
+        #endregion
+
+        #region WeightBridge Nov_22_2024
+        public async Task<DataTable> GetWeightBridgeList()
+        {
+            string sql = @"SELECT * FROM WeightBridge";
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+        public async Task<WeightBridgeDto> GetWeightBridgeID(string id)
+        {
+            WeightBridgeDto wbDto = new WeightBridgeDto();
             try
             {
-                Yard yard = await _context.Yard.FromSqlRaw("SELECT * FROM Yard WHERE YardID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
-                if (yard != null)
+                WeightBridge data = await _context.WeightBridge.FromSqlRaw("SELECT * FROM WeightBridge WHERE WeightBridgeID=@wID", new SqlParameter("@wID", id)).SingleOrDefaultAsync();
+                if (data != null)
                 {
-                    yardDto = _mapper.Map<YardDto>(yard);
+                    wbDto = _mapper.Map<WeightBridgeDto>(data);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
-
-            return yardDto;
+            return wbDto;
         }
+
+        #endregion
+
+        #region TruckJobType Nov_26_2024
+        public async Task<DataTable> GetTruckJobTypeList(string active)
+        {
+            string sql = "";
+            if (active == "All" || active == null)
+            {
+                sql = @"SELECT * from TruckJobType Order By TypeID";
+            }
+            else
+            {
+                sql = @"SELECT * from TruckJobType Where Active='" + active + "'";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+
+        }
+
+
+        #endregion
+
+        #region WaitingArea Nov_26_2024
+        
 
         #endregion
 

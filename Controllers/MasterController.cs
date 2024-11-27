@@ -106,13 +106,6 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetTransporterNames()
-        {
-            var tNames = await _queryDAL.GetTransporterNames();
-            return Ok(tNames);
-        }
-
         [HttpPost]
         public async Task<IActionResult> SaveTransporterType(TransporterTypeDto info)
         {
@@ -144,6 +137,13 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> GetTransporterNames()
+        //{
+        //    var tNames = await _queryDAL.GetTransporterNames();
+        //    return Ok(tNames);
+        //}
+
         [HttpGet]
         public async Task<IActionResult> GetTransporterId(string id)
         {
@@ -151,12 +151,12 @@ namespace TMS_Api.Controllers
             return Ok(transporterDto);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetOnlyTransporterTypes()
-        {
-            var transporterTypes = await _queryDAL.GetOnlyTransporterTypes();
-            return Ok(transporterTypes);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetOnlyTransporterTypes()
+        //{
+        //    var transporterTypes = await _queryDAL.GetOnlyTransporterTypes();
+        //    return Ok(transporterTypes);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> SaveTransporter([FromForm] TransporterDto info)
@@ -235,14 +235,6 @@ namespace TMS_Api.Controllers
             return Ok(truckDto);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetOnlyTruckTypes()
-        //{
-        //    var truckTypes = await _queryDAL.GetOnlyTruckTypes();
-        //    return Ok(truckTypes);
-        //}
-
-
         [HttpPost]
         public async Task<IActionResult> SaveTruck([FromForm] TruckDto info)
         {
@@ -315,12 +307,12 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetDriverId(string id)
-        {
-            DriverDto data = await _queryDAL.GetDriverId(id);
-            return Ok(data);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetDriverId(string id)
+        //{
+        //    DriverDto data = await _queryDAL.GetDriverId(id);
+        //    return Ok(data);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> SaveDriver([FromForm] DriverDto info)
@@ -352,12 +344,12 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetYardID(string id)
-        {
-            YardDto yardDto=await _queryDAL.GetYardID(id);
-            return Ok(yardDto);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetYardID(string id)
+        //{
+        //    YardDto yardDto=await _queryDAL.GetYardID(id);
+        //    return Ok(yardDto);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> SaveYard(YardDto info)
@@ -379,7 +371,138 @@ namespace TMS_Api.Controllers
             ResponseMessage msg=await _updateDAL.DeleteYard(id);
             return Ok(msg);
         }
-        #endregion 
+        #endregion
+
+        #region Truck_Entry_Type Nov_22_2024
+
+        [HttpGet]
+        public async Task<IActionResult> GetTruckEntryTypeList(string active)
+        {
+            DataTable dt = await _queryDAL.GetTruckEntryTypeList(active);
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveTruckEntryType(TruckEntryTypeDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveTruckEntryType(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTruckEntryType(TruckEntryTypeDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdateTruckEntryType(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTruckEntryType(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteTruckEntryType(id);
+            return Ok(msg);
+        }
+
+        #endregion
+
+        #region WeightBridge Nov_22_2024
+
+        [HttpGet]
+        public async Task<IActionResult> GetWeightBridgeList()
+        {
+            DataTable dt = await _queryDAL.GetWeightBridgeList();
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetWeightBridgeID(string id)
+        {
+            WeightBridgeDto data = await _queryDAL.GetWeightBridgeID(id);
+            return Ok(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveWeightBridge(WeightBridgeDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveWeightBridge(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateWeightBridge(WeightBridgeDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdateWeightBridge(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteWeightBridge(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteWeightBridge(id);
+            return Ok(msg);
+        }
+        #endregion
+
+        #region TruckJobType Nov_26_2024
+        [HttpGet]
+        public async Task<IActionResult> GetTruckJobTypeList(string active)
+        {
+            DataTable dt = await _queryDAL.GetTruckJobTypeList(active);
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveTruckJobType(TruckJobTypeDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveTruckJobType(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTruckJobType(TruckJobTypeDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdateTruckJobType(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTruckJobType(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteTruckJobType(id);
+            return Ok(msg);
+        }
+
+        #endregion
+
+        //#region Waiting Area Nov_26_2024
+        //[HttpGet]
+        //public async Task<IActionResult> GetWaitingAreaList(string active)
+        //{
+        //    DataTable dt = await _queryDAL.GetWaitingAreaList(active);
+        //    return Ok(dt);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> SaveWaitingArea(WaitingAreaDto info)
+        //{
+        //    ResponseMessage msg = await _updateDAL.SaveWaitingArea(info);
+        //    return Ok(msg);
+        //}
+
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateWaitingArea(WaitingAreaDto info)
+        //{
+        //    ResponseMessage msg = await _updateDAL.UpdateWaitingArea(info);
+        //    return Ok(msg);
+        //}
+
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteWaitingArea(string id)
+        //{
+        //    ResponseMessage msg = await _updateDAL.DeleteWaitingArea(id);
+        //    return Ok(msg);
+        //}
+        //#endregion
 
 
     }

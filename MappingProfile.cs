@@ -16,7 +16,11 @@ namespace TMS_Api
             CreateMap<Truck, TruckDto>().ReverseMap();
             CreateMap<Trailer, TrailerDto>().ReverseMap();
             CreateMap<Driver, DriverDto>().ReverseMap();
-            CreateMap<Yard, YardDto>().ReverseMap();    
+            CreateMap<Yard, YardDto>().ReverseMap();
+            CreateMap<WeightBridge, WeightBridgeDto>().ReverseMap();
+            CreateMap<TruckEntryType, TruckEntryTypeDto>().ReverseMap();
+            CreateMap<TruckJobType, TruckJobTypeDto>().ReverseMap();
+            CreateMap<WaitingArea, WaitingAreaDto>().ReverseMap();
         }
     }
 }

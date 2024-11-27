@@ -1,13 +1,14 @@
 ﻿namespace TMS_Api.DTOs
 {
-    public class TransporterTypeDto
+    public class TruckJobTypeDto
     {
-        public string TypeID { get; set; } = null!;//auto or not
+        public string TypeID { get; set; } = null!;
         public string? Description { get; set; }
-        public string? Remarks { get; set; }
         public Boolean? Active { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string? UpdatedUser { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string? CreatedUser { get; set; }
 
     }
 }
