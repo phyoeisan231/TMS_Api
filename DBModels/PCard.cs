@@ -13,6 +13,7 @@ namespace TMS_Api.DBModels
         public string? YardID { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string? GroupName { get; set; }
+
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
         [Column(TypeName = "bit")]
