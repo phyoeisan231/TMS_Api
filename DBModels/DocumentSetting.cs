@@ -8,9 +8,10 @@ namespace TMS_Api.DBModels
         [Key]
         [Column(TypeName = "varchar(10)")]
         public string DocCode { get; set; } = null!;
-
         [Column(TypeName ="varchar(50)")]
         public string? DocName {  get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string? PCCode { get; set; }
         [Column(TypeName ="bit")]
         public Boolean? AttachRequired { get; set; }
         [Column(TypeName ="bit")]

@@ -13,11 +13,9 @@ namespace TMS_Api.Controllers
         private readonly IConfiguration _configuration;
         private readonly TMSOperationQueryDAL _queryDAL;
         private readonly TMSOperationUpdateDAL _updateDAL;
-        private readonly IMapper _mapper;
-        public TMSOperationController(IConfiguration config, TMSOperationQueryDAL queryDAL, TMSOperationUpdateDAL updateDAL, IMapper mapper)
+        public TMSOperationController(IConfiguration config, TMSOperationQueryDAL queryDAL, TMSOperationUpdateDAL updateDAL)
         {
             _configuration = config;
-            _mapper = mapper;
             _queryDAL = queryDAL;
             _updateDAL = updateDAL;
         }
