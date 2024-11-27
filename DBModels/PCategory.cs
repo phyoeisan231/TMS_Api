@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TMS_Api.DBModels
 {
-    public class TMS_Category
+    public class PCategory
     {
         [Key]
         [Column(TypeName = "varchar(10)")]
-        public string PCode { get; set; } = null!;
+        public string PCCode { get; set; } = null!;
 
         [Column(TypeName ="varchar(50)")]
         public string? CategoryName { get; set; }

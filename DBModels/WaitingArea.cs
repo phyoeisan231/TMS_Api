@@ -6,7 +6,7 @@ namespace TMS_Api.DBModels
     public class WaitingArea
     {
         [Key]
-        [Column(TypeName = "varchar(25)")]
+        [Column(TypeName = "varchar(25)")]//YTGPool1,MNPool1
         public string AreaID { get; set; } = null!;//auto or not 
         [Column(TypeName = "varchar(30)")]
         public string? Name { get; set; }

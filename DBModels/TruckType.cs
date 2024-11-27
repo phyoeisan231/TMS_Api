@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class TruckType//Truck, Car, Van
+    public class TruckType//TR for truck, VC for Van 
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string TypeID { get; set; } = null!;//auto or not
+        public string TypeID { get; set; } = null!;
         [Column(TypeName = "varchar(30)")]
         public string? Description { get; set; }
         [Column(TypeName = "bit")]

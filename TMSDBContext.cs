@@ -37,6 +37,8 @@ namespace TMS_Api
         public DbSet<TruckJobType> TruckJobType { get; set; }
         public DbSet<TruckEntryType> TruckEntryType { get; set; }
         public DbSet<WeightBridge> WeightBridge { get; set; }
-        //public DbSet<Trip> Trip { get; set; }
+        public DbSet<WaitingArea> WaitingArea { get; set; }
+        public DbSet<PCategory> PCategory { get; set; }
+        public DbSet<PCard> PCard { get; set; }
     }
 }

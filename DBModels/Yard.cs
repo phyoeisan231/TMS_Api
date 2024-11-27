@@ -6,7 +6,7 @@ namespace TMS_Api.DBModels
     public class Yard
     {
         [Key]
-        [Column(TypeName = "varchar(25)")]
+        [Column(TypeName = "varchar(25)")]//YTG,MN,MHO
         public string YardID { get; set; } = null!;
         [Column(TypeName = "varchar(30)")]
         public string? Name { get; set; }

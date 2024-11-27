@@ -6,7 +6,7 @@ namespace TMS_Api.DBModels
     public class PCard
     {
         [Key]
-        [Column(TypeName = "varchar(15)")]
+        [Column(TypeName = "varchar(25)")]
         public string CardNo { get; set; } = null!;
 
         [Column(TypeName = "varchar(25)")]

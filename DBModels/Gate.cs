@@ -6,8 +6,8 @@ namespace TMS_Api.DBModels
     public class Gate
     {
         [Key]
-        [Column(TypeName = "varchar(25)")]
-        public string GateID { get; set; } = null!;//auto or not
+        [Column(TypeName = "varchar(25)")]//YTGGate,MHOGate,MNPA1MNPA2
+        public string GateID { get; set; } = null!;
         [Column(TypeName = "varchar(30)")]
         public string? Name { get; set; }
         [Column(TypeName = "varchar(25)")]
