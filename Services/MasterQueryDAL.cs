@@ -264,25 +264,25 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
-        //public async Task<DriverDto> GetDriverId(string id)
-        //{
-        //    DriverDto driverDto = new DriverDto();
-        //    try
-        //    {
+        public async Task<DriverDto> GetDriverId(string id)
+        {
+            DriverDto driverDto = new DriverDto();
+            try
+            {
 
-        //        Driver data = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE LicenseNo=@lId", new SqlParameter("@lId", id)).SingleOrDefaultAsync();
-        //        if (data != null)
-        //        {
-        //            driverDto = _mapper.Map<DriverDto>(data);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex);
-        //    }
+                Driver data = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE LicenseNo=@lId", new SqlParameter("@lId", id)).SingleOrDefaultAsync();
+                if (data != null)
+                {
+                    driverDto = _mapper.Map<DriverDto>(data);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
-        //    return driverDto;
-        //}
+            return driverDto;
+        }
 
         #endregion
 
