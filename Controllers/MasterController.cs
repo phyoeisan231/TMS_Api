@@ -306,12 +306,12 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetDriverId(string id)
-        //{
-        //    DriverDto data = await _queryDAL.GetDriverId(id);
-        //    return Ok(data);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> GetDriverId(string id)
+        {
+            DriverDto data = await _queryDAL.GetDriverId(id);
+            return Ok(data);
+        }
 
         [HttpPost]
         public async Task<IActionResult> SaveDriver([FromForm] DriverDto info)
@@ -330,6 +330,7 @@ namespace TMS_Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDriver(string id)
         {
+            //Console.WriteLine($"Received ID: {id}");
             ResponseMessage msg = await _updateDAL.DeleteDriver(id);
             return Ok(msg);
         }

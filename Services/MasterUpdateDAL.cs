@@ -870,12 +870,18 @@ namespace TMS_Api.Services
 
             }
         }
+
         public async Task<ResponseMessage> DeleteDriver(string id)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Driver driver = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE  REPLACE(LicenseNo,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                // Decode the ID
+                string decodedId = Uri.UnescapeDataString(id);
+                Console.WriteLine($"Received ID: {id}, Decoded ID: {decodedId}");
+
+                Driver driver = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE LicenseNo = @id", new SqlParameter("@id", decodedId)).SingleOrDefaultAsync();
+
                 if (driver == null)
                 {
                     msg.Status = false;
@@ -887,16 +893,43 @@ namespace TMS_Api.Services
                     await _context.SaveChangesAsync();
                     msg.Status = true;
                     msg.MessageContent = "Successfully Removed";
-                    return msg;
                 }
             }
             catch (DbUpdateException e)
             {
                 msg.MessageContent += e.Message;
-                return msg;
             }
             return msg;
         }
+
+        //public async Task<ResponseMessage> DeleteDriver(string id)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        //Driver driver = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE  REPLACE(LicenseNo,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+        //        Driver driver = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE LicenseNo = @id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+        //        if (driver == null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Data Not Found";
+        //        }
+        //        else
+        //        {
+        //            _context.Driver.Remove(driver);
+        //            await _context.SaveChangesAsync();
+        //            msg.Status = true;
+        //            msg.MessageContent = "Successfully Removed";
+        //            return msg;
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
 
         #endregion
 
