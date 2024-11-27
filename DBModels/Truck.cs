@@ -59,7 +59,5 @@ namespace TMS_Api.DBModels
         public DateTime? CreatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? CreatedUser { get; set; }
-
-
     }
 }
