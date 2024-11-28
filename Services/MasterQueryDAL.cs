@@ -140,10 +140,6 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
-        //public async Task<string[]> GetTransporterNames()
-        //{
-        //    return await _context.Transporter.Where(t => t.Active == true).OrderBy(t => t.TransporterName).Select(t => t.TransporterName).ToArrayAsync();
-        //}
         public async Task<TransporterDto> GetTransporterId(string id)
         {
             TransporterDto transporterDto = new TransporterDto();
@@ -302,24 +298,6 @@ namespace TMS_Api.Services
             return dt;
 
         }
-        //public async Task<YardDto> GetYardID(string id)
-        //{
-        //    YardDto yardDto = new YardDto();
-        //    try
-        //    {
-        //        Yard yard = await _context.Yard.FromSqlRaw("SELECT * FROM Yard WHERE YardID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
-        //        if (yard != null)
-        //        {
-        //            yardDto = _mapper.Map<YardDto>(yard);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex);
-        //    }
-
-        //    return yardDto;
-        //}
 
         #endregion
 

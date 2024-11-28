@@ -136,13 +136,6 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetTransporterNames()
-        //{
-        //    var tNames = await _queryDAL.GetTransporterNames();
-        //    return Ok(tNames);
-        //}
-
         [HttpGet]
         public async Task<IActionResult> GetTransporterId(string id)
         {
@@ -150,12 +143,6 @@ namespace TMS_Api.Controllers
             return Ok(transporterDto);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetOnlyTransporterTypes()
-        //{
-        //    var transporterTypes = await _queryDAL.GetOnlyTransporterTypes();
-        //    return Ok(transporterTypes);
-        //}
 
         [HttpPost]
         public async Task<IActionResult> SaveTransporter([FromForm] TransporterDto info)
@@ -344,13 +331,6 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetYardID(string id)
-        //{
-        //    YardDto yardDto=await _queryDAL.GetYardID(id);
-        //    return Ok(yardDto);
-        //}
-
         [HttpPost]
         public async Task<IActionResult> SaveYard(YardDto info)
         {
@@ -444,6 +424,7 @@ namespace TMS_Api.Controllers
         #endregion
 
         #region TruckJobType Nov_26_2024
+
         [HttpGet]
         public async Task<IActionResult> GetTruckJobTypeList(string active)
         {

@@ -1420,6 +1420,7 @@ namespace TMS_Api.Services
                     waitingArea.UpdatedUser = info.UpdatedUser;
                     waitingArea.UpdatedDate = GetLocalStdDT();
                     await _context.SaveChangesAsync();
+                    msg.Status = true;//optional
                     msg.MessageContent = "Successfully Updated";
                     return msg;
                 }
