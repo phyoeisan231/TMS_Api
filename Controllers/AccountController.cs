@@ -25,6 +25,7 @@ namespace TMS_Api.Controllers
 			_mapper = mapper;
 			_jwtHandler = jwtHandler;
 			_queryDAL = queryDAL;
+
 		}
 
 		[HttpPost]
