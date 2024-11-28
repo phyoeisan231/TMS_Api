@@ -10,6 +10,7 @@
         public int? InContainerSize { get; set; }
         public string? InType { get; set; }
         public string? InCargoType { get; set; }
+        public string? InCargoInfo { get; set; }
         public int? InNoOfContainer { get; set; }
         public string? TruckType { get; set; }
         public DateTime? InCheckDateTime { get; set; }

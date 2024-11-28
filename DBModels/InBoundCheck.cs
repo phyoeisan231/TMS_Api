@@ -21,6 +21,8 @@ namespace TMS_Api.DBModels
         public string? InType { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? InCargoType { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? InCargoInfo { get; set; }
         [Column(TypeName = "int")]
         public int? InNoOfContainer { get; set; }
         [Column(TypeName = "varchar(25)")]
