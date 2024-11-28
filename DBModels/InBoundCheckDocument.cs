@@ -11,8 +11,12 @@ namespace TMS_Api.DBModels
         [Key]
         [Column(TypeName = "varchar(10)")]
         public string? DocCode { get; set; }
-        [Column(TypeName = "varchar(15)")]
-        public string? CheckStatus { get; set; }//Valid,Invalid
+        [Column(TypeName = "varchar(50)")]
+        public string? DocName { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? CheckStatus { get; set; }
+        [Column(TypeName = "varchar(max)")]
+        public string? Remark { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

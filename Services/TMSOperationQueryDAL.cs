@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
+using TMS_Api.DBModels;
+using TMS_Api.DTOs;
 
 namespace TMS_Api.Services
 {
@@ -60,5 +63,44 @@ namespace TMS_Api.Services
                 }
             });
         }
+
+        #region InBound Check Nov_27_2024
+        public async Task<DataTable> GetInBoundCheckList(DateTime startDate, DateTime endDate,string yard)
+        {
+           
+           string sql = @"Select * from InBoundCheck where InYardID=@yard And Cast(InCheckDateTime as Date) Between @sDate and @eDate  Order by InRegNo DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate), new SqlParameter("@yard", yard));
+            return dt;
+        }
+
+        public async Task<InBoundCheckDto> GetInBoundCheckById(int id)
+        {
+            InBoundCheckDto info = new InBoundCheckDto();
+            try
+            {
+                InBoundCheck? data = await _context.InBoundCheck.FromSqlRaw("SELECT * FROM  InBoundCheck WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                if (data != null)
+                {
+                    info = _mapper.Map<InBoundCheckDto>(data);
+
+                    List<InBoundCheckDocument> documentList = await _context.InBoundCheckDocument.FromSqlRaw("SELECT * FROM InBoundCheckDocument WHERE InRegNo=@id", new SqlParameter("@id", id)).ToListAsync();
+
+                    info.DocumentList = new List<InBoundCheckDocumentDto>();
+                    foreach (var d in documentList)
+                    {
+
+                        InBoundCheckDocumentDto docDto = _mapper.Map<InBoundCheckDocumentDto>(d);
+                        info.DocumentList.Add(docDto);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return info;
+        }
+        #endregion
     }
 }

@@ -23,6 +23,8 @@ namespace TMS_Api
             CreateMap<WaitingArea, WaitingAreaDto>().ReverseMap();
             CreateMap<PCategory, PCategoryDto>().ReverseMap();
             CreateMap<PCard, PCardDto>().ReverseMap();
+            CreateMap<InBoundCheck, InBoundCheckDto>().ReverseMap();
+            CreateMap<InBoundCheckDocument, InBoundCheckDocumentDto>().ReverseMap();
         }
     }
 }

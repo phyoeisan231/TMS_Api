@@ -28,10 +28,6 @@ namespace TMS_Api.DBModels
         public string? TruckType { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? OutCheckDateTime { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? OutArrivalDateTime { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? OutDepartureDateTime { get; set; }
         [Column(TypeName = "decimal(18,5)")]
         public decimal? OutBoundWeight { get; set; }
         [Column(TypeName = "varchar(25)")]

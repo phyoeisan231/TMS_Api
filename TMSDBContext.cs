@@ -44,5 +44,6 @@ namespace TMS_Api
         public DbSet<InBoundCheck> InBoundCheck { get; set; }
         public DbSet<InBoundCheckDocument> InBoundCheckDocument { get; set; }
         public DbSet<TruckProcess> TruckProcess { get; set; }
+        public DbSet<DocumentSetting> DocumentSetting { get; set; }    
     }
 }
