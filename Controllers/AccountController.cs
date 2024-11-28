@@ -42,6 +42,7 @@ namespace TMS_Api.Controllers
 			{
 				var errors = result.Errors.Select(e => e.Description);
 
+
 				return BadRequest(new RegistrationResponseDto { Errors = errors });
 			}
 
