@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241127095704_UpdateDoctb")]
+    partial class UpdateDoctb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,40 +223,6 @@ namespace TMS_Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TMS_Api.DBModels.DocumentSetting", b =>
-                {
-                    b.Property<string>("DocCode")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<bool?>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("AttachRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("CreatedUser")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("DocName")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("PCCode")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("UpdatedUser")
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("DocCode");
-
-                    b.ToTable("DocumentSetting");
-                });
-
             modelBuilder.Entity("TMS_Api.DBModels.Driver", b =>
                 {
                     b.Property<string>("LicenseNo")
@@ -375,8 +344,8 @@ namespace TMS_Api.Migrations
                     b.Property<string>("DriverName")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("InCargoInfo")
-                        .HasColumnType("varchar(50)");
+                    b.Property<DateTime?>("InArrivalDateTime")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("InCargoType")
                         .HasColumnType("varchar(25)");
@@ -389,6 +358,9 @@ namespace TMS_Api.Migrations
 
                     b.Property<string>("InContainerType")
                         .HasColumnType("varchar(25)");
+
+                    b.Property<DateTime?>("InDepartureDateTime")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("InGateID")
                         .HasColumnType("varchar(25)");

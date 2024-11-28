@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241128042359_UpdateInBoundCheck28")]
+    partial class UpdateInBoundCheck28
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -373,9 +376,6 @@ namespace TMS_Api.Migrations
                         .HasColumnType("varchar(25)");
 
                     b.Property<string>("DriverName")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("InCargoInfo")
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("InCargoType")

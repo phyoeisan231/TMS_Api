@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-
 namespace TMS_Api.DBModels
 {
     public class InBoundCheck
@@ -8,13 +7,12 @@ namespace TMS_Api.DBModels
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int InRegNo { get; set; } = 0!;
-
         [Column(TypeName = "varchar(25)")]
         public string? InYardID { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? InGateID { get; set; }
         [Column(TypeName = "varchar(10)")]
-        public string? InPCCode { get; set; }
+        public string? InPCCode { get; set; }//Category
         [Column(TypeName = "varchar(25)")]
         public string? InContainerType { get; set; }
         [Column(TypeName = "int")]
@@ -23,16 +21,14 @@ namespace TMS_Api.DBModels
         public string? InType { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? InCargoType { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? InCargoInfo { get; set; }
         [Column(TypeName = "int")]
         public int? InNoOfContainer { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? TruckType { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? InCheckDateTime { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? InArrivalDateTime { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? InDepartureDateTime { get; set; }
        
         [Column(TypeName = "varchar(25)")]
         public string? TruckVehicleRegNo { get; set; }
@@ -48,9 +44,8 @@ namespace TMS_Api.DBModels
         public string? JobDescription { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? CardNo { get; set; }
-
         [Column(TypeName = "varchar(15)")]
-        public string? Status { get; set; }//Valid,Invalid
+        public string? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
 

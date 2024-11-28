@@ -25,6 +25,7 @@ namespace TMS_Api.Controllers
 			_mapper = mapper;
 			_jwtHandler = jwtHandler;
 			_queryDAL = queryDAL;
+
 		}
 
 		[HttpPost]
@@ -40,6 +41,7 @@ namespace TMS_Api.Controllers
 			if (!result.Succeeded)
 			{
 				var errors = result.Errors.Select(e => e.Description);
+
 
 				return BadRequest(new RegistrationResponseDto { Errors = errors });
 			}
