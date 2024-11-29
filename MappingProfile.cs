@@ -25,6 +25,7 @@ namespace TMS_Api
             CreateMap<PCard, PCardDto>().ReverseMap();
             CreateMap<InBoundCheck, InBoundCheckDto>().ReverseMap();
             CreateMap<InBoundCheckDocument, InBoundCheckDocumentDto>().ReverseMap();
+            CreateMap<DocumentSetting, DocumentSettingDto>().ReverseMap();
         }
     }
 }
