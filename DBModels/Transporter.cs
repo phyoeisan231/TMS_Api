@@ -8,11 +8,11 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string TransporterID { get; set; } = null!;//TC0001
+        public string TransporterID { get; set; } = null!;//TC0001//mandatory
         [Column(TypeName = "int")]
         public int? SrNo { get; set; }
         [Column(TypeName = "varchar(100)")]
-        public string? TransporterName { get; set; }
+        public string? TransporterName { get; set; }//mandatory
         [Column(TypeName = "varchar(250)")]
         public string? Address { get; set; }
         [Column(TypeName = "varchar(100)")]
@@ -22,7 +22,7 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "varchar(50)")]
         public string? ContactPerson { get; set; }
         [Column(TypeName = "varchar(25)")]
-        public string? TypeID { get; set; }
+        public string? TypeID { get; set; }//mandatory
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
         [Column(TypeName = "bit")]

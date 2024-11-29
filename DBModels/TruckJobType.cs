@@ -7,9 +7,9 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string TypeID { get; set; } = null!;
+        public string TypeID { get; set; } = null!;//mandatory
         [Column(TypeName = "varchar(50)")]
-        public string? Description { get; set; }
+        public string? Description { get; set; }//mandatory
 
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }

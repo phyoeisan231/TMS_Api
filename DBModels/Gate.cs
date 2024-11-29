@@ -6,14 +6,14 @@ namespace TMS_Api.DBModels
     public class Gate
     {
         [Key]
-        [Column(TypeName = "varchar(25)")]//YTGGate,MHOGate,MNPA1MNPA2
+        [Column(TypeName = "varchar(25)")]//YTGGate,MHOGate,MNPA1MNPA2//mandatory
         public string GateID { get; set; } = null!;
         [Column(TypeName = "varchar(30)")]
-        public string? Name { get; set; }
+        public string? Name { get; set; }//mandatory
         [Column(TypeName = "varchar(25)")]
-        public string? YardID { get; set; }
+        public string? YardID { get; set; }//mandatory
         [Column(TypeName = "varchar(25)")]
-        public string? Type { get; set; }//InBound,OutBound,Both
+        public string? Type { get; set; }//InBound,OutBound,Both//mandatory
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
 

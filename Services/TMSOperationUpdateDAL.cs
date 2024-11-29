@@ -69,29 +69,29 @@ namespace TMS_Api.Services
         }
 
         #region InBound Check Nov_27_2024
-        public async Task<ResponseMessage> SaveInBoundCheck(InBoundCheckDto info)
+        public async Task<ResponseMessage> SaveInBoundCheck(ICD_InBoundCheckDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    InBoundCheck inBound = _mapper.Map<InBoundCheck>(info);
+                    ICD_InBoundCheck inBound = _mapper.Map<ICD_InBoundCheck>(info);
                     inBound.CreatedDate = GetLocalStdDT();
-                    inBound.Status = "Check(In)";
-                    _context.InBoundCheck.Add(inBound);
+                    inBound.Status = false;
+                    _context.ICD_InBoundCheck.Add(inBound);
                     await _context.SaveChangesAsync();
                     List<DocumentSetting> documentList = await _context.DocumentSetting.FromSqlRaw("SELECT * FROM DocumentSetting WHERE PCCode=@id And AttachRequired=1 And Active=1", new SqlParameter("@id", info.InPCCode)).ToListAsync();
                     foreach (var i in documentList)
                     {
-                        InBoundCheckDocument doc = new InBoundCheckDocument();
+                        ICD_InBoundCheck_Document doc = new ICD_InBoundCheck_Document();
                         doc.CheckStatus = false;
                         doc.DocName = doc.DocName;
                         doc.DocCode = doc.DocCode;
                         doc.InRegNo = inBound.InRegNo;
                         doc.CreatedDate = GetLocalStdDT();
                         doc.CreatedUser = info.CreatedUser;
-                        _context.InBoundCheckDocument.Add(doc);
+                        _context.ICD_InBoundCheck_Document.Add(doc);
                     }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
@@ -109,12 +109,12 @@ namespace TMS_Api.Services
             return msg;
         }
 
-        public async Task<ResponseMessage> UpdateInBoundCheck(InBoundCheckDto info)
+        public async Task<ResponseMessage> UpdateInBoundCheck(ICD_InBoundCheckDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                InBoundCheck? data = await _context.InBoundCheck.FromSqlRaw("SELECT * FROM InBoundCheck WHERE  InRegNo=@id", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
+                ICD_InBoundCheck? data = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT * FROM ICD_InBoundCheck WHERE  InRegNo=@id", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
                 if (data == null)
                 {
                     msg.Status = false;
@@ -142,7 +142,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                InBoundCheck? data = await _context.InBoundCheck.FromSqlRaw("SELECT * FROM InBoundCheck WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                ICD_InBoundCheck? data = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT * FROM ICD_InBoundCheck WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                 if (data == null)
                 {
                     msg.Status = false;
@@ -151,18 +151,18 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    TruckProcess? process = await _context.TruckProcess.FromSqlRaw("SELECT Top 1* FROM TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT Top 1* FROM ICD_TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                     if (process != null)
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data is used by another process!";
                         return msg;
                     }
-                     _context.InBoundCheck.Remove(data);
-                     List<InBoundCheckDocument> detailList = await _context.InBoundCheckDocument.FromSqlRaw("SELECT * FROM InBoundCheckDocument WHERE InRegNo=@id", new SqlParameter("@id", id)).ToListAsync();
+                     _context.ICD_InBoundCheck.Remove(data);
+                     List<ICD_InBoundCheck_Document> detailList = await _context.ICD_InBoundCheck_Document.FromSqlRaw("SELECT * FROM ICD_InBoundCheck_Document WHERE InRegNo=@id", new SqlParameter("@id", id)).ToListAsync();
                      if (detailList.Count > 0)
                      {
-                        _context.InBoundCheckDocument.RemoveRange(detailList);
+                        _context.ICD_InBoundCheck_Document.RemoveRange(detailList);
                      }                                   
                     await _context.SaveChangesAsync();
                     msg.Status = true;
@@ -179,12 +179,12 @@ namespace TMS_Api.Services
 
         }
 
-        public async Task<ResponseMessage> UpdateInBoundCheckDocument(InBoundCheckDocumentDto info)
+        public async Task<ResponseMessage> UpdateInBoundCheckDocument(ICD_InBoundCheck_DocumentDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                InBoundCheckDocument? doc = await _context.InBoundCheckDocument.FromSqlRaw("SELECT * FROM InBoundCheckDocument WHERE InRegNo=@id AND DocCode=@doc And CheckStatus=false", new SqlParameter("@id", info.InRegNo), new SqlParameter("@doc", info.DocCode)).SingleOrDefaultAsync();
+                ICD_InBoundCheck_Document? doc = await _context.ICD_InBoundCheck_Document.FromSqlRaw("SELECT * FROM ICD_InBoundCheck_Document WHERE InRegNo=@id AND DocCode=@doc And CheckStatus=false", new SqlParameter("@id", info.InRegNo), new SqlParameter("@doc", info.DocCode)).SingleOrDefaultAsync();
                 if (doc == null)
                 {
                     msg.Status = false;
@@ -215,7 +215,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                InBoundCheckDocument?item = await _context.InBoundCheckDocument.FromSqlRaw("SELECT * FROM InBoundCheckDocument WHERE InRegNo=@id AND DocCode=@doc", new SqlParameter("@id", regNo), new SqlParameter("@doc", docCode)).SingleOrDefaultAsync();
+                ICD_InBoundCheck_Document?item = await _context.ICD_InBoundCheck_Document.FromSqlRaw("SELECT * FROM ICD_InBoundCheck_Document WHERE InRegNo=@id AND DocCode=@doc", new SqlParameter("@id", regNo), new SqlParameter("@doc", docCode)).SingleOrDefaultAsync();
                 if (item == null)
                 {
                     msg.Status = false;
@@ -224,7 +224,7 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    _context.InBoundCheckDocument.Remove(item);
+                    _context.ICD_InBoundCheck_Document.Remove(item);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
                     msg.MessageContent = "Removed successfully!";
@@ -238,7 +238,6 @@ namespace TMS_Api.Services
                 return msg;
             }
         }
-
         #endregion
     }
 }

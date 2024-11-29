@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class TruckProcess
+    public class ICD_TruckProcess
     {
         [Key]
         [Column(TypeName = "int")]

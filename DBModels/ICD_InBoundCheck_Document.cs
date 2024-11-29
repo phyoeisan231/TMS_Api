@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class InBoundCheckDocument
+    public class ICD_InBoundCheck_Document
     {
         [Key]
         [Column(TypeName = "int")]

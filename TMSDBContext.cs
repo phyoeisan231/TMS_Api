@@ -17,7 +17,7 @@ namespace TMS_Api
         {
             base.OnModelCreating(modelBuilder);
             //modelBuilder.ApplyConfiguration(new RoleConfiguration());
-            modelBuilder.Entity<InBoundCheckDocument>().HasKey(m => new { m.InRegNo, m.DocCode });
+            modelBuilder.Entity<ICD_InBoundCheck_Document>().HasKey(m => new { m.InRegNo, m.DocCode });
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -41,9 +41,11 @@ namespace TMS_Api
         public DbSet<WaitingArea> WaitingArea { get; set; }
         public DbSet<PCategory> PCategory { get; set; }
         public DbSet<PCard> PCard { get; set; }
-        public DbSet<InBoundCheck> InBoundCheck { get; set; }
-        public DbSet<InBoundCheckDocument> InBoundCheckDocument { get; set; }
-        public DbSet<TruckProcess> TruckProcess { get; set; }
-        public DbSet<DocumentSetting> DocumentSetting { get; set; }    
+        public DbSet<ICD_InBoundCheck> ICD_InBoundCheck { get; set; }
+        public DbSet<ICD_InBoundCheck_Document> ICD_InBoundCheck_Document { get; set; }
+        public DbSet<ICD_TruckProcess> ICD_TruckProcess { get; set; }
+        public DbSet<DocumentSetting> DocumentSetting { get; set; }
+        public DbSet<OperationArea> OperationArea { get; set; }
+
     }
 }

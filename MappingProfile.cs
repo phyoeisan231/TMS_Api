@@ -23,8 +23,9 @@ namespace TMS_Api
             CreateMap<WaitingArea, WaitingAreaDto>().ReverseMap();
             CreateMap<PCategory, PCategoryDto>().ReverseMap();
             CreateMap<PCard, PCardDto>().ReverseMap();
-            CreateMap<InBoundCheck, InBoundCheckDto>().ReverseMap();
-            CreateMap<InBoundCheckDocument, InBoundCheckDocumentDto>().ReverseMap();
+            CreateMap<ICD_InBoundCheck, ICD_InBoundCheckDto>().ReverseMap();
+            CreateMap<ICD_InBoundCheck_Document, ICD_InBoundCheck_DocumentDto>().ReverseMap();
+            CreateMap<OperationArea, OperationAreaDto>().ReverseMap();
         }
     }
 }

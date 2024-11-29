@@ -1,7 +1,7 @@
 ﻿
 namespace TMS_Api.DTOs
 {
-    public class InBoundCheckDocumentDto
+    public class ICD_InBoundCheck_DocumentDto
     {
         public int InRegNo { get; set; } = 0!;
         public string? DocCode { get; set; }
