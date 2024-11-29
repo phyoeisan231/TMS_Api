@@ -546,6 +546,15 @@ namespace TMS_Api.Controllers
         }
         #endregion
 
+        //#region DocumentSettings Nov_28_2024
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetDocumentSettingList(string active)
+        //{
+        //    DataTable dt=await _queryDAL.GetDocumentSettingList
+        //}
+        //#endregion
+
 
 
     }

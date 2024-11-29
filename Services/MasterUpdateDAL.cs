@@ -85,7 +85,9 @@ namespace TMS_Api.Services
                 else
                 {
                     TruckType type = _mapper.Map<TruckType>(info);
-                    type.UpdatedDate = GetLocalStdDT();
+                    type.CreatedDate = GetLocalStdDT();
+                    type.CreatedUser = info.CreatedUser;
+                    
                     _context.TruckType.Add(type);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
@@ -441,7 +443,8 @@ namespace TMS_Api.Services
                     transporter.BlackRemovedDate = info.BlackRemovedDate;
                     transporter.BlackRemovedReason = info.BlackRemovedReason;
                     transporter.UpdatedDate = GetLocalStdDT();
-                    transporter.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    transporter.UpdatedUser = info.UpdatedUser;
+                    //transporter.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
 
                     await _context.SaveChangesAsync();
                     msg.MessageContent = "Successfully updated";
@@ -811,7 +814,8 @@ namespace TMS_Api.Services
                 {
                     Driver data = _mapper.Map<Driver>(info);
                     data.CreatedDate = GetLocalStdDT();
-                    data.CreatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    //data.CreatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    data.CreatedUser = info.CreatedUser;
                     _context.Driver.Add(data);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
@@ -855,7 +859,7 @@ namespace TMS_Api.Services
                     driver.BlackRemovedDate = info.BlackRemovedDate;
                     driver.BlackRemovedReason = info.BlackRemovedReason;
                     driver.UpdatedDate = GetLocalStdDT();
-                    driver.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    driver.UpdatedUser = info.UpdatedUser;
 
                     await _context.SaveChangesAsync();
                     msg.Message = "Successfully Updated";
@@ -871,7 +875,6 @@ namespace TMS_Api.Services
 
             }
         }
-
         public async Task<ResponseMessage> DeleteDriver(string id)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
@@ -903,35 +906,6 @@ namespace TMS_Api.Services
             return msg;
         }
 
-        //public async Task<ResponseMessage> DeleteDriver(string id)
-        //{
-        //    ResponseMessage msg = new ResponseMessage { Status = false };
-        //    try
-        //    {
-        //        //Driver driver = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE  REPLACE(LicenseNo,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
-        //        Driver driver = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE LicenseNo = @id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
-        //        if (driver == null)
-        //        {
-        //            msg.Status = false;
-        //            msg.MessageContent = "Data Not Found";
-        //        }
-        //        else
-        //        {
-        //            _context.Driver.Remove(driver);
-        //            await _context.SaveChangesAsync();
-        //            msg.Status = true;
-        //            msg.MessageContent = "Successfully Removed";
-        //            return msg;
-        //        }
-        //    }
-        //    catch (DbUpdateException e)
-        //    {
-        //        msg.MessageContent += e.Message;
-        //        return msg;
-        //    }
-        //    return msg;
-        //}
-
         #endregion
 
         #region Yard Nov_26_2024
@@ -958,7 +932,7 @@ namespace TMS_Api.Services
                     else
                     {
                         Yard yard = _mapper.Map<Yard>(info);
-                        yard.UpdatedDate = GetLocalStdDT();
+                        yard.CreatedDate = GetLocalStdDT();
                         _context.Yard.Add(yard);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
@@ -1079,7 +1053,6 @@ namespace TMS_Api.Services
                     {
                         WeightBridge data = _mapper.Map<WeightBridge>(info);
                         data.CreatedDate = GetLocalStdDT();
-                        data.CreatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
                         _context.WeightBridge.Add(data);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
@@ -1113,7 +1086,8 @@ namespace TMS_Api.Services
                     weightBridge.Name = info.Name;
                     weightBridge.YardID = info.YardID;
                     weightBridge.UpdatedDate = GetLocalStdDT();
-                    weightBridge.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    //weightBridge.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    weightBridge.UpdatedUser = info.UpdatedUser;
                     await _context.SaveChangesAsync();
                     msg.Message = "Successfully Updated";
                     msg.Status = true;
@@ -1180,7 +1154,7 @@ namespace TMS_Api.Services
                     else
                     {
                         TruckEntryType truck = _mapper.Map<TruckEntryType>(info);
-                        truck.UpdatedDate = GetLocalStdDT();
+                        truck.CreatedDate = GetLocalStdDT();
                         _context.TruckEntryType.Add(truck);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
@@ -1280,7 +1254,7 @@ namespace TMS_Api.Services
                     else
                     {
                         TruckJobType truck = _mapper.Map<TruckJobType>(info);
-                        truck.UpdatedDate = GetLocalStdDT();
+                        truck.CreatedDate = GetLocalStdDT();
                         _context.TruckJobType.Add(truck);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
@@ -1354,7 +1328,6 @@ namespace TMS_Api.Services
             }
             return msg;
         }
-
 
         #endregion
 
@@ -1526,7 +1499,7 @@ namespace TMS_Api.Services
                     pCategory.Active = info.Active;
                     pCategory.GroupName = info.GroupName;
                     pCategory.UpdatedDate = GetLocalStdDT();
-                    //pCategory.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
+                    pCategory.UpdatedUser = info.UpdatedUser;
                     await _context.SaveChangesAsync();
                     msg.Message = "Successfully Updated";
                     msg.Status = true;
