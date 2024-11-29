@@ -10,9 +10,9 @@ namespace TMS_Api.DBModels
         public string WeightBridgeID { get; set; } = null!;//auto or not
 
         [Column(TypeName = "varchar(30)")]
-        public string? Name { get; set; }
+        public string? Name { get; set; }//mandatory
         [Column(TypeName = "varchar(25)")]
-        public string? YardID { get; set; }
+        public string? YardID { get; set; }//mandatory
 
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }

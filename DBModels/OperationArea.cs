@@ -1,18 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class TruckType//TR for truck, VC for Van 
+    public class OperationArea
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string TypeID { get; set; } = null!;//mandatory
+        public string AreaID { get; set; } = null!;//mandatory
         [Column(TypeName = "varchar(30)")]
-        public string? Description { get; set; }//mandatory
+        public string? Name { get; set; }//mandatory
+        [Column(TypeName = "varchar(25)")]
+        public string? YardID { get; set; }//mandatory
+
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
+
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

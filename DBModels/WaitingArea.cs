@@ -7,11 +7,11 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]//YTGPool1,MNPool1
-        public string AreaID { get; set; } = null!;//auto or not 
+        public string AreaID { get; set; } = null!;//auto or not //mandatory
         [Column(TypeName = "varchar(30)")]
-        public string? Name { get; set; }
+        public string? Name { get; set; }//mandatory
         [Column(TypeName = "varchar(25)")]
-        public string? YardID { get; set; }
+        public string? YardID { get; set; }//mandatory
 
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }

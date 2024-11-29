@@ -65,31 +65,63 @@ namespace TMS_Api.Services
         }
 
         #region InBound Check Nov_27_2024
-        public async Task<DataTable> GetInBoundCheckList(DateTime startDate, DateTime endDate,string yard)
+
+        public async Task<DataTable> GetTruckList(string id, string type)
         {
-           
-           string sql = @"Select * from InBoundCheck where InYardID=@yard And Cast(InCheckDateTime as Date) Between @sDate and @eDate  Order by InRegNo DESC";
+            string sql = "";
+            if (type == "RGL")
+            {
+                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%'" + id + "'%' And IsRGL=1 And IsBlack<>1 And Active=1";
+            }
+            else
+            {
+                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%'" + id + "'%' And IsRGL<>1 And IsBlack<>1 And Active=1";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+
+
+        public async Task<DataTable> GetDriverList(string id)
+        {
+            DateTime strDate = GetLocalStdDT();
+            string sql = @"Select Name,LicenseNo,LicenseExpiration from Driver where IsBlack<>1 And Active=1 And Cast(LicenseExpiration as Date)>=@eDate And LicenseNo like '%" + id + "%' ";
+            DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@eDate", strDate));
+            return dt;
+        }
+
+        public async Task<DataTable> GetTrailerList()
+        {
+            string sql = @"Select VehicleRegNo,DriverLicenseNo,ContainerType,ContainerSize,TransporterID from Trailer where IsBlack<>1 And Active=1";
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+
+
+        public async Task<DataTable> GetInBoundCheckList(DateTime startDate, DateTime endDate,string yard)
+        {          
+           string sql = @"Select * from ICD_InBoundCheck where InYardID=@yard And Cast(InCheckDateTime as Date) Between @sDate and @eDate  Order by InRegNo DESC";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate), new SqlParameter("@yard", yard));
             return dt;
         }
 
-        public async Task<InBoundCheckDto> GetInBoundCheckById(int id)
+        public async Task<ICD_InBoundCheckDto> GetInBoundCheckById(int id)
         {
-            InBoundCheckDto info = new InBoundCheckDto();
+            ICD_InBoundCheckDto info = new ICD_InBoundCheckDto();
             try
             {
-                InBoundCheck? data = await _context.InBoundCheck.FromSqlRaw("SELECT * FROM  InBoundCheck WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                ICD_InBoundCheck? data = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT * FROM  InBoundCheck WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                 if (data != null)
                 {
-                    info = _mapper.Map<InBoundCheckDto>(data);
+                    info = _mapper.Map<ICD_InBoundCheckDto>(data);
 
-                    List<InBoundCheckDocument> documentList = await _context.InBoundCheckDocument.FromSqlRaw("SELECT * FROM InBoundCheckDocument WHERE InRegNo=@id", new SqlParameter("@id", id)).ToListAsync();
+                    List<ICD_InBoundCheck_Document> documentList = await _context.ICD_InBoundCheck_Document.FromSqlRaw("SELECT * FROM ICD_InBoundCheck_Document WHERE InRegNo=@id", new SqlParameter("@id", id)).ToListAsync();
 
-                    info.DocumentList = new List<InBoundCheckDocumentDto>();
+                    info.DocumentList = new List<ICD_InBoundCheck_DocumentDto>();
                     foreach (var d in documentList)
                     {
 
-                        InBoundCheckDocumentDto docDto = _mapper.Map<InBoundCheckDocumentDto>(d);
+                        ICD_InBoundCheck_DocumentDto docDto = _mapper.Map<ICD_InBoundCheck_DocumentDto>(d);
                         info.DocumentList.Add(docDto);
                     }
                 }

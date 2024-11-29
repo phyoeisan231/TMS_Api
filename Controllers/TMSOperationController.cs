@@ -19,6 +19,30 @@ namespace TMS_Api.Controllers
 
         #region InBound Check Doc Nov_27_2024
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetTruckList(string id,string type)
+        {
+            DataTable dt = await _queryDAL.GetTruckList(id,type);
+            return Ok(dt);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetDriverList(string id)
+        {
+            DataTable dt = await _queryDAL.GetDriverList(id);
+            return Ok(dt);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetTrailerList()
+        {
+            DataTable dt = await _queryDAL.GetTrailerList();
+            return Ok(dt);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetInBoundCheckList(DateTime startDate,DateTime endDate,string yard)
         {
@@ -29,26 +53,26 @@ namespace TMS_Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetInBoundCheckById(int id)
         {
-            InBoundCheckDto data = await _queryDAL.GetInBoundCheckById(id);
+            ICD_InBoundCheckDto data = await _queryDAL.GetInBoundCheckById(id);
             return Ok(data);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveInBoundCheck(InBoundCheckDto info)
+        public async Task<IActionResult> SaveInBoundCheck(ICD_InBoundCheckDto info)
         {
             ResponseMessage msg = await _updateDAL.SaveInBoundCheck(info);
             return Ok(msg);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateInBoundCheck(InBoundCheckDto info)
+        public async Task<IActionResult> UpdateInBoundCheck(ICD_InBoundCheckDto info)
         {
             ResponseMessage msg = await _updateDAL.UpdateInBoundCheck(info);
             return Ok(msg);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateInBoundCheckDocument(InBoundCheckDocumentDto info)
+        public async Task<IActionResult> UpdateInBoundCheckDocument(ICD_InBoundCheck_DocumentDto info)
         {
             ResponseMessage msg = await _updateDAL.UpdateInBoundCheckDocument(info);
             return Ok(msg);

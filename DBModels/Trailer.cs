@@ -8,7 +8,7 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string VehicleRegNo { get; set; } = null!;
+        public string VehicleRegNo { get; set; } = null!;//mandatory
         [Column(TypeName = "varchar(25)")]
         public string? ContainerType { get; set; }
         [Column(TypeName = "int")]

@@ -2,17 +2,17 @@
 using System.ComponentModel.DataAnnotations;
 namespace TMS_Api.DBModels
 {
-    public class InBoundCheck
+    public class ICD_InBoundCheck
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int InRegNo { get; set; } = 0!;
+        public int InRegNo { get; set; } = 0!;//mandatory
         [Column(TypeName = "varchar(25)")]
-        public string? InYardID { get; set; }
+        public string? InYardID { get; set; }//mandatory
         [Column(TypeName = "varchar(25)")]
-        public string? InGateID { get; set; }
+        public string? InGateID { get; set; }//mandatory
         [Column(TypeName = "varchar(10)")]
-        public string? InPCCode { get; set; }//Category
+        public string? InPCCode { get; set; }//Category//mandatory
         [Column(TypeName = "varchar(25)")]
         public string? InContainerType { get; set; }
         [Column(TypeName = "int")]
@@ -25,10 +25,13 @@ namespace TMS_Api.DBModels
         public string? InCargoInfo { get; set; }
         [Column(TypeName = "int")]
         public int? InNoOfContainer { get; set; }
-        [Column(TypeName = "varchar(25)")]
-        public string? TruckType { get; set; }
+
         [Column(TypeName = "datetime")]
         public DateTime? InCheckDateTime { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? AreaID { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? TruckType { get; set; }
        
         [Column(TypeName = "varchar(25)")]
         public string? TruckVehicleRegNo { get; set; }
@@ -44,8 +47,12 @@ namespace TMS_Api.DBModels
         public string? JobDescription { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? CardNo { get; set; }
-        [Column(TypeName = "varchar(15)")]
-        public string? Status { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? TransporterID { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? TransporterName { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
 
