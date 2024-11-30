@@ -448,6 +448,24 @@ namespace TMS_Api.Services
         }
 
         #endregion
+
+        #region OperationArea Nov_29_2024
+        public async Task<DataTable> GetOperationAreaList(string active)
+        {
+            string sql = "";
+            if (active == "All" || active == null)
+            {
+                sql = @"SELECT * from OperationArea Order By AreaID";
+            }
+            else
+            {
+                sql = @"SELECT * from OperationArea Where Active='" + active + "'";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+
+        #endregion
     }
 
 }

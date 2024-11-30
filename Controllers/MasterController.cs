@@ -579,6 +579,39 @@ namespace TMS_Api.Controllers
 
         #endregion
 
+        #region OperationArea Nov_29_2024
+
+        [HttpGet]
+        public async Task<IActionResult> GetOperationAreaList(string active)
+        {
+            DataTable dt = await _queryDAL.GetOperationAreaList(active);
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveOperationArea(OperationAreaDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveOperationArea(info);
+            return Ok(msg);
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateOperationArea(OperationAreaDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdateOperationArea(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOperationArea(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteOperationArea(id);
+            return Ok(msg);
+        }
+
+        #endregion
+
 
 
     }

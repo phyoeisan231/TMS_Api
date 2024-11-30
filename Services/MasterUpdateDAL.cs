@@ -86,7 +86,7 @@ namespace TMS_Api.Services
                 {
                     TruckType type = _mapper.Map<TruckType>(info);
                     type.CreatedDate = GetLocalStdDT();
-                    type.CreatedUser = info.CreatedUser;
+                    //type.CreatedUser = info.CreatedUser;
                     
                     _context.TruckType.Add(type);
                     await _context.SaveChangesAsync();
@@ -1646,7 +1646,6 @@ namespace TMS_Api.Services
         #endregion
 
         #region DocumentSetting  Nov_29_2024
-
         public async Task<ResponseMessage> SaveDocumentSetting(DocumentSettingDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
@@ -1738,6 +1737,98 @@ namespace TMS_Api.Services
             return msg;
         }
 
+        #endregion
+
+        #region OperationArea Nov_29_2024
+        public async Task<ResponseMessage> SaveOperationArea(OperationAreaDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                OperationArea data = await _context.OperationArea.FromSqlRaw("SELECT TOP 1* FROM OperationArea WHERE REPLACE(AreaID,'','')=REPLACE(@areaID,'','')",
+                    new SqlParameter("@areaID", info.AreaID)).SingleOrDefaultAsync();
+                if (data != null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Area ID Duplicate!!";
+                }
+                else
+                {
+                    OperationArea area = _mapper.Map<OperationArea>(info);
+                    area.CreatedDate = GetLocalStdDT();
+                    _context.OperationArea.Add(area);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Added!";
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+        public async Task<ResponseMessage> UpdateOperationArea(OperationAreaDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                OperationArea opArea = await _context.OperationArea.SingleOrDefaultAsync(d => d.AreaID == info.AreaID);
+                if (opArea == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found!";
+                    return msg;
+                }
+                else
+                {
+                    opArea.AreaID = info.AreaID;
+                    opArea.Name = info.Name;
+                    opArea.YardID = info.YardID;
+                    opArea.Active = info.Active;
+                    opArea.UpdatedDate = GetLocalStdDT();
+                    opArea.UpdatedUser = info.UpdatedUser;
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Updated";
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+        }
+        public async Task<ResponseMessage> DeleteOperationArea(string id)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                OperationArea opArea = await _context.OperationArea.FromSqlRaw("SELECT * FROM OperationArea Where AreaID=@areaID", new SqlParameter("@areaID", id)).SingleOrDefaultAsync();
+                if (opArea == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                }
+                else
+                {
+                    _context.OperationArea.Remove(opArea);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Removed";
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
 
         #endregion
 
