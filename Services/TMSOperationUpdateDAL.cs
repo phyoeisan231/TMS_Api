@@ -86,8 +86,8 @@ namespace TMS_Api.Services
                     {
                         ICD_InBoundCheck_Document doc = new ICD_InBoundCheck_Document();
                         doc.CheckStatus = false;
-                        doc.DocName = doc.DocName;
-                        doc.DocCode = doc.DocCode;
+                        doc.DocName = i.DocName;
+                        doc.DocCode = i.DocCode;
                         doc.InRegNo = inBound.InRegNo;
                         doc.CreatedDate = GetLocalStdDT();
                         doc.CreatedUser = info.CreatedUser;
@@ -151,7 +151,7 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT Top 1* FROM ICD_TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                     if (process != null)
                     {
                         msg.Status = false;
@@ -179,13 +179,13 @@ namespace TMS_Api.Services
 
         }
 
-        public async Task<ResponseMessage> UpdateInBoundCheckDocument(ICD_InBoundCheck_DocumentDto info)
+        public async Task<ResponseMessage> UpdateInBoundCheckDocument(int id, string docList, string user)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                ICD_InBoundCheck_Document? doc = await _context.ICD_InBoundCheck_Document.FromSqlRaw("SELECT * FROM ICD_InBoundCheck_Document WHERE InRegNo=@id AND DocCode=@doc And CheckStatus=false", new SqlParameter("@id", info.InRegNo), new SqlParameter("@doc", info.DocCode)).SingleOrDefaultAsync();
-                if (doc == null)
+                List<ICD_InBoundCheck_Document>? doc = await _context.ICD_InBoundCheck_Document.FromSqlRaw("SELECT * FROM ICD_InBoundCheck_Document WHERE InRegNo=@id AND DocCode in ("+docList+")", new SqlParameter("@id", id)).ToListAsync();
+                if (doc.Count==0)
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data not found!";
@@ -193,9 +193,21 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    doc.CheckStatus = true;
-                    doc.UpdatedDate = GetLocalStdDT();
-                    doc.UpdatedUser = info.UpdatedUser;
+                    ICD_InBoundCheck? inbound = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT * FROM ICD_InBoundCheck WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                    if (inbound == null)
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data not found!";
+                        return msg;
+                    }
+                    inbound.UpdatedDate = GetLocalStdDT();
+                    inbound.UpdatedUser = user;
+                    foreach (var i in doc)
+                    {
+                        i.CheckStatus = true;
+                        i.UpdatedDate = GetLocalStdDT();
+                        i.UpdatedUser = user;
+                    }                  
                     await _context.SaveChangesAsync();
                     msg.Status = true;
                     msg.MessageContent = "Successfully updated!";
@@ -210,7 +222,7 @@ namespace TMS_Api.Services
             }
         }
 
-        public async Task<ResponseMessage> DeleteInBoundCheckDocument(int regNo,int docCode)
+        public async Task<ResponseMessage> DeleteInBoundCheckDocument(int regNo,string docCode)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
