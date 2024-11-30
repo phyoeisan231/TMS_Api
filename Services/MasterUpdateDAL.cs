@@ -1645,6 +1645,102 @@ namespace TMS_Api.Services
 
         #endregion
 
+        #region DocumentSetting  Nov_29_2024
+
+        public async Task<ResponseMessage> SaveDocumentSetting(DocumentSettingDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                DocumentSetting data = await _context.DocumentSetting.FromSqlRaw("SELECT TOP 1* FROM DocumentSetting WHERE REPLACE(DocCode,'','')=REPLACE(@docCode,'','')",
+                    new SqlParameter("@docCode", info.DocCode)).SingleOrDefaultAsync();
+                if (data != null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Document Code Duplicate!!";
+                }
+                else
+                {
+                    DocumentSetting docSetting = _mapper.Map<DocumentSetting>(info);
+                    docSetting.CreatedDate = GetLocalStdDT();
+                    _context.DocumentSetting.Add(docSetting);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Added!";
+                    return msg;
+                }
+            }
+            catch(DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+        public async Task<ResponseMessage> UpdateDocumentSetting(DocumentSettingDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                DocumentSetting docSetting = await _context.DocumentSetting.SingleOrDefaultAsync(d => d.DocCode == info.DocCode);
+                if (docSetting == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found!";
+                    return msg;
+                }
+                else
+                {
+                    docSetting.DocCode = info.DocCode;
+                    docSetting.DocName = info.DocName;
+                    docSetting.PCCode = info.PCCode;
+                    docSetting.AttachRequired = info.AttachRequired;
+                    docSetting.Active = info.Active;
+                    docSetting.UpdatedDate = GetLocalStdDT();
+                    docSetting.UpdatedUser = info.UpdatedUser;
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Updated";
+                    return msg;
+                }
+            }
+            catch(DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+        }
+        public async Task<ResponseMessage> DeleteDocumentSetting(string id)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                DocumentSetting docSetting = await _context.DocumentSetting.FromSqlRaw("SELECT * FROM DocumentSetting Where DocCode=@docCode", new SqlParameter("@docCode", id)).SingleOrDefaultAsync();
+                if (docSetting == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                }
+                else
+                {
+                    _context.DocumentSetting.Remove(docSetting);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Removed";
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+            return msg;
+        }
+
+
+        #endregion
+
 
     }
 

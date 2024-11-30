@@ -287,9 +287,9 @@ namespace TMS_Api.Controllers
         #region Driver Nov_12_2024
 
         [HttpGet]
-        public async Task<IActionResult> GetDriverList()
+        public async Task<IActionResult> GetDriverList(string active)
         {
-            DataTable dt = await _queryDAL.GetDriverList();
+            DataTable dt = await _queryDAL.GetDriverList(active);
             return Ok(dt);
         }
 
@@ -546,14 +546,38 @@ namespace TMS_Api.Controllers
         }
         #endregion
 
-        //#region DocumentSettings Nov_28_2024
+        #region DocumentSettings Nov_28_2024
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetDocumentSettingList(string active)
-        //{
-        //    DataTable dt=await _queryDAL.GetDocumentSettingList
-        //}
-        //#endregion
+        [HttpGet]
+        public async Task<IActionResult> GetDocumentSettingList(string active)
+        {
+            DataTable dt = await _queryDAL.GetDocumentSettingList(active);
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveDocumentSetting(DocumentSettingDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveDocumentSetting(info);
+            return Ok(msg);
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateDocumentSetting(DocumentSettingDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdateDocumentSetting(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDocumentSetting(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteDocumentSetting(id);
+            return Ok(msg);
+        }
+
+        #endregion
 
 
 
