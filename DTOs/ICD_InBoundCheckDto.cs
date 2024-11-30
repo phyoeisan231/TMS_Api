@@ -13,6 +13,7 @@ namespace TMS_Api.DTOs
         public string? InCargoType { get; set; }
         public string? InCargoInfo { get; set; }
         public int? InNoOfContainer { get; set; }
+        public string? AreaID { get; set; }
         public DateTime? InCheckDateTime { get; set; }
         public string? TruckType { get; set; }
         public string? TransporterID { get; set; }

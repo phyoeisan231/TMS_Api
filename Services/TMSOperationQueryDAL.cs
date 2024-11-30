@@ -66,16 +66,37 @@ namespace TMS_Api.Services
 
         #region InBound Check Nov_27_2024
 
+
+        public async Task<DataTable> GetGateInBoundList(string id)
+        {
+            string sql = @"Select GateID,Name,YardID from Gate where YardID=@yard And Type in('InBound','Both') And Active=1";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
+            return dt;
+        }
+
+        public async Task<DataTable> GetOperationAreaList(string id)
+        {
+            string sql = @"Select AreaID,Name,YardID from OperationArea where YardID=@yard And Active=1";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
+            return dt;
+        }
+
+        public async Task<DataTable> GetCardICDList(string id)
+        {
+            string sql = @"SELECT CardNo,GroupName,YardID from PCard Where GroupName in('ICD','Other') And Active=1 And IsUse=0 or IsUse is null And YardID=@yard";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
+            return dt;
+        }
         public async Task<DataTable> GetTruckList(string id, string type)
         {
             string sql = "";
             if (type == "RGL")
             {
-                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%'" + id + "'%' And IsRGL=1 And IsBlack<>1 And Active=1";
+                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%" + id + "%' And IsRGL=1 And IsBlack<>1 OR IsBlack is null And Active=1";
             }
             else
             {
-                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%'" + id + "'%' And IsRGL<>1 And IsBlack<>1 And Active=1";
+                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%" + id + "%' And IsRGL<>1 And IsBlack<>1 OR IsBlack is null And Active=1";
             }
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
@@ -85,23 +106,29 @@ namespace TMS_Api.Services
         public async Task<DataTable> GetDriverList(string id)
         {
             DateTime strDate = GetLocalStdDT();
-            string sql = @"Select Name,LicenseNo,LicenseExpiration from Driver where IsBlack<>1 And Active=1 And Cast(LicenseExpiration as Date)>=@eDate And LicenseNo like '%" + id + "%' ";
+            string sql = @"Select Name,LicenseNo,(LicenseNo +' | '+Name) as DriverName,LicenseExpiration from Driver where IsBlack<>1 OR IsBlack is null And Active=1 And Cast(LicenseExpiration as Date)>=@eDate And LicenseNo like '%" + id + "%' ";
             DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@eDate", strDate));
             return dt;
         }
 
         public async Task<DataTable> GetTrailerList()
         {
-            string sql = @"Select VehicleRegNo,DriverLicenseNo,ContainerType,ContainerSize,TransporterID from Trailer where IsBlack<>1 And Active=1";
+            string sql = @"Select VehicleRegNo,DriverLicenseNo,ContainerType,ContainerSize,TransporterID from Trailer where IsBlack<>1 OR IsBlack is null And Active=1";
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
 
-
+        public async Task<DataTable> GetTransporterList()
+        {
+            string sql = @"select TransporterID,TransporterName,(TransporterID +' | '+TransporterName) as Name from Transporter Where Active=1 And IsBlack<>1 OR IsBlack is null";
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+        
         public async Task<DataTable> GetInBoundCheckList(DateTime startDate, DateTime endDate,string yard)
         {          
-           string sql = @"Select * from ICD_InBoundCheck where InYardID=@yard And Cast(InCheckDateTime as Date) Between @sDate and @eDate  Order by InRegNo DESC";
-            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate), new SqlParameter("@yard", yard));
+           string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InContainerType,InContainerSize,InType,InCargoType,InCargoInfo,InNoOfContainer,convert(varchar, InCheckDateTime, 29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,JobCode,JobDescription,CardNo,TransporterID,TransporterName,Status,Remark FROM ICD_InBoundCheck where InYardID in (" + yard+") And Cast(InCheckDateTime as Date) Between @sDate and @eDate  Order by InRegNo DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
             return dt;
         }
 
@@ -110,7 +137,7 @@ namespace TMS_Api.Services
             ICD_InBoundCheckDto info = new ICD_InBoundCheckDto();
             try
             {
-                ICD_InBoundCheck? data = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT * FROM  InBoundCheck WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                ICD_InBoundCheck? data = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT * FROM  ICD_InBoundCheck WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     info = _mapper.Map<ICD_InBoundCheckDto>(data);

@@ -19,9 +19,31 @@ namespace TMS_Api.Controllers
 
         #region InBound Check Doc Nov_27_2024
 
+        [HttpGet]
+        public async Task<IActionResult> GetGateInBoundList(string yard)
+        {
+            DataTable dt = await _queryDAL.GetGateInBoundList(yard);
+            return Ok(dt);
+        }
 
         [HttpGet]
-        public async Task<IActionResult> GetTruckList(string id,string type)
+        public async Task<IActionResult> GetOperationAreaDataList(string yard)
+        {
+            DataTable dt = await _queryDAL.GetOperationAreaList(yard);
+            return Ok(dt);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetCardICDList(string yard)
+        {
+            DataTable dt = await _queryDAL.GetCardICDList(yard);
+            return Ok(dt);
+        }
+
+        
+        [HttpGet]
+        public async Task<IActionResult> GetTruckDataList(string id,string type)
         {
             DataTable dt = await _queryDAL.GetTruckList(id,type);
             return Ok(dt);
@@ -29,19 +51,26 @@ namespace TMS_Api.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetDriverList(string id)
+        public async Task<IActionResult> GetDriverDataList(string id)
         {
             DataTable dt = await _queryDAL.GetDriverList(id);
             return Ok(dt);
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> GetTrailerList()
+        public async Task<IActionResult> GetTrailerDataList()
         {
             DataTable dt = await _queryDAL.GetTrailerList();
             return Ok(dt);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTransporterDataList()
+        {
+            DataTable dt = await _queryDAL.GetTransporterList();
+            return Ok(dt);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GetInBoundCheckList(DateTime startDate,DateTime endDate,string yard)
@@ -72,9 +101,9 @@ namespace TMS_Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateInBoundCheckDocument(ICD_InBoundCheck_DocumentDto info)
+        public async Task<IActionResult> UpdateInBoundCheckDocument(int id,string docList,string user)
         {
-            ResponseMessage msg = await _updateDAL.UpdateInBoundCheckDocument(info);
+            ResponseMessage msg = await _updateDAL.UpdateInBoundCheckDocument(id,docList,user);
             return Ok(msg);
         }
 
@@ -86,9 +115,9 @@ namespace TMS_Api.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteInBoundCheckDocument(int regNo, int docCode)
+        public async Task<IActionResult> DeleteInBoundCheckDocument(int id, string code)
         {
-            ResponseMessage msg = await _updateDAL.DeleteInBoundCheckDocument(regNo, docCode);
+            ResponseMessage msg = await _updateDAL.DeleteInBoundCheckDocument(id, code);
             return Ok(msg);
         }
         

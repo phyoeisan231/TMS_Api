@@ -15,6 +15,8 @@ namespace TMS_Api.DBModels
 
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? IsWaitingArea { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
