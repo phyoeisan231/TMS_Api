@@ -1788,6 +1788,7 @@ namespace TMS_Api.Services
                     opArea.Name = info.Name;
                     opArea.YardID = info.YardID;
                     opArea.Active = info.Active;
+                    opArea.IsWaitingArea = info.IsWaitingArea;
                     opArea.UpdatedDate = GetLocalStdDT();
                     opArea.UpdatedUser = info.UpdatedUser;
                     await _context.SaveChangesAsync();
