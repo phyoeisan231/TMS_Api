@@ -7,10 +7,10 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(10)")]
-        public string PCCode { get; set; } = null!;
+        public string PCCode { get; set; } = null!;//mandatory
 
         [Column(TypeName ="varchar(50)")]
-        public string? CategoryName { get; set; }
+        public string? CategoryName { get; set; }//mandatory
 
         [Column(TypeName ="decimal(18,5)")]
         public decimal? InboundWeight {  get; set; }
@@ -19,7 +19,7 @@ namespace TMS_Api.DBModels
         public decimal? OutboundWeight { get; set; }
 
         [Column(TypeName ="varchar(10)")]
-        public string? GroupName {  get; set; }
+        public string? GroupName {  get; set; }//mandatory
 
         [Column(TypeName ="bit")]
         public Boolean? Active { get; set; }

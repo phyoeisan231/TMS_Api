@@ -287,9 +287,9 @@ namespace TMS_Api.Controllers
         #region Driver Nov_12_2024
 
         [HttpGet]
-        public async Task<IActionResult> GetDriverList()
+        public async Task<IActionResult> GetDriverList(string active)
         {
-            DataTable dt = await _queryDAL.GetDriverList();
+            DataTable dt = await _queryDAL.GetDriverList(active);
             return Ok(dt);
         }
 
@@ -544,6 +544,72 @@ namespace TMS_Api.Controllers
             ResponseMessage msg = await _updateDAL.DeletePCard(id);
             return Ok(msg);
         }
+        #endregion
+
+        #region DocumentSettings Nov_28_2024
+
+        [HttpGet]
+        public async Task<IActionResult> GetDocumentSettingList(string active)
+        {
+            DataTable dt = await _queryDAL.GetDocumentSettingList(active);
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveDocumentSetting(DocumentSettingDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveDocumentSetting(info);
+            return Ok(msg);
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateDocumentSetting(DocumentSettingDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdateDocumentSetting(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDocumentSetting(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteDocumentSetting(id);
+            return Ok(msg);
+        }
+
+        #endregion
+
+        #region OperationArea Nov_29_2024
+
+        [HttpGet]
+        public async Task<IActionResult> GetOperationAreaList(string active)
+        {
+            DataTable dt = await _queryDAL.GetOperationAreaList(active);
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveOperationArea(OperationAreaDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveOperationArea(info);
+            return Ok(msg);
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateOperationArea(OperationAreaDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdateOperationArea(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOperationArea(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteOperationArea(id);
+            return Ok(msg);
+        }
+
         #endregion
 
 

@@ -3,16 +3,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class OutBoundCheckDocument
+    public class ICD_InBoundCheck_Document
     {
         [Key]
         [Column(TypeName = "int")]
-        public int OutRegNo { get; set; } = 0!;
+        public int InRegNo { get; set; } = 0!;
         [Key]
         [Column(TypeName = "varchar(10)")]
         public string? DocCode { get; set; }
-        [Column(TypeName = "varchar(15)")]
-        public string? CheckStatus { get; set; }//Valid,Invalid
+        [Column(TypeName = "varchar(50)")]
+        public string? DocName { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? CheckStatus { get; set; }
+        [Column(TypeName = "varchar(max)")]
+        public string? Remark { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

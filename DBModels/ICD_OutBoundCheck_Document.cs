@@ -3,16 +3,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class TruckJobType//Rail,WH,ICD,Other,(Rail,WH,Truck,CCA,Store,WS for workshop,ICD,QEHS)
+    public class ICD_OutBoundCheck_Document
     {
         [Key]
-        [Column(TypeName = "varchar(25)")]
-        public string TypeID { get; set; } = null!;//mandatory
+        [Column(TypeName = "int")]
+        public int OutRegNo { get; set; } = 0!;
+        [Key]
+        [Column(TypeName = "varchar(10)")]
+        public string? DocCode { get; set; }
         [Column(TypeName = "varchar(50)")]
-        public string? Description { get; set; }//mandatory
-
+        public string? DocName { get; set; }
         [Column(TypeName = "bit")]
-        public Boolean? Active { get; set; }
+        public Boolean? CheckStatus { get; set; }
+        [Column(TypeName = "varchar(max)")]
+        public string? Remark { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

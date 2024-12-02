@@ -7,9 +7,9 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]//YTG,MN,MHO
-        public string YardID { get; set; } = null!;
+        public string YardID { get; set; } = null!;//mandatory
         [Column(TypeName = "varchar(30)")]
-        public string? Name { get; set; }
+        public string? Name { get; set; }//mandatory
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
         [Column(TypeName = "datetime")]

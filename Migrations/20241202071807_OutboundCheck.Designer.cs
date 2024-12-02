@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241202071807_OutboundCheck")]
+    partial class OutboundCheck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -612,145 +615,6 @@ namespace TMS_Api.Migrations
                     b.HasKey("OutRegNo", "DocCode");
 
                     b.ToTable("ICD_OutBoundCheck_Document");
-                });
-
-            modelBuilder.Entity("TMS_Api.DBModels.ICD_TruckProcess", b =>
-                {
-                    b.Property<int>("InNo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InNo"));
-
-                    b.Property<string>("AreaID")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("CardNo")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("CreatedUser")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Customer")
-                        .HasColumnType("varchar(150)");
-
-                    b.Property<string>("DriverLicenseNo")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("DriverName")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("InCargoInfo")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("InCargoType")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<DateTime?>("InCheckDateTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("InContainerSize")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InContainerType")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("InGateID")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<DateTime?>("InGatePassTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("InNoOfContainer")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InPCCode")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<int?>("InRegNo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InType")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<bool?>("InYard")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("InYardID")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("JobCode")
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<string>("JobDescription")
-                        .HasColumnType("varchar(150)");
-
-                    b.Property<string>("OutCargoInfo")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("OutCargoType")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<DateTime?>("OutCheckDateTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("OutContainerSize")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OutContainerType")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("OutGateID")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<DateTime?>("OutGatePassTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("OutNoOfContainer")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OutPCCode")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<int?>("OutRegNo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OutType")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("OutYardID")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("Remark")
-                        .HasColumnType("varchar(max)");
-
-                    b.Property<string>("TrailerVehicleRegNo")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("TransporterID")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("TransporterName")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("TruckType")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("TruckVehicleRegNo")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("UpdatedUser")
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("InNo");
-
-                    b.ToTable("ICD_TruckProcess");
                 });
 
             modelBuilder.Entity("TMS_Api.DBModels.OperationArea", b =>

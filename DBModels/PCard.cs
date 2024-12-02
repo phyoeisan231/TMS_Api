@@ -7,12 +7,12 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string CardNo { get; set; } = null!;
+        public string CardNo { get; set; } = null!;//mandatory
 
         [Column(TypeName = "varchar(25)")]
-        public string? YardID { get; set; }
+        public string? YardID { get; set; }//mandatory
         [Column(TypeName = "varchar(10)")]
-        public string? GroupName { get; set; }
+        public string? GroupName { get; set; }//mandatory
 
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }

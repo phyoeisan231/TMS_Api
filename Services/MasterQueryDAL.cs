@@ -242,7 +242,6 @@ namespace TMS_Api.Services
             }
             return trailerDto;
         }
-
         public async Task<DataTable> GetTrailerList()
         {
             string sql = @"SELECT * from Trailer";
@@ -254,9 +253,23 @@ namespace TMS_Api.Services
 
         #region Driver Nov_12_2024
 
-        public async Task<DataTable> GetDriverList()
+        //public async Task<DataTable> GetDriverList()
+        //{
+        //    string sql = @"SELECT * FROM Driver";
+        //    DataTable dt = await GetDataTableAsync(sql);
+        //    return dt;
+        //}
+        public async Task<DataTable> GetDriverList(string active)
         {
-            string sql = @"SELECT * FROM Driver";
+            string sql = "";
+            if (active == "All" || active == null)
+            {
+                sql = @"SELECT * from Driver Order By LicenseNo";
+            }
+            else
+            {
+                sql = @"select (LicenseNo+' | '+Name) as DriverName,Name,LicenseNo from Driver where Active='" + active + "'";
+            }
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
@@ -418,8 +431,41 @@ namespace TMS_Api.Services
         }
         #endregion
 
+        #region DocumentSetting Nov_29_2024
+        public async Task<DataTable> GetDocumentSettingList(string active)
+        {
+            string sql = "";
+            if(active=="All"|| active == null)
+            {
+                sql = @"SELECT * from DocumentSetting Order By DocCode";
+            }
+            else
+            {
+                sql = @"SELECT * from DocumentSetting Where Active='" + active + "'";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
 
+        #endregion
 
+        #region OperationArea Nov_29_2024
+        public async Task<DataTable> GetOperationAreaList(string active)
+        {
+            string sql = "";
+            if (active == "All" || active == null)
+            {
+                sql = @"SELECT * from OperationArea Order By AreaID";
+            }
+            else
+            {
+                sql = @"SELECT * from OperationArea Where Active='" + active + "'";
+            }
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+
+        #endregion
     }
 
 }

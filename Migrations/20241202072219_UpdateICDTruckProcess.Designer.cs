@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241202072219_UpdateICDTruckProcess")]
+    partial class UpdateICDTruckProcess
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

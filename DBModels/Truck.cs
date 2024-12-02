@@ -8,7 +8,7 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string VehicleRegNo { get; set; } = null!;
+        public string VehicleRegNo { get; set; } = null!;//mandatory
         [Column(TypeName = "varchar(25)")]
         public string? ContainerType { get; set; }
 
@@ -19,7 +19,7 @@ namespace TMS_Api.DBModels
         public decimal? TruckWeight { get; set; }
         
         [Column(TypeName = "varchar(30)")]
-        public string? TypeID { get; set; }
+        public string? TypeID { get; set; }//mandatory
 
         [Column(TypeName = "varchar(25)")]
         public string? TransporterID { get; set; }

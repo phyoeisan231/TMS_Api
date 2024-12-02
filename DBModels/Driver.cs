@@ -8,11 +8,11 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(25)")]
-        public string LicenseNo { get; set; } = null!;
+        public string LicenseNo { get; set; } = null!;//mandatory
         [Column(TypeName = "varchar(25)")]
         public string? NRC { get; set; }
         [Column(TypeName = "varchar(50)")]
-        public string? Name { get; set; }
+        public string? Name { get; set; }//mandatory
         [Column(TypeName = "varchar(250)")]
         public string? Address { get; set; }
         [Column(TypeName = "varchar(100)")]
@@ -24,9 +24,9 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? LicenseExpiration { get; set; }
+        public DateTime? LicenseExpiration { get; set; }//mandatory
         [Column(TypeName = "varchar(2)")]
-        public string? LicenseClass { get; set; }
+        public string? LicenseClass { get; set; }//mandatory
 
         [Column(TypeName = "varchar(max)")]
         public string? Remarks { get; set; }

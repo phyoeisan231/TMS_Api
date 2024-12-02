@@ -7,11 +7,11 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [Column(TypeName = "varchar(10)")]
-        public string DocCode { get; set; } = null!;
+        public string DocCode { get; set; } = null!;//mandatory
         [Column(TypeName ="varchar(50)")]
-        public string? DocName {  get; set; }
+        public string? DocName {  get; set; }//mandatory
         [Column(TypeName = "varchar(10)")]
-        public string? PCCode { get; set; }
+        public string? PCCode { get; set; }//mandatory
         [Column(TypeName ="bit")]
         public Boolean? AttachRequired { get; set; }
         [Column(TypeName ="bit")]
