@@ -55,6 +55,8 @@ namespace TMS_Api.DBModels
         public Boolean? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
+        [Column(TypeName = "varchar(150)")]
+        public string? Customer { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }

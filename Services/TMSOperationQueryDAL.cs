@@ -76,7 +76,7 @@ namespace TMS_Api.Services
 
         public async Task<DataTable> GetOperationAreaList(string id)
         {
-            string sql = @"Select AreaID,Name,YardID from OperationArea where YardID=@yard And Active=1";
+            string sql = @"Select AreaID,Name,YardID from OperationArea where YardID=@yard And Active=1 And IsWaitingArea=0 or IsWaitingArea is null";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
             return dt;
         }
