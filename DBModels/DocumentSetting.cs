@@ -14,6 +14,10 @@ namespace TMS_Api.DBModels
         public string? PCCode { get; set; }//mandatory
         [Column(TypeName ="bit")]
         public Boolean? AttachRequired { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? IsInDoc { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? IsOutDoc { get; set; }
         [Column(TypeName ="bit")]
         public Boolean? Active { get; set; }
         [Column(TypeName = "datetime")]

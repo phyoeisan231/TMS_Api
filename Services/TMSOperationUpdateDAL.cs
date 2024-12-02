@@ -81,7 +81,7 @@ namespace TMS_Api.Services
                     inBound.Status = false;
                     _context.ICD_InBoundCheck.Add(inBound);
                     await _context.SaveChangesAsync();
-                    List<DocumentSetting> documentList = await _context.DocumentSetting.FromSqlRaw("SELECT * FROM DocumentSetting WHERE PCCode=@id And AttachRequired=1 And Active=1", new SqlParameter("@id", info.InPCCode)).ToListAsync();
+                    List<DocumentSetting> documentList = await _context.DocumentSetting.FromSqlRaw("SELECT * FROM DocumentSetting WHERE PCCode=@id And IsInDoc=1 And Active=1", new SqlParameter("@id", info.InPCCode)).ToListAsync();
                     foreach (var i in documentList)
                     {
                         ICD_InBoundCheck_Document doc = new ICD_InBoundCheck_Document();
