@@ -107,10 +107,10 @@ namespace TMS_Api.Controllers
             return Ok(msg);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInBoundCheck(int id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteInBoundCheck(int id,string user)
         {
-            ResponseMessage msg = await _updateDAL.DeleteInBoundCheck(id);
+            ResponseMessage msg = await _updateDAL.DeleteInBoundCheck(id,user);
             return Ok(msg);
         }
 
