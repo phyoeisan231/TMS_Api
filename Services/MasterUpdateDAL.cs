@@ -862,7 +862,7 @@ namespace TMS_Api.Services
                     driver.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
 
                     await _context.SaveChangesAsync();
-                    msg.Message = "Successfully Updated";
+                    msg.MessageContent = "Successfully Updated";
                     msg.Status = true;
                     return msg;
 
@@ -1088,7 +1088,7 @@ namespace TMS_Api.Services
                     weightBridge.UpdatedDate = GetLocalStdDT();
                     weightBridge.UpdatedUser = info.UpdatedUser;
                     await _context.SaveChangesAsync();
-                    msg.Message = "Successfully Updated";
+                    msg.MessageContent = "Successfully Updated";
                     msg.Status = true;
                     return msg;
                 }
