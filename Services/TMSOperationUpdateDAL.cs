@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using TMS_Api.DBModels;
 using TMS_Api.DTOs;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TMS_Api.Services
 {
@@ -122,15 +120,10 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    data.InContainerType = info.InContainerType;
-                    data.InContainerSize = info.InContainerSize;
                     data.InType = info.InType;
                     data.InCargoType = info.InCargoType;
                     data.InCargoInfo = info.InCargoInfo;
-                    data.InNoOfContainer = info.InNoOfContainer;
                     data.AreaID = info.AreaID;
-                    data.JobCode = info.JobCode;
-                    data.JobDescription = info.JobDescription;
                     data.Remark = info.Remark;
                     data.Customer = info.Customer;
                     data.UpdatedUser = info.UpdatedUser;
@@ -189,6 +182,27 @@ namespace TMS_Api.Services
                             card.VehicleRegNo = info.TruckVehicleRegNo;
                             card.CardIssueDate = GetLocalStdDT();
                             data.CardNo = info.CardNo;
+                        }
+                    }
+
+                    if (data.Status==true)
+                    {
+                        ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
+                        if(process == null)
+                        {
+                            ICD_TruckProcess truck = new ICD_TruckProcess();
+                            truck = _mapper.Map<ICD_TruckProcess>(data);
+                            truck.CreatedDate = GetLocalStdDT();
+                            truck.CreatedUser = info.UpdatedUser;
+                            truck.Status = "In(Check)";
+                            truck.InYard = false;
+                            _context.ICD_TruckProcess.Add(truck);
+                        }
+                        else
+                        {
+                            process.CardNo = data.CardNo;
+                            process.UpdatedUser = info.UpdatedUser;
+                            process.UpdatedDate = GetLocalStdDT();
                         }
                     }
                     await _context.SaveChangesAsync();
@@ -298,6 +312,26 @@ namespace TMS_Api.Services
                         {
                             inbound.Status = true;
                         }                     
+                    }
+                    if (inbound.Status == true)
+                    {
+                        ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", inbound.InRegNo)).SingleOrDefaultAsync();
+                        if (process == null)
+                        {
+                            ICD_TruckProcess truck = new ICD_TruckProcess();
+                            truck = _mapper.Map<ICD_TruckProcess>(inbound);
+                            truck.CreatedDate = GetLocalStdDT();
+                            truck.CreatedUser = user;
+                            truck.Status = "In(Check)";
+                            truck.InYard = false;
+                            _context.ICD_TruckProcess.Add(truck);
+                        }
+                        else
+                        {
+                            process.CardNo = inbound.CardNo;
+                            process.UpdatedUser = inbound.UpdatedUser;
+                            process.UpdatedDate = GetLocalStdDT();
+                        }
                     }
                     await _context.SaveChangesAsync();
                     msg.Status = true;

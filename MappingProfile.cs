@@ -27,6 +27,7 @@ namespace TMS_Api
             CreateMap<ICD_InBoundCheck_Document, ICD_InBoundCheck_DocumentDto>().ReverseMap();
             CreateMap<OperationArea, OperationAreaDto>().ReverseMap();
             CreateMap<DocumentSetting, DocumentSettingDto>().ReverseMap();
+            CreateMap<ICD_TruckProcess,ICD_InBoundCheck>().ReverseMap();
         }
     }
 }

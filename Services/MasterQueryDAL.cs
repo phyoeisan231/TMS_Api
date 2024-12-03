@@ -406,7 +406,7 @@ namespace TMS_Api.Services
             }
             else
             {
-                sql = @"SELECT * from PCategory Where Active='" + active + "'";
+                sql = @"SELECT * from PCategory Where  Active='" + active + "'";
             }
             DataTable dt = await GetDataTableAsync(sql);
             return dt;

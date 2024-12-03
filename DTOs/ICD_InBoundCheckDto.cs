@@ -1,5 +1,4 @@
 ﻿
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TMS_Api.DTOs
 {
@@ -9,10 +8,10 @@ namespace TMS_Api.DTOs
         public string? InYardID { get; set; }//mandatory
         public string? InGateID { get; set; }//mandatory
         public string? InPCCode { get; set; }//Category//mandatory
-        public string? InContainerType { get; set; }//["DV","FR","GP", "HC", "HQ","HG","OS","OT","PF","RF","RH","TK", "IC", "FL", "BC", "HT", "VC", "PL"];
-        public int? InContainerSize { get; set; }// ["20", "40", "45"];
+        //public string? InContainerType { get; set; }//["DV","FR","GP", "HC", "HQ","HG","OS","OT","PF","RF","RH","TK", "IC", "FL", "BC", "HT", "VC", "PL"];
+        //public int? InContainerSize { get; set; }// ["20", "40", "45"];
         public string? InType { get; set; }//FCL,LCL
-        public string? InCargoType { get; set; }//Laden,Empty
+        public string? InCargoType { get; set; }//Laden,MT
         public string? InCargoInfo { get; set; }
         public int? InNoOfContainer { get; set; }
         public DateTime? InCheckDateTime { get; set; }
@@ -22,11 +21,14 @@ namespace TMS_Api.DTOs
         public string? TrailerVehicleRegNo { get; set; }
         public string? DriverLicenseNo { get; set; }
         public string? DriverName { get; set; }
-        public string? JobCode { get; set; }
-        public string? JobDescription { get; set; }
+        //public string? JobCode { get; set; }
+        //public string? JobDescription { get; set; }
         public string? CardNo { get; set; }
+        public string? InStatus { get; set; }
         public string? TransporterID { get; set; }
         public string? TransporterName { get; set; }
+        public Boolean? InboundWeight { get; set; }
+        public Boolean? OutboundWeight { get; set; }
         public Boolean? Status { get; set; }
         public string? Remark { get; set; }
         public string? Customer { get; set; }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241203040942_UpdateICD_TruckProcess")]
+    partial class UpdateICD_TruckProcess
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,8 +399,17 @@ namespace TMS_Api.Migrations
                     b.Property<DateTime?>("InCheckDateTime")
                         .HasColumnType("datetime");
 
+                    b.Property<int?>("InContainerSize")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InContainerType")
+                        .HasColumnType("varchar(25)");
+
                     b.Property<string>("InGateID")
                         .HasColumnType("varchar(25)");
+
+                    b.Property<int?>("InNoOfContainer")
+                        .HasColumnType("int");
 
                     b.Property<string>("InPCCode")
                         .HasColumnType("varchar(10)");
@@ -408,11 +420,11 @@ namespace TMS_Api.Migrations
                     b.Property<string>("InYardID")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<bool?>("InboundWeight")
-                        .HasColumnType("bit");
+                    b.Property<string>("JobCode")
+                        .HasColumnType("varchar(30)");
 
-                    b.Property<bool?>("OutboundWeight")
-                        .HasColumnType("bit");
+                    b.Property<string>("JobDescription")
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("Remark")
                         .HasColumnType("varchar(max)");
@@ -649,6 +661,12 @@ namespace TMS_Api.Migrations
                     b.Property<DateTime?>("InCheckDateTime")
                         .HasColumnType("datetime");
 
+                    b.Property<int?>("InContainerSize")
+                        .HasColumnType("int");
+
+                    b.Property<string>("InContainerType")
+                        .HasColumnType("varchar(25)");
+
                     b.Property<string>("InGateID")
                         .HasColumnType("varchar(25)");
 
@@ -673,6 +691,12 @@ namespace TMS_Api.Migrations
                     b.Property<string>("InYardID")
                         .HasColumnType("varchar(25)");
 
+                    b.Property<string>("JobCode")
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<string>("JobDescription")
+                        .HasColumnType("varchar(150)");
+
                     b.Property<string>("OutCargoInfo")
                         .HasColumnType("varchar(50)");
 
@@ -682,11 +706,20 @@ namespace TMS_Api.Migrations
                     b.Property<DateTime?>("OutCheckDateTime")
                         .HasColumnType("datetime");
 
+                    b.Property<int?>("OutContainerSize")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OutContainerType")
+                        .HasColumnType("varchar(25)");
+
                     b.Property<string>("OutGateID")
                         .HasColumnType("varchar(25)");
 
                     b.Property<DateTime?>("OutGatePassTime")
                         .HasColumnType("datetime");
+
+                    b.Property<int?>("OutNoOfContainer")
+                        .HasColumnType("int");
 
                     b.Property<string>("OutPCCode")
                         .HasColumnType("varchar(10)");
@@ -829,11 +862,11 @@ namespace TMS_Api.Migrations
                     b.Property<string>("GroupName")
                         .HasColumnType("varchar(10)");
 
-                    b.Property<bool?>("InboundWeight")
-                        .HasColumnType("bit");
+                    b.Property<decimal?>("InboundWeight")
+                        .HasColumnType("decimal(18,5)");
 
-                    b.Property<bool?>("OutboundWeight")
-                        .HasColumnType("bit");
+                    b.Property<decimal?>("OutboundWeight")
+                        .HasColumnType("decimal(18,5)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime");

@@ -13,18 +13,18 @@ namespace TMS_Api.DBModels
         public string? InGateID { get; set; }//mandatory
         [Column(TypeName = "varchar(10)")]
         public string? InPCCode { get; set; }//Category//mandatory
-        [Column(TypeName = "varchar(25)")]
-        public string? InContainerType { get; set; }
-        [Column(TypeName = "int")]
-        public int? InContainerSize { get; set; }
+        //[Column(TypeName = "varchar(25)")]
+        //public string? InContainerType { get; set; }
+        //[Column(TypeName = "int")]
+        //public int? InContainerSize { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? InType { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? InCargoType { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? InCargoInfo { get; set; }
-        [Column(TypeName = "int")]
-        public int? InNoOfContainer { get; set; }
+        //[Column(TypeName = "int")]
+        //public int? InNoOfContainer { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime? InCheckDateTime { get; set; }
@@ -41,16 +41,20 @@ namespace TMS_Api.DBModels
         public string? DriverLicenseNo { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? DriverName { get; set; }
-        [Column(TypeName = "varchar(30)")]
-        public string? JobCode { get; set; }
-        [Column(TypeName = "varchar(150)")]
-        public string? JobDescription { get; set; }
+        //[Column(TypeName = "varchar(30)")]
+        //public string? JobCode { get; set; }
+        //[Column(TypeName = "varchar(150)")]
+        //public string? JobDescription { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? CardNo { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? TransporterID { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string? TransporterName { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? InboundWeight { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? OutboundWeight { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
