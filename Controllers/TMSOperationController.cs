@@ -49,7 +49,6 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> GetDriverDataList(string id)
         {

@@ -43,7 +43,6 @@ namespace TMS_Api.Services
                 return pacific;
             }
         }
-
         public Task<DataTable> GetDataTableAsync(string sSQL, params SqlParameter[] para)
         {
             return Task.Run(() =>
@@ -65,22 +64,18 @@ namespace TMS_Api.Services
         }
 
         #region InBound Check Nov_27_2024
-
-
         public async Task<DataTable> GetGateInBoundList(string id)
         {
             string sql = @"Select GateID,Name,YardID from Gate where YardID=@yard And Type in('InBound','Both') And Active=1";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
             return dt;
         }
-
         public async Task<DataTable> GetOperationAreaList(string id)
         {
             string sql = @"Select AreaID,Name,YardID from OperationArea where YardID=@yard And Active=1 And IsWaitingArea=0 or IsWaitingArea is null";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
             return dt;
         }
-
         public async Task<DataTable> GetCardICDList(string id)
         {
             string sql = @"SELECT CardNo,GroupName,YardID from PCard Where GroupName in('ICD','Other') And Active=1 And IsUse=0 or IsUse is null And YardID=@yard";
@@ -101,8 +96,6 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
-
-
         public async Task<DataTable> GetDriverList(string id)
         {
             DateTime strDate = GetLocalStdDT();
@@ -110,28 +103,24 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@eDate", strDate));
             return dt;
         }
-
         public async Task<DataTable> GetTrailerList()
         {
             string sql = @"Select VehicleRegNo,DriverLicenseNo,ContainerType,ContainerSize,TransporterID from Trailer where IsBlack<>1 OR IsBlack is null And Active=1";
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
-
         public async Task<DataTable> GetTransporterList()
         {
             string sql = @"select TransporterID,TransporterName,(TransporterID +' | '+TransporterName) as Name from Transporter Where Active=1 And IsBlack<>1 OR IsBlack is null";
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
-        
         public async Task<DataTable> GetInBoundCheckList(DateTime startDate, DateTime endDate,string yard)
         {          
            string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InContainerType,InContainerSize,InType,InCargoType,InCargoInfo,InNoOfContainer,convert(varchar, InCheckDateTime, 29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,JobCode,JobDescription,CardNo,TransporterID,TransporterName,Status,Remark FROM ICD_InBoundCheck where InYardID in (" + yard+") And Cast(InCheckDateTime as Date) Between @sDate and @eDate  Order by InRegNo DESC";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
             return dt;
         }
-
         public async Task<ICD_InBoundCheckDto> GetInBoundCheckById(int id)
         {
             ICD_InBoundCheckDto info = new ICD_InBoundCheckDto();
@@ -160,6 +149,7 @@ namespace TMS_Api.Services
 
             return info;
         }
+
         #endregion
     }
 }
