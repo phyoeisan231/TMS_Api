@@ -1480,7 +1480,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                PCategory pCategory = await _context.PCategory.SingleOrDefaultAsync(tt => tt.PCCode == info.PCCode);
+                PCategory? pCategory = await _context.PCategory.SingleOrDefaultAsync(tt => tt.PCCode == info.PCCode);
                 if (pCategory == null)
                 {
                     msg.Status = false;

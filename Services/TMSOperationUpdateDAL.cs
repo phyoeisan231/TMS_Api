@@ -120,15 +120,10 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    data.InContainerType = info.InContainerType;
-                    data.InContainerSize = info.InContainerSize;
                     data.InType = info.InType;
                     data.InCargoType = info.InCargoType;
                     data.InCargoInfo = info.InCargoInfo;
-                    data.InNoOfContainer = info.InNoOfContainer;
                     data.AreaID = info.AreaID;
-                    data.JobCode = info.JobCode;
-                    data.JobDescription = info.JobDescription;
                     data.Remark = info.Remark;
                     data.Customer = info.Customer;
                     data.UpdatedUser = info.UpdatedUser;
