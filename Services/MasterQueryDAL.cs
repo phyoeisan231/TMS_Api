@@ -57,7 +57,6 @@ namespace TMS_Api.Services
                 return pacific;
             }
         }
-
         public Task<DataTable> GetDataTableAsync(string sSQL, params SqlParameter[] para)
         {
             return Task.Run(() =>
@@ -407,7 +406,7 @@ namespace TMS_Api.Services
             }
             else
             {
-                sql = @"SELECT * from PCategory Where Active='" + active + "'";
+                sql = @"SELECT * from PCategory Where  Active='" + active + "'";
             }
             DataTable dt = await GetDataTableAsync(sql);
             return dt;

@@ -4,8 +4,8 @@
     {
         public string PCCode { get; set; } = null!;
         public string? CategoryName { get; set; }
-        public decimal? InboundWeight { get; set; }
-        public decimal? OutboundWeight { get; set; }
+        public Boolean? InboundWeight { get; set; }
+        public Boolean? OutboundWeight { get; set; }
         public string? GroupName { get; set; }
         public Boolean? Active { get; set; }
         public DateTime? UpdatedDate { get; set; }
