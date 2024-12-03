@@ -131,5 +131,28 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
         #endregion
+
+        #region OutBound December_2_2024
+        [HttpGet]
+        public async Task<IActionResult> GetTrailerList(string searchedText)
+        {
+            DataTable dt = await _queryDAL.GetTrailerList(searchedText);
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTruckList(string id)
+        {
+            DataTable dt = await _queryDAL.GetTruckDataList(id);
+            return Ok(dt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateOutBoundCheck(ICD_TruckProcessDto info)
+        {
+            ResponseMessage msg = await _updateDAL.CreateOutBoundCheck(info);
+            return Ok(msg);
+        }
+        #endregion
     }
 }

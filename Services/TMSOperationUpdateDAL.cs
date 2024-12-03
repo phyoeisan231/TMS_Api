@@ -341,6 +341,29 @@ namespace TMS_Api.Services
                 return msg;
             }
         }
+
+
+        #endregion
+
+        #region OutBound Check
+        public async Task<ResponseMessage> CreateOutBoundCheck(ICD_TruckProcessDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                ICD_TruckProcess outBound = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InYard=1 AND InNo=@inNo", new SqlParameter("@inNo", info.InNo)).SingleOrDefaultAsync();
+                if (outBound != null)
+                {
+                    ICD_OutBoundCheck outBCheck = new ICD_OutBoundCheck();
+                    outBCheck.OutYardID = outBound.InYardID;
+                }
+            }
+            catch(Exception e)
+            {
+                msg.MessageContent = e.Message;
+            }
+            return msg;
+        }
         #endregion
     }
 }
