@@ -637,9 +637,6 @@ namespace TMS_Api.Services
                     truck.TransporterID = info.TransporterID;
                     truck.Remarks = info.Remarks;
                     truck.Active = info.Active;
-                    truck.IsBlack = info.IsBlack;
-                    truck.BlackDate = info.BlackDate;
-                    truck.BlackRemovedDate = info.BlackRemovedDate;
                     truck.VehicleBackRegNo = info.VehicleBackRegNo;
                     truck.TruckWeight = info.TruckWeight;
                     truck.DriverLicenseNo = info.DriverLicenseNo;
@@ -652,7 +649,40 @@ namespace TMS_Api.Services
 
                     await _context.SaveChangesAsync();
                     msg.MessageContent = "Successfully updated";
-                    msg.Status = true; // Set status to true for a successful operation
+                    msg.Status = true; 
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+        }
+        public async Task<ResponseMessage> BlackFormForTruck([FromBody] TruckDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                Truck truck = await _context.Truck.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
+
+                if (truck == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found";
+                    return msg;
+                }
+                else
+                {
+                    truck.IsBlack = info.IsBlack;
+                    truck.BlackDate = info.BlackDate;
+                    truck.BlackReason = info.BlackReason;
+                    truck.BlackRemovedDate = info.BlackRemovedDate;
+                    truck.BlackRemovedReason = info.BlackRemovedReason;
+                    
+                    await _context.SaveChangesAsync();
+                    msg.MessageContent = "Successfully Blacked";
+                    msg.Status = true; 
                     return msg;
                 }
             }
