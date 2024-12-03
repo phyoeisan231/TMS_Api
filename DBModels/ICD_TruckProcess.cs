@@ -85,6 +85,8 @@ namespace TMS_Api.DBModels
         public DateTime? InGatePassTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? OutGatePassTime { get; set; }
+        [Column(TypeName = "varchar(20)")]
+        public string? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
         [Column(TypeName = "datetime")]

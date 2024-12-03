@@ -123,13 +123,6 @@ namespace TMS_Api.Controllers
 
         #endregion
 
-        #region Gate In December_2_2024
-        [HttpGet]
-        public async Task<IActionResult> GetInBoundCheckCardList(string yard,string gate)
-        {
-            DataTable dt = await _queryDAL.GetInBoundCheckCardList(yard,gate);
-            return Ok(dt);
-        }
-        #endregion
+        
     }
 }

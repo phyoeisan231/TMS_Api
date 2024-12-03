@@ -90,7 +90,7 @@ namespace TMS_Api.Services
         public async Task<DataTable> GetTruckList(string id, string type)
         {
             string sql = "";
-            if (type == "RGL")
+            if (type == "RG")
             {
                 sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%" + id + "%' And IsRGL=1 And IsBlack<>1 OR IsBlack is null And Active=1";
             }

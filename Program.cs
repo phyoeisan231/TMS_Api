@@ -46,6 +46,8 @@ builder.Services.AddScoped<MasterQueryDAL>();
 builder.Services.AddScoped<MasterUpdateDAL>();
 builder.Services.AddScoped<TMSOperationQueryDAL>();
 builder.Services.AddScoped<TMSOperationUpdateDAL>();
+builder.Services.AddScoped<GateSupportQueryDAL>();
+builder.Services.AddScoped<GateSupportUpdateDAL>();
 builder.Services.AddAutoMapper(typeof(Program));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
