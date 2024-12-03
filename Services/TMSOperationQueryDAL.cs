@@ -151,5 +151,14 @@ namespace TMS_Api.Services
         }
 
         #endregion
+
+        #region Gate In Dec_2_2024
+        public async Task<DataTable> GetInBoundCheckCardList(string yard, string gate)
+        {
+            string sql = @"SELECT * from ICD_InBoundCheck  where Status=1 And InYardID=@yard And InGateID=@gate And InRegNo not in (select InRegNo from ICD_TruckProcess where InYardID=@yard And InGateID=@gate)";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate));
+            return dt;
+        }
+        #endregion
     }
 }

@@ -3,17 +3,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TMS_Api.DBModels
 {
-    public class OutBoundCheck
+    public class ICD_OutBoundCheck
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int OutRegNo { get; set; } = 0!;
+        public int OutRegNo { get; set; } = 0!;//mandatory
         [Column(TypeName = "varchar(25)")]
-        public string? OutYardID { get; set; }
+        public string? OutYardID { get; set; }//mandatory
         [Column(TypeName = "varchar(25)")]
-        public string? OutGateID { get; set; }
+        public string? OutGateID { get; set; }//mandatory
         [Column(TypeName = "varchar(10)")]
-        public string? OutPCCode { get; set; }
+        public string? OutPCCode { get; set; }//Category//mandatory
         [Column(TypeName = "varchar(25)")]
         public string? OutContainerType { get; set; }
         [Column(TypeName = "int")]
@@ -22,14 +22,18 @@ namespace TMS_Api.DBModels
         public string? OutType { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? OutCargoType { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? OutCargoInfo { get; set; }
         [Column(TypeName = "int")]
         public int? OutNoOfContainer { get; set; }
-        [Column(TypeName = "varchar(25)")]
-        public string? TruckType { get; set; }
+
         [Column(TypeName = "datetime")]
         public DateTime? OutCheckDateTime { get; set; }
-        [Column(TypeName = "decimal(18,5)")]
-        public decimal? OutBoundWeight { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? AreaID { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? TruckType { get; set; }
+
         [Column(TypeName = "varchar(25)")]
         public string? TruckVehicleRegNo { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -44,11 +48,16 @@ namespace TMS_Api.DBModels
         public string? JobDescription { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? CardNo { get; set; }
-
-        [Column(TypeName = "varchar(15)")]
-        public string? Status { get; set; }//Valid,Invalid
+        [Column(TypeName = "varchar(25)")]
+        public string? TransporterID { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? TransporterName { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
+        [Column(TypeName = "varchar(150)")]
+        public string? Customer { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }

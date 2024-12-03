@@ -81,7 +81,7 @@ namespace TMS_Api.Services
                     inBound.Status = false;
                     _context.ICD_InBoundCheck.Add(inBound);
                     await _context.SaveChangesAsync();
-                    List<DocumentSetting> documentList = await _context.DocumentSetting.FromSqlRaw("SELECT * FROM DocumentSetting WHERE PCCode=@id And AttachRequired=1 And Active=1", new SqlParameter("@id", info.InPCCode)).ToListAsync();
+                    List<DocumentSetting> documentList = await _context.DocumentSetting.FromSqlRaw("SELECT * FROM DocumentSetting WHERE PCCode=@id And IsInDoc=1 And Active=1", new SqlParameter("@id", info.InPCCode)).ToListAsync();
                     foreach (var i in documentList)
                     {
                         ICD_InBoundCheck_Document doc = new ICD_InBoundCheck_Document();
@@ -218,13 +218,13 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
-                    if (process != null)
-                    {
-                        msg.Status = false;
-                        msg.MessageContent = "Data is used by another process!";
-                        return msg;
-                    }
+                    //ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                    //if (process != null)
+                    //{
+                    //    msg.Status = false;
+                    //    msg.MessageContent = "Data is used by another process!";
+                    //    return msg;
+                    //}
                      _context.ICD_InBoundCheck.Remove(data);
                      List<ICD_InBoundCheck_Document> detailList = await _context.ICD_InBoundCheck_Document.FromSqlRaw("SELECT * FROM ICD_InBoundCheck_Document WHERE InRegNo=@id", new SqlParameter("@id", id)).ToListAsync();
                      if (detailList.Count > 0)
