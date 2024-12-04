@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using TMS_Api.DBModels;
 using TMS_Api.DTOs;
 using TMS_Api.Services;
 
@@ -18,7 +19,13 @@ namespace TMS_Api.Controllers
         }
 
         #region InBound Check Doc Nov_27_2024
-
+        [HttpGet]
+        public async Task<IActionResult> GetCategoryICDOList()
+        {
+            DataTable dt = await _queryDAL.GetCategoryICDOList();
+            return Ok(dt);
+        }
+        
         [HttpGet]
         public async Task<IActionResult> GetGateInBoundList(string yard)
         {
@@ -70,6 +77,12 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetWBDataList(string id)
+        {
+            DataTable dt = await _queryDAL.GetWBDataList(id);
+            return Ok(dt);
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetInBoundCheckList(DateTime startDate,DateTime endDate,string yard)
@@ -85,43 +98,105 @@ namespace TMS_Api.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SaveInBoundCheck(ICD_InBoundCheckDto info)
-        {
-            ResponseMessage msg = await _updateDAL.SaveInBoundCheck(info);
-            return Ok(msg);
-        }
+        #region old 
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateInBoundCheck(ICD_InBoundCheckDto info)
-        {
-            ResponseMessage msg = await _updateDAL.UpdateInBoundCheck(info);
-            return Ok(msg);
-        }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateInBoundCheckDocument(int id,string docList,string user)
-        {
-            ResponseMessage msg = await _updateDAL.UpdateInBoundCheckDocument(id,docList,user);
-            return Ok(msg);
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> SaveInBoundCheck(ICD_InBoundCheckDto info)
+        //{
+        //    ResponseMessage msg = await _updateDAL.SaveInBoundCheck(info);
+        //    return Ok(msg);
+        //}
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteInBoundCheck(int id,string user)
-        {
-            ResponseMessage msg = await _updateDAL.DeleteInBoundCheck(id,user);
-            return Ok(msg);
-        }
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateInBoundCheck(ICD_InBoundCheckDto info)
+        //{
+        //    ResponseMessage msg = await _updateDAL.UpdateInBoundCheck(info);
+        //    return Ok(msg);
+        //}
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteInBoundCheckDocument(int id, string code)
-        {
-            ResponseMessage msg = await _updateDAL.DeleteInBoundCheckDocument(id, code);
-            return Ok(msg);
-        }
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateInBoundCheckDocument(int id,string docList,string user)
+        //{
+        //    ResponseMessage msg = await _updateDAL.UpdateInBoundCheckDocument(id,docList,user);
+        //    return Ok(msg);
+        //}
+
+        //[HttpDelete]
+        //public async Task<IActionResult> DeleteInBoundCheck(int id,string user)
+        //{
+        //    ResponseMessage msg = await _updateDAL.DeleteInBoundCheck(id,user);
+        //    return Ok(msg);
+        //}
+
+        //[HttpDelete]
+        //public async Task<IActionResult> DeleteInBoundCheckDocument(int id, string code)
+        //{
+        //    ResponseMessage msg = await _updateDAL.DeleteInBoundCheckDocument(id, code);
+        //    return Ok(msg);
+        //}
 
         #endregion
 
-        
+
+        //[HttpPost]
+        //public async Task<IActionResult> SaveInBoundCheck(ICD_InBoundCheckDto info)
+        //{
+        //    ResponseMessage msg = await _updateDAL.SaveInBoundCheck(info);
+        //    return Ok(msg);
+        //}
+
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateInBoundCheck(ICD_InBoundCheckDto info)
+        //{
+        //    ResponseMessage msg = await _updateDAL.UpdateInBoundCheck(info);
+        //    return Ok(msg);
+        //}
+
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateInBoundCheckDocument(int id, string docList, string user)
+        //{
+        //    ResponseMessage msg = await _updateDAL.UpdateInBoundCheckDocument(id, docList, user);
+        //    return Ok(msg);
+        //}
+
+        //[HttpDelete]
+        //public async Task<IActionResult> DeleteInBoundCheck(int id, string user)
+        //{
+        //    ResponseMessage msg = await _updateDAL.DeleteInBoundCheck(id, user);
+        //    return Ok(msg);
+        //}
+
+        //[HttpDelete]
+        //public async Task<IActionResult> DeleteInBoundCheckDocument(int id, string code)
+        //{
+        //    ResponseMessage msg = await _updateDAL.DeleteInBoundCheckDocument(id, code);
+        //    return Ok(msg);
+        //}
+        #region New
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteInCheck(int id, string user)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteInCheck(id, user);
+            return Ok(msg);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SaveInCheck(ICD_InBoundCheckDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveInCheck(info);
+            return Ok(msg);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDocumentSettingList(string id)
+        {
+            DataTable dt = await _queryDAL.GetDocumentSettingList(id);
+            return Ok(dt);
+        }
+        #endregion
+        #endregion
+
+
     }
 }
