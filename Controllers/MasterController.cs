@@ -229,6 +229,13 @@ namespace TMS_Api.Controllers
         }
 
         [HttpPut]
+        public async Task<IActionResult> BlackFormForTruck([FromBody] TruckDto info)
+        {
+            ResponseMessage msg = await _updateDAL.BlackFormForTruck(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
         public async Task<IActionResult> UpdateTruck([FromForm] TruckDto info)
         {
             ResponseMessage msg = await _updateDAL.UpdateTruck(info);

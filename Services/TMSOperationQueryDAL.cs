@@ -173,6 +173,20 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@id",id));
             return dt;
         }
+
+        public async Task<DataTable> GetTrailerList(string searchedText)
+        {
+            string sql = $"SELECT VehicleRegNo FROM Trailer WHERE VehicleRegNo LIKE '%{searchedText}%'";
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+
+        public async Task<DataTable> GetTruckDataList(string id)
+        {
+            string sql = $"SELECT * FROM ICD_TruckProcess WHERE InYard=1 AND TruckVehicleRegNo Like '%{id}%'";
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
         #endregion
 
         #endregion
