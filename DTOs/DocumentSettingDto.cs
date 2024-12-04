@@ -7,6 +7,8 @@
         public string? PCCode { get; set; }
         public Boolean? AttachRequired { get; set; }
         public Boolean? Active { get; set; }
+        public Boolean? IsInDoc { get; set; }
+        public Boolean? IsOutDoc { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string? UpdatedUser { get; set; }
         public DateTime? CreatedDate { get; set; }

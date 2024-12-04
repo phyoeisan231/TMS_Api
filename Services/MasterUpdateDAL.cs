@@ -145,7 +145,7 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    Truck truck = await _context.Truck.FromSqlRaw("SELECT Top 1 * FROM Truck WHERE REPLACE(TypeID,' ','')=REPLACE(@name,' ','')", new SqlParameter("@name", type.TypeID)).SingleOrDefaultAsync();
+                    Truck truck = await _context.Truck.FromSqlRaw("SELECT Top 1 * FROM Truck WHERE TypeID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                     if (truck == null)
                     {
                         _context.TruckType.Remove(type);
@@ -157,7 +157,7 @@ namespace TMS_Api.Services
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data exists in another table!";
+                        msg.MessageContent = "Data Exists in Another Table!";
                     }
                 }
             }
@@ -437,6 +437,7 @@ namespace TMS_Api.Services
                     transporter.Active = info.Active;
                     transporter.ContactPerson = info.ContactPerson;
                     transporter.TypeID = info.TypeID;
+                    transporter.SAPID = info.SAPID;
                     transporter.IsBlack = info.IsBlack;
                     transporter.BlackDate = info.BlackDate;
                     transporter.BlackReason = info.BlackReason;
@@ -463,7 +464,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Transporter transporter = await _context.Transporter.FromSqlRaw("SELECT * FROM Transporter Where TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
+                Transporter? transporter = await _context.Transporter.FromSqlRaw("SELECT * FROM Transporter Where TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
                 if (transporter == null)
                 {
                     msg.Status = false;
@@ -471,11 +472,26 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    _context.Transporter.Remove(transporter);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
+                    ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
+                    Truck? truck = await _context.Truck.FromSqlRaw("SELECT TOP 1* FROM Truck WHERE TransporterID=@tID", new SqlParameter("@licenseNo", id)).SingleOrDefaultAsync();
+                    Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT TOP 1* FROM Trailer WHERE TransporterID=@tID", new SqlParameter("@licenseNo", id)).SingleOrDefaultAsync();
+
+                    if(ibCheck==null && obCheck==null && tProcess==null && truck==null && trailer == null)
+                    {
+                        _context.Transporter.Remove(transporter);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed";
+                        return msg;
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exists in Another Table!";
+                        return msg;
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -570,11 +586,23 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    _context.Gate.Remove(gate);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
+                    ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE InGateID=@gateID", new SqlParameter("@gateID", id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE OutGateID=@gateID", new SqlParameter("@gateID", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE InGateID=@gateID", new SqlParameter("@gateID", id)).SingleOrDefaultAsync();
+                    if(ibCheck==null && obCheck==null && tProcess == null)
+                    {
+                        _context.Gate.Remove(gate);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed";
+                        return msg;
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exists in Another Table!";
+                        return msg;
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -637,6 +665,7 @@ namespace TMS_Api.Services
                     truck.TransporterID = info.TransporterID;
                     truck.Remarks = info.Remarks;
                     truck.Active = info.Active;
+                    truck.IsRGL= info.IsRGL;
                     truck.VehicleBackRegNo = info.VehicleBackRegNo;
                     truck.TruckWeight = info.TruckWeight;
                     truck.DriverLicenseNo = info.DriverLicenseNo;
@@ -675,15 +704,21 @@ namespace TMS_Api.Services
                 else
                 {
                     truck.IsBlack = info.IsBlack;
-                    truck.BlackDate = info.BlackDate;
-                    truck.BlackReason = info.BlackReason;
-                    truck.BlackRemovedDate = info.BlackRemovedDate;
-                    truck.BlackRemovedReason = info.BlackRemovedReason;
-                    
+                    if (truck.IsBlack == true)
+                    {
+                        truck.BlackDate = info.BlackDate;
+                        truck.BlackReason = info.BlackReason;
+                    }
+                    else
+                    {
+                        truck.BlackRemovedDate = info.BlackRemovedDate;
+                        truck.BlackRemovedReason = info.BlackRemovedReason;
+                    }
                     await _context.SaveChangesAsync();
-                    msg.MessageContent = "Successfully Blacked";
-                    msg.Status = true; 
+                    msg.MessageContent = "Successfully";
+                    msg.Status = true;
                     return msg;
+
                 }
             }
             catch (DbUpdateException e)
@@ -705,11 +740,25 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    _context.Truck.Remove(truck);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
+                    ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+                    PCard? pCard = await _context.PCard.FromSqlRaw("SELECT TOP 1* FROM PCard WHERE VehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+
+                    if(ibCheck==null && obCheck==null && tProcess==null && pCard == null)
+                    {
+                        _context.Truck.Remove(truck);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed";
+                        return msg;
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exists in Another Table!";
+                        return msg;
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -914,7 +963,7 @@ namespace TMS_Api.Services
                 string decodedId = Uri.UnescapeDataString(id);
                 Console.WriteLine($"Received ID: {id}, Decoded ID: {decodedId}");
 
-                Driver driver = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE LicenseNo = @id", new SqlParameter("@id", decodedId)).SingleOrDefaultAsync();
+                Driver? driver = await _context.Driver.FromSqlRaw("SELECT * FROM Driver WHERE LicenseNo = @id", new SqlParameter("@id", decodedId)).SingleOrDefaultAsync();
 
                 if (driver == null)
                 {
@@ -923,10 +972,25 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    _context.Driver.Remove(driver);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
+                    ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE DriverLicenseNo=@licenseNo", new SqlParameter("@licenseNo", decodedId)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE DriverLicenseNo=@licenseNo", new SqlParameter("@licenseNo", decodedId)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE DriverLicenseNo=@licenseNo", new SqlParameter("@licenseNo", decodedId)).SingleOrDefaultAsync();
+                    Truck? truck = await _context.Truck.FromSqlRaw("SELECT TOP 1* FROM Truck WHERE DriverLicenseNo=@licenseNo", new SqlParameter("@licenseNo", decodedId)).SingleOrDefaultAsync();
+                    Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT TOP 1* FROM Trailer WHERE DriverLicenseNo=@licenseNo", new SqlParameter("@licenseNo", decodedId)).SingleOrDefaultAsync();
+
+                    if(ibCheck==null && obCheck==null && tProcess==null && truck==null && trailer == null)
+                    {
+                        _context.Driver.Remove(driver);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed";
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exists in Another Table!";
+                        return msg;
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -1014,41 +1078,40 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Yard data = await _context.Yard.FromSqlRaw("SELECT Top 1* FROM Yard WHERE REPLACE(YardID,'','')=REPLACE(@yID,'','')", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
-                if(data == null)
+                Yard? data = await _context.Yard.FromSqlRaw("SELECT Top 1* FROM Yard WHERE REPLACE(YardID,'','')=REPLACE(@yID,'','')", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                if (data == null)
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found";
                 }
                 else
                 {
-                    Gate gate=await _context.Gate.FromSqlRaw("SELECT Top 1* FROM Gate WHERE REPLACE(YardID,'','')=REPLACE(@yID,'','')",new SqlParameter("@yID",id)).SingleOrDefaultAsync();
+                    //Gate? gate = await _context.Gate.FromSqlRaw("SELECT Top 1* FROM Gate WHERE REPLACE(YardID,'','')=REPLACE(@yID,'','')", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                    Gate? gate = await _context.Gate.FromSqlRaw("SELECT TOP 1* FROM Gate WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                    WeightBridge? weightBridge = await _context.WeightBridge.FromSqlRaw("SELECT TOP 1* FROM WeightBridge WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                    OperationArea? opArea = await _context.OperationArea.FromSqlRaw("SELECT TOP 1* FROM OperationArea WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                    PCard? pCard = await _context.PCard.FromSqlRaw("SELECT TOP 1* FROM PCard WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                    //WaitingArea? waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT TOP 1* FROM WaitingArea WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                    ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE InYardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE OutYardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE InYardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
 
-                    if (gate == null)
+                    if (gate == null && weightBridge==null && opArea==null && pCard==null && ibCheck==null && obCheck==null && tProcess==null)
                     {
-                        WeightBridge weightBridge = await _context.WeightBridge.FromSqlRaw("SELECT TOP 1 * FROM WeightBridge WHERE REPLACE(YardID, '', '') = REPLACE(@yID, '', '')",new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                        _context.Yard.Remove(data);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed";
 
-                        if (weightBridge == null)
-                        {
-                            _context.Yard.Remove(data);
-                            await _context.SaveChangesAsync();
-                            msg.Status = true;
-                            msg.MessageContent = "Successfully Removed";
-                        }
-                        else
-                        {
-                            msg.Status = false;
-                            msg.MessageContent = "Data exists in WeightBridge table!";
-                        }
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data exists in Gate table!";
+                        msg.MessageContent = "Data exists in Another table!";
                     }
                 }
             }
-            catch(DbUpdateException e)
+            catch (DbUpdateException e)
             {
                 msg.MessageContent += e.Message;
                 return msg;
@@ -1544,7 +1607,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                PCategory pCategory = await _context.PCategory.FromSqlRaw("SELECT * FROM PCategory Where PCCode=@pCode", new SqlParameter("@pCode", id)).SingleOrDefaultAsync();
+                PCategory? pCategory = await _context.PCategory.FromSqlRaw("SELECT * FROM PCategory Where PCCode=@pCode", new SqlParameter("@pCode", id)).SingleOrDefaultAsync();
                 if (pCategory == null)
                 {
                     msg.Status = false;
@@ -1552,11 +1615,24 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    _context.PCategory.Remove(pCategory);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
+                    DocumentSetting? docSetting = await _context.DocumentSetting.FromSqlRaw("SELECT TOP 1* FROM DocumentSetting WHERE PCCode=@pcCode", new SqlParameter("@pcCode", id)).SingleOrDefaultAsync();
+                    ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE InPCCode=@pcCode", new SqlParameter("@pcCode", id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE OutPCCode=@pcCode", new SqlParameter("@pcCode", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE InPCCode=@pcCode", new SqlParameter("@pcCode", id)).SingleOrDefaultAsync();
+                    if(docSetting==null && ibCheck==null && obCheck==null && tProcess == null)
+                    {
+                        _context.PCategory.Remove(pCategory);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed";
+                        return msg;
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exists in Another Table!";
+                        return msg;
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -1645,7 +1721,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                PCard pCard = await _context.PCard.FromSqlRaw("SELECT * FROM PCard Where CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
+                PCard? pCard = await _context.PCard.FromSqlRaw("SELECT * FROM PCard Where CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
                 if (pCard == null)
                 {
                     msg.Status = false;
@@ -1653,11 +1729,23 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    _context.PCard.Remove(pCard);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
+                    ICD_InBoundCheck? ibCheck=await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE CardNo=@cardNo",new SqlParameter("@cardNo",id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
+                    if(ibCheck==null && obCheck==null && tProcess == null)
+                    {
+                        _context.PCard.Remove(pCard);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed";
+                        return msg;
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exists in Another table!";
+                        return msg;
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -1719,6 +1807,8 @@ namespace TMS_Api.Services
                     docSetting.DocName = info.DocName;
                     docSetting.PCCode = info.PCCode;
                     docSetting.AttachRequired = info.AttachRequired;
+                    docSetting.IsInDoc = info.IsInDoc;
+                    docSetting.IsOutDoc = info.IsOutDoc;
                     docSetting.Active = info.Active;
                     docSetting.UpdatedDate = GetLocalStdDT();
                     docSetting.UpdatedUser = info.UpdatedUser;
@@ -1739,7 +1829,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                DocumentSetting docSetting = await _context.DocumentSetting.FromSqlRaw("SELECT * FROM DocumentSetting Where DocCode=@docCode", new SqlParameter("@docCode", id)).SingleOrDefaultAsync();
+                DocumentSetting? docSetting = await _context.DocumentSetting.FromSqlRaw("SELECT * FROM DocumentSetting Where DocCode=@docCode", new SqlParameter("@docCode", id)).SingleOrDefaultAsync();
                 if (docSetting == null)
                 {
                     msg.Status = false;
@@ -1747,11 +1837,22 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    _context.DocumentSetting.Remove(docSetting);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
+                    ICD_InBoundCheck_Document? ibDocument = await _context.ICD_InBoundCheck_Document.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck_Document WHERE DocCode=@docCode", new SqlParameter("@docCode", id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck_Document? obDocument = await _context.ICD_OutBoundCheck_Document.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck_Document WHERE DocCode=@docCode", new SqlParameter("@docCode", id)).SingleOrDefaultAsync();
+                    if(ibDocument==null && obDocument == null)
+                    {
+                        _context.DocumentSetting.Remove(docSetting);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed";
+                        return msg;
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exists in Another Table!";
+                        return msg;
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -1833,7 +1934,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                OperationArea opArea = await _context.OperationArea.FromSqlRaw("SELECT * FROM OperationArea Where AreaID=@areaID", new SqlParameter("@areaID", id)).SingleOrDefaultAsync();
+                OperationArea? opArea = await _context.OperationArea.FromSqlRaw("SELECT * FROM OperationArea Where AreaID=@areaID", new SqlParameter("@areaID", id)).SingleOrDefaultAsync();
                 if (opArea == null)
                 {
                     msg.Status = false;
@@ -1841,11 +1942,24 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    _context.OperationArea.Remove(opArea);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
+                    ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE AreaID=@areaID", new SqlParameter("@areaID", id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE AreaID=@areaID", new SqlParameter("@areaID", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE AreaID=@areaID", new SqlParameter("@areaID", id)).SingleOrDefaultAsync();
+                    if(ibCheck==null && obCheck==null && tProcess == null)
+                    {
+                        _context.OperationArea.Remove(opArea);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed";
+                        return msg;
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exists in Another Table!";
+                        return msg;
+                    }
+                    
                 }
             }
             catch (DbUpdateException e)

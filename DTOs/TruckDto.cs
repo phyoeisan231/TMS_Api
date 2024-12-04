@@ -10,6 +10,7 @@ namespace TMS_Api.DTOs
         public string? TypeID { get; set; }
         public string? TransporterID { get; set; }
         public Boolean? Active { get; set; }
+        public Boolean? IsRGL { get; set; }
         public string? DriverLicenseNo { get; set; }
         public DateTime? LastPassedDate { get; set; }
         public string? VehicleBackRegNo { get; set; }
