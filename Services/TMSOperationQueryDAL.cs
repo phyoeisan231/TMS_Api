@@ -79,13 +79,13 @@ namespace TMS_Api.Services
         }
         public async Task<DataTable> GetOperationAreaList(string id)
         {
-            string sql = @"Select AreaID,Name,YardID from OperationArea where YardID=@yard And Active=1 And IsWaitingArea=0 or IsWaitingArea is null";
+            string sql = @"Select AreaID,Name,YardID from OperationArea where YardID=@yard And Active=1 And (IsWaitingArea=0 or IsWaitingArea is null)";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
             return dt;
         }
         public async Task<DataTable> GetCardICDList(string id)
         {
-            string sql = @"SELECT CardNo,GroupName,YardID from PCard Where GroupName in('ICD','Other') And Active=1 And IsUse=0 or IsUse is null And YardID=@yard";
+            string sql = @"SELECT CardNo,GroupName,YardID from PCard Where GroupName in('ICD','Other') And Active=1 And (IsUse=0 or IsUse is null) And YardID=@yard";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
             return dt;
         }
@@ -106,26 +106,26 @@ namespace TMS_Api.Services
         public async Task<DataTable> GetDriverList(string id)
         {
             DateTime strDate = GetLocalStdDT();
-            string sql = @"Select Name,LicenseNo,(LicenseNo +' | '+Name) as DriverName,LicenseExpiration,ContactNo from Driver where IsBlack<>1 OR IsBlack is null And Active=1 And LicenseNo not in (select DriverLicenseNo as LicenseNo from ICD_TruckProcess where Status<>'Out') And Cast(LicenseExpiration as Date)>=@eDate And LicenseNo like '%" + id + "%' ";
+            string sql = @"Select Name,LicenseNo,(LicenseNo +' | '+Name) as DriverName,LicenseExpiration,ContactNo from Driver where (IsBlack<>1 OR IsBlack is null) And Active=1 And LicenseNo not in (select DriverLicenseNo as LicenseNo from ICD_TruckProcess where Status<>'Out') And Cast(LicenseExpiration as Date)>=@eDate And LicenseNo like '%" + id + "%' ";
             DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@eDate", strDate));
             return dt;
         }
         public async Task<DataTable> GetTrailerList()
         {
-            string sql = @"Select VehicleRegNo,DriverLicenseNo,ContainerType,ContainerSize,TransporterID from Trailer where IsBlack<>1 OR IsBlack is null And Active=1 And VehicleRegNo not in (select TrailerVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
+            string sql = @"Select VehicleRegNo,DriverLicenseNo,ContainerType,ContainerSize,TransporterID from Trailer where (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TrailerVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
         public async Task<DataTable> GetTransporterList()
         {
-            string sql = @"select TransporterID,TransporterName,(TransporterID +' | '+TransporterName) as Name from Transporter Where Active=1 And IsBlack<>1 OR IsBlack is null";
+            string sql = @"select TransporterID,TransporterName,(TransporterID +' | '+TransporterName) as Name from Transporter Where Active=1 And (IsBlack<>1 OR IsBlack is null)";
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
 
         public async Task<DataTable> GetWBDataList(string id)
         {
-            string sql = @"Select Name,WeightBridgeID,YardID from WeightBridge where YardID=@yard  And Active=1";
+            string sql = @"Select Name,WeightBridgeID,YardID from WeightBridge where YardID=@yard And Active=1";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
             return dt;
         }
