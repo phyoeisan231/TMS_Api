@@ -13,7 +13,8 @@ namespace TMS_Api.DBModels
         public string? Name { get; set; }//mandatory
         [Column(TypeName = "varchar(25)")]
         public string? YardID { get; set; }//mandatory
-
+        [Column(TypeName = "bit")]
+        public Boolean? Active { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

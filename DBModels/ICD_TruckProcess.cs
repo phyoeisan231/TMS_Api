@@ -6,8 +6,7 @@ namespace TMS_Api.DBModels
     public class ICD_TruckProcess
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int InNo { get; set; } = 0!;
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Column(TypeName = "int")]
         public int? InRegNo { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -23,8 +22,6 @@ namespace TMS_Api.DBModels
         public string? InCargoType { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? InCargoInfo { get; set; }
-        [Column(TypeName = "int")]
-        public int? InNoOfContainer { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? InCheckDateTime { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -40,6 +37,8 @@ namespace TMS_Api.DBModels
         public string? DriverLicenseNo { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? DriverName { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? DriverContactNo { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? CardNo { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -73,6 +72,14 @@ namespace TMS_Api.DBModels
         public DateTime? InGatePassTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? OutGatePassTime { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? InboundWeight { get; set; }
+        [Column(TypeName = "bit")]
+        public Boolean? OutboundWeight { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? InWeightBridgeID { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? OutWeightBridgeID { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string? Status { get; set; }
         [Column(TypeName = "varchar(max)")]

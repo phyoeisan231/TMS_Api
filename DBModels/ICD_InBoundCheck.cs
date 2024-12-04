@@ -23,6 +23,7 @@ namespace TMS_Api.DBModels
         public string? InCargoType { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? InCargoInfo { get; set; }
+       
         //[Column(TypeName = "int")]
         //public int? InNoOfContainer { get; set; }
 
@@ -41,6 +42,8 @@ namespace TMS_Api.DBModels
         public string? DriverLicenseNo { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? DriverName { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? DriverContactNo { get; set; }
         //[Column(TypeName = "varchar(30)")]
         //public string? JobCode { get; set; }
         //[Column(TypeName = "varchar(150)")]
@@ -55,6 +58,10 @@ namespace TMS_Api.DBModels
         public Boolean? InboundWeight { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? OutboundWeight { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? InWeightBridgeID { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? OutWeightBridgeID { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
