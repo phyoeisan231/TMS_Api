@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -516,7 +517,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                ICD_TruckProcess outBound = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InYard=1 AND InNo=@inNo", new SqlParameter("@inNo", info.InNo)).SingleOrDefaultAsync();
+                ICD_TruckProcess outBound = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InYard=1 AND InNo=@inNo", new SqlParameter("@inNo", info.InRegNo)).SingleOrDefaultAsync();
                 if (outBound != null)
                 {
                     ICD_OutBoundCheck outBCheck = new ICD_OutBoundCheck();

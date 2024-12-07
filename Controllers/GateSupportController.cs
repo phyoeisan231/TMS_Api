@@ -26,8 +26,8 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> SaveGateIn(ICD_InBoundCheckDto info)
+        [HttpPost]
+        public async Task<IActionResult> SaveGateIn([FromForm] ICD_TruckProcessDto info)
         {
             ResponseMessage msg = await _updateDAL.SaveGateIn(info);
             return Ok(msg);
