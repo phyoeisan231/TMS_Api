@@ -65,108 +65,6 @@ namespace TMS_Api.Controllers
 
         #endregion
 
-        #region Trailer Type Nov_11_2024
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetTrailerTypeList(string active)
-        //{
-        //    DataTable dt = await _queryDAL.GetTrailerTypeList(active);
-        //    return Ok(dt);
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> SaveTrailerType(TrailerTypeDto info)
-        //{
-        //    ResponseMessage msg = await _updateDAL.SaveTrailerType(info);
-        //    return Ok(msg);
-        //}
-
-        //[HttpPut]
-        //public async Task<IActionResult> UpdateTrailerType(TrailerTypeDto info)
-        //{
-        //    ResponseMessage msg = await _updateDAL.UpdateTrailerType(info);
-        //    return Ok(msg);
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTrailerType(string id)
-        //{
-        //    ResponseMessage msg = await _updateDAL.DeleteTrailerType(id);
-        //    return Ok(msg);
-        //}
-        #endregion
-
-        #region Transporter_Type Nov_12_2024
-
-        [HttpGet]
-        public async Task<IActionResult> GetTransporterTypeList(string active)
-        {
-            DataTable dt = await _queryDAL.GetTransporterTypeList(active);
-            return Ok(dt);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveTransporterType(TransporterTypeDto info)
-        {
-            ResponseMessage msg = await _updateDAL.SaveTransporterType(info);
-            return Ok(msg);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateTransporterType(TransporterTypeDto info)
-        {
-            ResponseMessage msg = await _updateDAL.UpdateTransporterType(info);
-            return Ok(msg);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransporterType(string id)
-        {
-            ResponseMessage msg = await _updateDAL.DeleteTransporterType(id);
-            return Ok(msg);
-        }
-        #endregion
-
-        #region Transporter Nov_12_2024
-
-        [HttpGet]
-        public async Task<IActionResult> GetTransporterList()
-        {
-            DataTable dt = await _queryDAL.GetTransporterList();
-            return Ok(dt);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetTransporterId(string id)
-        {
-            TransporterDto transporterDto = await _queryDAL.GetTransporterId(id);
-            return Ok(transporterDto);
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> SaveTransporter([FromForm] TransporterDto info)
-        {
-            ResponseMessage msg = await _updateDAL.SaveTransporter(info);
-            return Ok(msg);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateTransporter([FromForm] TransporterDto info)
-        {
-            ResponseMessage msg = await _updateDAL.UpdateTransporter(info);
-            return Ok(msg);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransporter(string id)
-        {
-            ResponseMessage msg = await _updateDAL.DeleteTransporter(id);
-            return Ok(msg);
-        }
-
-        #endregion
-
         #region Gate Nov_11_2024
 
         [HttpGet]
@@ -205,6 +103,55 @@ namespace TMS_Api.Controllers
         }
         #endregion
 
+        #region Transporter Nov_12_2024
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetTransporterList(string active, string isBlack)
+        {
+            DataTable dt = await _queryDAL.GetTransporterList(active, isBlack);
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTransporterId(string id)
+        {
+            TransporterDto transporterDto = await _queryDAL.GetTransporterId(id);
+            return Ok(transporterDto);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SaveTransporter(TransporterDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveTransporter(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTransporter(TransporterDto info)
+        {
+            ResponseMessage msg = await _updateDAL.UpdateTransporter(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> BlackFormForTransporter([FromBody] TransporterDto info)
+        {
+            ResponseMessage msg = await _updateDAL.BlackFormForTransporter(info);
+            return Ok(msg);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTransporter(string id)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteTransporter(id);
+            return Ok(msg);
+        }
+
+        #endregion
+
+
         #region Truck Nov_12_2024
 
         [HttpGet]
@@ -222,7 +169,7 @@ namespace TMS_Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveTruck([FromForm] TruckDto info)
+        public async Task<IActionResult> SaveTruck(TruckDto info)
         {
             ResponseMessage msg = await _updateDAL.SaveTruck(info);
             return Ok(msg);
@@ -236,7 +183,7 @@ namespace TMS_Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateTruck([FromForm] TruckDto info)
+        public async Task<IActionResult> UpdateTruck(TruckDto info)
         {
             ResponseMessage msg = await _updateDAL.UpdateTruck(info);
             return Ok(msg);
@@ -270,16 +217,23 @@ namespace TMS_Api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> SaveTrailer([FromForm] TrailerDto info)
+        public async Task<IActionResult> SaveTrailer(TrailerDto info)
         {
             ResponseMessage msg = await _updateDAL.SaveTrailer(info);
             return Ok(msg);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateTrailer([FromForm] TrailerDto info)
+        public async Task<IActionResult> UpdateTrailer(TrailerDto info)
         {
             ResponseMessage msg = await _updateDAL.UpdateTrailer(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> BlackFormForTrailer([FromBody] TrailerDto info)
+        {
+            ResponseMessage msg = await _updateDAL.BlackFormForTrailer(info);
             return Ok(msg);
         }
 
@@ -294,11 +248,12 @@ namespace TMS_Api.Controllers
         #region Driver Nov_12_2024
 
         [HttpGet]
-        public async Task<IActionResult> GetDriverList(string active)
+        public async Task<IActionResult> GetDriverList(string active, string isBlack)
         {
-            DataTable dt = await _queryDAL.GetDriverList(active);
+            DataTable dt = await _queryDAL.GetDriverList(active, isBlack);
             return Ok(dt);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetDriverId(string id)
@@ -308,16 +263,23 @@ namespace TMS_Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveDriver([FromForm] DriverDto info)
+        public async Task<IActionResult> SaveDriver(DriverDto info)
         {
             ResponseMessage msg = await _updateDAL.SaveDriver(info);
             return Ok(msg);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateDriver([FromForm] DriverDto info)
+        public async Task<IActionResult> UpdateDriver(DriverDto info)
         {
             ResponseMessage msg = await _updateDAL.UpdateDriver(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> BlackFormForDriver([FromBody] DriverDto info)
+        {
+            ResponseMessage msg = await _updateDAL.BlackFormForDriver(info);
             return Ok(msg);
         }
 
@@ -329,6 +291,7 @@ namespace TMS_Api.Controllers
             return Ok(msg);
         }
         #endregion
+
 
         #region Yard Nov_20_2024
         [HttpGet]
@@ -359,6 +322,7 @@ namespace TMS_Api.Controllers
             return Ok(msg);
         }
         #endregion
+
 
         #region Truck_Entry_Type Nov_22_2024
 
@@ -430,6 +394,7 @@ namespace TMS_Api.Controllers
         }
         #endregion
 
+
         #region TruckJobType Nov_26_2024
 
         [HttpGet]
@@ -492,6 +457,7 @@ namespace TMS_Api.Controllers
         }
         #endregion
 
+
         #region PCategory Nov_27_2024
         [HttpGet]
         public async Task<IActionResult> GetPCategoryList(string active)
@@ -552,6 +518,7 @@ namespace TMS_Api.Controllers
             return Ok(msg);
         }
         #endregion
+
 
         #region DocumentSettings Nov_28_2024
 

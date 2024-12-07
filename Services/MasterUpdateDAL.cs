@@ -76,11 +76,12 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                TruckType data = await _context.TruckType.FromSqlRaw("SELECT TOP 1 * FROM TruckType WHERE REPLACE(Description,' ','') = REPLACE(@name,' ','')",new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
+                TruckType? data = await _context.TruckType.FromSqlRaw("SELECT TOP 1* FROM TruckType WHERE TypeID=@tID OR Description=@name Order By TypeID",
+                    new SqlParameter("@tID", info.TypeID), new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Truck-Type Name Duplicate !";
+                    msg.MessageContent = "Truck-Type Duplicate!!";
                 }
                 else
                 {
@@ -90,7 +91,7 @@ namespace TMS_Api.Services
                     _context.TruckType.Add(type);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully added!";
+                    msg.MessageContent = "Successfully Added!";
                 }
             }
             catch (DbUpdateException e)
@@ -110,7 +111,7 @@ namespace TMS_Api.Services
                 if (type == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data not found!";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
@@ -121,7 +122,7 @@ namespace TMS_Api.Services
                     _context.TruckType.Update(type);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully updated!";
+                    msg.MessageContent = "Successfully Updated!";
                 }
             }
             catch (DbUpdateException e)
@@ -140,7 +141,7 @@ namespace TMS_Api.Services
                 TruckType type = await _context.TruckType.FromSqlRaw("SELECT * FROM TruckType WHERE TypeID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                 if (type == null)
                 {
-                    msg.MessageContent = "Data not found.";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -152,12 +153,12 @@ namespace TMS_Api.Services
 
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Removed successfully!";
+                        msg.MessageContent = "Removed Successfully!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data Exists in Another Table!";
+                        msg.MessageContent = "Data Exists in Another Table!!";
                     }
                 }
             }
@@ -371,7 +372,7 @@ namespace TMS_Api.Services
         #endregion
 
         #region Transporter Nov_12_2024
-        public async Task<ResponseMessage> SaveTransporter([FromForm] TransporterDto info)
+        public async Task<ResponseMessage> SaveTransporter(TransporterDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
@@ -380,7 +381,7 @@ namespace TMS_Api.Services
                 if (duplicate != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Transporter Name duplicate";
+                    msg.MessageContent = "Transporter Name Duplicate!1";
                     return msg;
                 }
                 else
@@ -404,7 +405,7 @@ namespace TMS_Api.Services
                 _context.Transporter.Add(data);
                 await _context.SaveChangesAsync();
                 msg.Status = true;
-                msg.MessageContent = "Successfully added";
+                msg.MessageContent = "Successfully Added!";
             }
             catch (DbUpdateException e)
             {
@@ -413,7 +414,7 @@ namespace TMS_Api.Services
             }
             return msg;
         }
-        public async Task<ResponseMessage> UpdateTransporter([FromForm] TransporterDto info)
+        public async Task<ResponseMessage> UpdateTransporter(TransporterDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
@@ -423,7 +424,7 @@ namespace TMS_Api.Services
                 if (transporter == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -439,17 +440,52 @@ namespace TMS_Api.Services
                     transporter.TypeID = info.TypeID;
                     transporter.SAPID = info.SAPID;
                     transporter.IsBlack = info.IsBlack;
-                    transporter.BlackDate = info.BlackDate;
-                    transporter.BlackReason = info.BlackReason;
-                    transporter.BlackRemovedDate = info.BlackRemovedDate;
-                    transporter.BlackRemovedReason = info.BlackRemovedReason;
+                    
                     transporter.UpdatedDate = GetLocalStdDT();
                     transporter.UpdatedUser = info.UpdatedUser;
                     transporter.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
 
                     await _context.SaveChangesAsync();
-                    msg.MessageContent = "Successfully updated";
+                    msg.MessageContent = "Successfully Updated!";
                     msg.Status = true; // Set status to true for a successful operation
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+        }
+        public async Task<ResponseMessage> BlackFormForTransporter([FromBody] TransporterDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                Transporter transporter = await _context.Transporter.SingleOrDefaultAsync(t => t.TransporterID == info.TransporterID);
+
+                if (transporter == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found!!";
+                    return msg;
+                }
+                else
+                {
+                    transporter.IsBlack = info.IsBlack;
+                    if (transporter.IsBlack == true)
+                    {
+                        transporter.BlackDate = info.BlackDate;
+                        transporter.BlackReason = info.BlackReason;
+                    }
+                    else
+                    {
+                        transporter.BlackRemovedDate = info.BlackRemovedDate;
+                        transporter.BlackRemovedReason = info.BlackRemovedReason;
+                    }
+                    await _context.SaveChangesAsync();
+                    msg.MessageContent = "Success!";
+                    msg.Status = true;
                     return msg;
                 }
             }
@@ -468,29 +504,27 @@ namespace TMS_Api.Services
                 if (transporter == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
                     ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
                     ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
-                    Truck? truck = await _context.Truck.FromSqlRaw("SELECT TOP 1* FROM Truck WHERE TransporterID=@tID", new SqlParameter("@licenseNo", id)).SingleOrDefaultAsync();
-                    Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT TOP 1* FROM Trailer WHERE TransporterID=@tID", new SqlParameter("@licenseNo", id)).SingleOrDefaultAsync();
+                    Truck? truck = await _context.Truck.FromSqlRaw("SELECT TOP 1* FROM Truck WHERE TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
+                    Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT TOP 1* FROM Trailer WHERE TransporterID=@tID", new SqlParameter("@tID", id)).SingleOrDefaultAsync();
 
                     if(ibCheck==null && obCheck==null && tProcess==null && truck==null && trailer == null)
                     {
                         _context.Transporter.Remove(transporter);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully Removed";
-                        return msg;
+                        msg.MessageContent = "Successfully Removed!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data Exists in Another Table!";
-                        return msg;
+                        msg.MessageContent = "Data Exists in Another Table!!";
                     }
                 }
             }
@@ -510,29 +544,22 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Gate data = await _context.Gate.FromSqlRaw("SELECT Top 1 * FROM Gate WHERE REPLACE(Name,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
+                Gate? data = await _context.Gate.FromSqlRaw("SELECT Top 1 * FROM Gate WHERE GateID=@gID OR Name=@name Order By GateID",
+                    new SqlParameter("@gID",info.GateID),new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Name duplicate!";
+                    msg.MessageContent = "Data Duplicate!1";
+                    return msg;
                 }
                 else
                 {
-                    Gate gIDTest = await _context.Gate.FromSqlRaw("SELECT Top 1* FROM Gate WHERE REPLACE(GateID,'','')=REPLACE(@gID,'','')", new SqlParameter("@gID", info.GateID)).SingleOrDefaultAsync();
-                    if (gIDTest != null)
-                    {
-                        msg.Status = false;
-                        msg.MessageContent = "ID duplicate!";//For User Input ID Testing
-                    }
-                    else
-                    {
-                        Gate gate = _mapper.Map<Gate>(info);
-                        gate.UpdatedDate = GetLocalStdDT();
-                        _context.Gate.Add(gate);
-                        await _context.SaveChangesAsync();
-                        msg.Status = true;
-                        msg.MessageContent = "Successfully added";
-                    }
+                    Gate gate = _mapper.Map<Gate>(info);
+                    gate.UpdatedDate = GetLocalStdDT();
+                    _context.Gate.Add(gate);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Added!";
                 }
             }
             catch (DbUpdateException e)
@@ -551,19 +578,21 @@ namespace TMS_Api.Services
                 if (gate == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
+                    gate.GateID = info.GateID;
                     gate.Name = info.Name;
                     gate.YardID = info.YardID;
+                    gate.Type = info.Type;
                     gate.Active = info.Active;
                     gate.UpdatedDate = GetLocalStdDT();
                     gate.UpdatedUser = info.UpdatedUser;
                     _context.Gate.Update(gate);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully updated";
+                    msg.MessageContent = "Successfully Updated!";
                 }
             }
             catch (DbUpdateException e)
@@ -582,26 +611,26 @@ namespace TMS_Api.Services
                 if (gate == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
                     ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE InGateID=@gateID", new SqlParameter("@gateID", id)).SingleOrDefaultAsync();
                     ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE OutGateID=@gateID", new SqlParameter("@gateID", id)).SingleOrDefaultAsync();
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE InGateID=@gateID", new SqlParameter("@gateID", id)).SingleOrDefaultAsync();
-                    if(ibCheck==null && obCheck==null && tProcess == null)
+                    WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE GateID=@gateID", new SqlParameter("@gateID", id)).SingleOrDefaultAsync();
+
+                    if (ibCheck==null && obCheck==null && tProcess == null && wbQueue==null)
                     {
                         _context.Gate.Remove(gate);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully Removed";
-                        return msg;
+                        msg.MessageContent = "Successfully Removed!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data Exists in Another Table!";
-                        return msg;
+                        msg.MessageContent = "Data Exists in Another Table!!";
                     }
                 }
             }
@@ -615,7 +644,7 @@ namespace TMS_Api.Services
         #endregion
 
         #region Truck Nov_12_2024
-        public async Task<ResponseMessage> SaveTruck([FromForm] TruckDto info)
+        public async Task<ResponseMessage> SaveTruck(TruckDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
@@ -624,7 +653,7 @@ namespace TMS_Api.Services
                 if (truck != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!1";
                     return msg;
                 }
                 else
@@ -635,7 +664,7 @@ namespace TMS_Api.Services
                     _context.Truck.Add(data);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully added";
+                    msg.MessageContent = "Successfully Added!";
                 }
             }
             catch (DbUpdateException e)
@@ -645,7 +674,7 @@ namespace TMS_Api.Services
             }
             return msg;
         }
-        public async Task<ResponseMessage> UpdateTruck([FromForm] TruckDto info)
+        public async Task<ResponseMessage> UpdateTruck(TruckDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
@@ -655,7 +684,7 @@ namespace TMS_Api.Services
                 if (truck == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -666,6 +695,7 @@ namespace TMS_Api.Services
                     truck.Remarks = info.Remarks;
                     truck.Active = info.Active;
                     truck.IsRGL= info.IsRGL;
+                    truck.IsBlack = info.IsBlack;
                     truck.VehicleBackRegNo = info.VehicleBackRegNo;
                     truck.TruckWeight = info.TruckWeight;
                     truck.DriverLicenseNo = info.DriverLicenseNo;
@@ -677,7 +707,7 @@ namespace TMS_Api.Services
                     truck.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
 
                     await _context.SaveChangesAsync();
-                    msg.MessageContent = "Successfully updated";
+                    msg.MessageContent = "Successfully Updated!";
                     msg.Status = true; 
                     return msg;
                 }
@@ -698,7 +728,7 @@ namespace TMS_Api.Services
                 if (truck == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -715,7 +745,7 @@ namespace TMS_Api.Services
                         truck.BlackRemovedReason = info.BlackRemovedReason;
                     }
                     await _context.SaveChangesAsync();
-                    msg.MessageContent = "Successfully";
+                    msg.MessageContent = "Success!";
                     msg.Status = true;
                     return msg;
 
@@ -736,7 +766,7 @@ namespace TMS_Api.Services
                 if (truck == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
@@ -744,20 +774,19 @@ namespace TMS_Api.Services
                     ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
                     PCard? pCard = await _context.PCard.FromSqlRaw("SELECT TOP 1* FROM PCard WHERE VehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+                    WeightBridgeQueue? wbQueue= await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
 
-                    if(ibCheck==null && obCheck==null && tProcess==null && pCard == null)
+                    if(ibCheck==null && obCheck==null && tProcess==null && pCard == null && wbQueue==null)
                     {
                         _context.Truck.Remove(truck);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully Removed";
-                        return msg;
+                        msg.MessageContent = "Successfully Removed!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data Exists in Another Table!";
-                        return msg;
+                        msg.MessageContent = "Data Exists in Another Table!!";
                     }
                 }
             }
@@ -772,7 +801,7 @@ namespace TMS_Api.Services
         #endregion
 
         #region Trailer Nov_12_2024
-        public async Task<ResponseMessage> SaveTrailer([FromForm] TrailerDto info)
+        public async Task<ResponseMessage> SaveTrailer(TrailerDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
@@ -781,7 +810,7 @@ namespace TMS_Api.Services
                 if (trailer != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -793,7 +822,7 @@ namespace TMS_Api.Services
                     _context.Trailer.Add(data);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully added";
+                    msg.MessageContent = "Successfully Added!";
                 }
             }
             catch (DbUpdateException e)
@@ -803,7 +832,7 @@ namespace TMS_Api.Services
             }
             return msg;
         }
-        public async Task<ResponseMessage> UpdateTrailer([FromForm] TrailerDto info)
+        public async Task<ResponseMessage> UpdateTrailer(TrailerDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
@@ -813,7 +842,7 @@ namespace TMS_Api.Services
                 if (trailer == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -825,18 +854,55 @@ namespace TMS_Api.Services
                     trailer.TransporterID = info.TransporterID;
                     trailer.Remarks = info.Remarks;
                     trailer.Active = info.Active;
-                    trailer.VehicleBackRegNo = info.VehicleBackRegNo;
                     trailer.IsBlack = info.IsBlack;
+                    trailer.VehicleBackRegNo = info.VehicleBackRegNo;
                     trailer.DriverLicenseNo = info.DriverLicenseNo;
-                    trailer.BlackRemovedDate = info.BlackRemovedDate;
-                    trailer.BlackDate = info.BlackDate;
+                   
                     trailer.LastPassedDate = info.LastPassedDate;
                     trailer.UpdatedDate = GetLocalStdDT();
                     trailer.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
 
                     await _context.SaveChangesAsync();
-                    msg.MessageContent = "Successfully updated";
+                    msg.MessageContent = "Successfully Updated!";
                     msg.Status = true; // Set status to true for a successful operation
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+        }
+        public async Task<ResponseMessage> BlackFormForTrailer([FromBody] TrailerDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                Trailer trailer = await _context.Trailer.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
+
+                if (trailer == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found!!";
+                    return msg;
+                }
+                else
+                {
+                    trailer.IsBlack = info.IsBlack;
+                    if (trailer.IsBlack == true)
+                    {
+                        trailer.BlackDate = info.BlackDate;
+                        trailer.BlackReason = info.BlackReason;
+                    }
+                    else
+                    {
+                        trailer.BlackRemovedDate = info.BlackRemovedDate;
+                        trailer.BlackRemovedReason = info.BlackRemovedReason;
+                    }
+                    await _context.SaveChangesAsync();
+                    msg.MessageContent = "Success!";
+                    msg.Status = true;
                     return msg;
                 }
             }
@@ -855,15 +921,26 @@ namespace TMS_Api.Services
                 if (trailer == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!";
                 }
                 else
                 {
-                    _context.Trailer.Remove(trailer);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
+                    ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE TrailerVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE TrailerVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE TrailerVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+                    WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE TrailerVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+                    if(ibCheck==null && obCheck==null && tProcess==null && wbQueue == null)
+                    {
+                        _context.Trailer.Remove(trailer);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed!";
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exitsts in Another Table!";
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -877,7 +954,7 @@ namespace TMS_Api.Services
         #endregion
 
         #region Driver Nov_12_2024
-        public async Task<ResponseMessage> SaveDriver([FromForm] DriverDto info)
+        public async Task<ResponseMessage> SaveDriver(DriverDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
@@ -886,7 +963,7 @@ namespace TMS_Api.Services
                 if (driver != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -898,7 +975,7 @@ namespace TMS_Api.Services
                     _context.Driver.Add(data);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully added";
+                    msg.MessageContent = "Successfully Added!";
                 }
             }
             catch (DbUpdateException e)
@@ -908,7 +985,7 @@ namespace TMS_Api.Services
             }
             return msg;
         }
-        public async Task<ResponseMessage> UpdateDriver([FromForm] DriverDto info)
+        public async Task<ResponseMessage> UpdateDriver(DriverDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
@@ -917,7 +994,7 @@ namespace TMS_Api.Services
                 if (driver == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -933,15 +1010,12 @@ namespace TMS_Api.Services
                     driver.Email = info.Email;
                     driver.Remarks = info.Remarks;
                     driver.IsBlack = info.IsBlack;
-                    driver.BlackDate = info.BlackDate;
-                    driver.BlackReason = info.BlackReason;
-                    driver.BlackRemovedDate = info.BlackRemovedDate;
-                    driver.BlackRemovedReason = info.BlackRemovedReason;
+                    
                     driver.UpdatedDate = GetLocalStdDT();
                     driver.UpdatedUser = _httpContextAccessor.HttpContext?.User.Identity.Name ?? "UnknownUser";
 
                     await _context.SaveChangesAsync();
-                    msg.MessageContent = "Successfully Updated";
+                    msg.MessageContent = "Successfully Updated!";
                     msg.Status = true;
                     return msg;
 
@@ -952,6 +1026,44 @@ namespace TMS_Api.Services
                 msg.MessageContent += e.Message;
                 return msg;
 
+            }
+        }
+        public async Task<ResponseMessage> BlackFormForDriver([FromBody] DriverDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                Driver driver = await _context.Driver.SingleOrDefaultAsync(t => t.LicenseNo== info.LicenseNo);
+
+                if (driver == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found!!";
+                    return msg;
+                }
+                else
+                {
+                    driver.IsBlack = info.IsBlack;
+                    if (driver.IsBlack == true)
+                    {
+                        driver.BlackDate = info.BlackDate;
+                        driver.BlackReason = info.BlackReason;
+                    }
+                    else
+                    {
+                        driver.BlackRemovedDate = info.BlackRemovedDate;
+                        driver.BlackRemovedReason = info.BlackRemovedReason;
+                    }
+                    await _context.SaveChangesAsync();
+                    msg.MessageContent = "Success!";
+                    msg.Status = true;
+                    return msg;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
             }
         }
         public async Task<ResponseMessage> DeleteDriver(string id)
@@ -968,7 +1080,7 @@ namespace TMS_Api.Services
                 if (driver == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
@@ -983,13 +1095,12 @@ namespace TMS_Api.Services
                         _context.Driver.Remove(driver);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully Removed";
+                        msg.MessageContent = "Successfully Removed!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data Exists in Another Table!";
-                        return msg;
+                        msg.MessageContent = "Data Exists in Another Table!!";
                     }
                 }
             }
@@ -1003,39 +1114,70 @@ namespace TMS_Api.Services
         #endregion
 
         #region Yard Nov_26_2024
+
+        //public async Task<ResponseMessage> SaveYard(YardDto info)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+
+        //        Yard data = await _context.Yard.FromSqlRaw("SELECT Top 1 * FROM Yard WHERE REPLACE(Name,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
+        //        if (data != null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Name Duplicate!";
+        //        }
+        //        else
+        //        {
+        //            Yard yardIDTest = await _context.Yard.FromSqlRaw("SELECT Top 1* FROM Yard WHERE REPLACE(YardID,'','')=REPLACE(@yID,'','')", new SqlParameter("@yID", info.YardID)).SingleOrDefaultAsync();
+        //            if (yardIDTest != null)
+        //            {
+        //                msg.Status = false;
+        //                msg.MessageContent = "YardID Duplicate!";//For User Input ID Testing
+        //            }
+        //            else
+        //            {
+        //                Yard yard = _mapper.Map<Yard>(info);
+        //                yard.CreatedDate = GetLocalStdDT();
+        //                _context.Yard.Add(yard);
+        //                await _context.SaveChangesAsync();
+        //                msg.Status = true;
+        //                msg.MessageContent = "Successfully Added";
+        //            }
+        //        }
+
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
         public async Task<ResponseMessage> SaveYard(YardDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
 
-                Yard data = await _context.Yard.FromSqlRaw("SELECT Top 1 * FROM Yard WHERE REPLACE(Name,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
+                Yard data = await _context.Yard.FromSqlRaw("SELECT TOP 1* FROM Yard WHERE YardID=@yId OR Name=@name ORDER By YardID", new SqlParameter("@yId", info.YardID), new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Name duplicate!";
+                    msg.MessageContent = "Data Duplicate!!";
+                    return msg;
                 }
                 else
                 {
-                    Yard yardIDTest = await _context.Yard.FromSqlRaw("SELECT Top 1* FROM Yard WHERE REPLACE(YardID,'','')=REPLACE(@yID,'','')", new SqlParameter("@yID", info.YardID)).SingleOrDefaultAsync();
-                    if (yardIDTest != null)
-                    {
-                        msg.Status = false;
-                        msg.MessageContent = "YardID duplicate!";//For User Input ID Testing
-                    }
-                    else
-                    {
-                        Yard yard = _mapper.Map<Yard>(info);
-                        yard.CreatedDate = GetLocalStdDT();
-                        _context.Yard.Add(yard);
-                        await _context.SaveChangesAsync();
-                        msg.Status = true;
-                        msg.MessageContent = "Successfully added";
-                    }
+                    Yard yard = _mapper.Map<Yard>(info);
+                    yard.CreatedDate = GetLocalStdDT();
+                    _context.Yard.Add(yard);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Added!";
                 }
-                
             }
-            catch (DbUpdateException e)
+            catch(DbUpdateException e)
             {
                 msg.MessageContent += e.Message;
                 return msg;
@@ -1051,7 +1193,7 @@ namespace TMS_Api.Services
                 if (yard == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
@@ -1063,7 +1205,7 @@ namespace TMS_Api.Services
                     _context.Yard.Update(yard);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully updated";
+                    msg.MessageContent = "Successfully Updated!";
                 }
             }
             catch (DbUpdateException e)
@@ -1082,7 +1224,7 @@ namespace TMS_Api.Services
                 if (data == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
@@ -1091,23 +1233,23 @@ namespace TMS_Api.Services
                     WeightBridge? weightBridge = await _context.WeightBridge.FromSqlRaw("SELECT TOP 1* FROM WeightBridge WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
                     OperationArea? opArea = await _context.OperationArea.FromSqlRaw("SELECT TOP 1* FROM OperationArea WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
                     PCard? pCard = await _context.PCard.FromSqlRaw("SELECT TOP 1* FROM PCard WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
-                    //WaitingArea? waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT TOP 1* FROM WaitingArea WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
                     ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE InYardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
                     ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE OutYardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE InYardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
+                    WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
 
-                    if (gate == null && weightBridge==null && opArea==null && pCard==null && ibCheck==null && obCheck==null && tProcess==null)
+
+                    if (gate == null && weightBridge==null && opArea==null && pCard==null && ibCheck==null && obCheck==null && tProcess==null && wbQueue==null)
                     {
                         _context.Yard.Remove(data);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully Removed";
-
+                        msg.MessageContent = "Successfully Removed!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data exists in Another table!";
+                        msg.MessageContent = "Data exists in Another Table!!";
                     }
                 }
             }
@@ -1127,31 +1269,22 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                WeightBridge weightBridge = await _context.WeightBridge.FromSqlRaw("SELECT Top 1 * FROM WeightBridge WHERE REPLACE(Name,' ','')=REPLACE(@name,' ','')", new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
+                WeightBridge? weightBridge = await _context.WeightBridge.FromSqlRaw("SELECT Top 1 * FROM WeightBridge WHERE REPLACE(Name,' ','')=REPLACE(@name,' ','') OR REPLACE(WeightBridgeID,'','')=REPLACE(@wbID,'','')"
+                    ,new SqlParameter("@wbID",info.WeightBridgeID), new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
                 if (weightBridge != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Name Duplicate!";
+                    msg.MessageContent = "Data Duplicate!!";
                     return msg;
                 }
                 else
                 {
-                    WeightBridge wIDTest = await _context.WeightBridge.FromSqlRaw("SELECT Top 1* FROM WeightBridge WHERE REPLACE(WeightBridgeID,'','')=REPLACE(@wID,'','')", new SqlParameter("@wID", info.WeightBridgeID)).SingleOrDefaultAsync();
-                    if (wIDTest != null)
-                    {
-                        msg.Status = false;
-                        msg.MessageContent = "ID duplicate!";//For User Input ID Testing
-                    }
-                    else
-                    {
-                        WeightBridge data = _mapper.Map<WeightBridge>(info);
-                        data.CreatedDate = GetLocalStdDT();
-                        _context.WeightBridge.Add(data);
-                        await _context.SaveChangesAsync();
-                        msg.Status = true;
-                        msg.MessageContent = "Successfully added";
-
-                    }
+                    WeightBridge data = _mapper.Map<WeightBridge>(info);
+                    data.CreatedDate = GetLocalStdDT();
+                    _context.WeightBridge.Add(data);
+                    await _context.SaveChangesAsync();
+                    msg.Status = true;
+                    msg.MessageContent = "Successfully Added!";
                 }
             }
             catch (DbUpdateException e)
@@ -1170,7 +1303,7 @@ namespace TMS_Api.Services
                 if (weightBridge == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -1178,10 +1311,11 @@ namespace TMS_Api.Services
                     weightBridge.WeightBridgeID = info.WeightBridgeID;
                     weightBridge.Name = info.Name;
                     weightBridge.YardID = info.YardID;
+                    weightBridge.Active = info.Active;
                     weightBridge.UpdatedDate = GetLocalStdDT();
                     weightBridge.UpdatedUser = info.UpdatedUser;
                     await _context.SaveChangesAsync();
-                    msg.MessageContent = "Successfully Updated";
+                    msg.MessageContent = "Successfully Updated!";
                     msg.Status = true;
                     return msg;
                 }
@@ -1201,15 +1335,27 @@ namespace TMS_Api.Services
                 if (weightBridge == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
-                    _context.WeightBridge.Remove(weightBridge);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
+                    WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE WeightBridgeID=@wbID", new SqlParameter("@wbID", id)).SingleOrDefaultAsync();
+                    ICD_InBoundCheck? ibCheck = await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE InWeightBridgeID=@wbID", new SqlParameter("@wbID", id)).SingleOrDefaultAsync();
+                    ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE OutWeightBridgeID=@wbID", new SqlParameter("@wbID", id)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE InWeightBridgeID=@wbID", new SqlParameter("@wbID", id)).SingleOrDefaultAsync();
+
+                    if (wbQueue == null && ibCheck==null && obCheck==null && tProcess==null)
+                    {
+                        _context.WeightBridge.Remove(weightBridge);
+                        await _context.SaveChangesAsync();
+                        msg.Status = true;
+                        msg.MessageContent = "Successfully Removed!";
+                    }
+                    else
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Data Exitsts in Another Table!!";
+                    }
                 }
             }
             catch (DbUpdateException e)
@@ -1233,7 +1379,7 @@ namespace TMS_Api.Services
                 if (data != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Name duplicate!";
+                    msg.MessageContent = "Name Duplicate!";
                 }
                 else
                 {
@@ -1241,7 +1387,7 @@ namespace TMS_Api.Services
                     if (tIDTest != null)
                     {
                         msg.Status = false;
-                        msg.MessageContent = "ID duplicate!";//For User Input ID Testing
+                        msg.MessageContent = "ID Duplicate!";//For User Input ID Testing
                     }
                     else
                     {
@@ -1250,7 +1396,7 @@ namespace TMS_Api.Services
                         _context.TruckEntryType.Add(truck);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully added";
+                        msg.MessageContent = "Successfully Added!";
                     }
                 }
 
@@ -1271,7 +1417,7 @@ namespace TMS_Api.Services
                 if (type == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data not found!";
+                    msg.MessageContent = "Data Not Found!";
                 }
                 else
                 {
@@ -1282,7 +1428,7 @@ namespace TMS_Api.Services
                     _context.TruckEntryType.Update(type);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully updated!";
+                    msg.MessageContent = "Successfully Updated!";
                 }
             }
             catch (DbUpdateException e)
@@ -1301,14 +1447,14 @@ namespace TMS_Api.Services
                 if (type == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!";
                 }
                 else
                 {
                     _context.TruckEntryType.Remove(type);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
+                    msg.MessageContent = "Successfully Removed!";
                     return msg;
                 }
             }
@@ -1333,7 +1479,7 @@ namespace TMS_Api.Services
                 if (data != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Name duplicate!";
+                    msg.MessageContent = "Name Duplicate!";
                 }
                 else
                 {
@@ -1341,7 +1487,7 @@ namespace TMS_Api.Services
                     if (tIDTest != null)
                     {
                         msg.Status = false;
-                        msg.MessageContent = "ID duplicate!";//For User Input ID Testing
+                        msg.MessageContent = "ID Duplicate!";//For User Input ID Testing
                     }
                     else
                     {
@@ -1350,7 +1496,7 @@ namespace TMS_Api.Services
                         _context.TruckJobType.Add(truck);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully added";
+                        msg.MessageContent = "Successfully Added!";
                     }
                 }
 
@@ -1371,7 +1517,7 @@ namespace TMS_Api.Services
                 if (type == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!";
                 }
                 else
                 {
@@ -1383,7 +1529,7 @@ namespace TMS_Api.Services
                     _context.TruckJobType.Update(type);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully updated";
+                    msg.MessageContent = "Successfully Updated!";
                 }
             }
             catch (DbUpdateException e)
@@ -1402,14 +1548,14 @@ namespace TMS_Api.Services
                 if (type == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!";
                 }
                 else
                 {
                     _context.TruckJobType.Remove(type);
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
+                    msg.MessageContent = "Successfully Removed!";
                     return msg;
                 }
             }
@@ -1532,7 +1678,7 @@ namespace TMS_Api.Services
             try
             {
                 // Check if either CategoryName or PCCode is duplicated
-                PCategory duplicateCheck = await _context.PCategory
+                PCategory? duplicateCheck = await _context.PCategory
                     .FromSqlRaw("SELECT TOP 1 * FROM PCategory WHERE REPLACE(CategoryName, ' ', '') = REPLACE(@name, ' ', '') OR REPLACE(PCCode, '', '') = REPLACE(@pCode, '', '')",
                      new SqlParameter("@name", info.CategoryName),new SqlParameter("@pCode", info.PCCode)).SingleOrDefaultAsync();
 
@@ -1540,11 +1686,11 @@ namespace TMS_Api.Services
                 {
                     if (duplicateCheck.CategoryName == info.CategoryName)
                     {
-                        msg.MessageContent = "Name Duplicate!";
+                        msg.MessageContent = "Name Duplicate!!";
                     }
                     else if (duplicateCheck.PCCode == info.PCCode)
                     {
-                        msg.MessageContent = "ID Duplicate!";
+                        msg.MessageContent = "ID Duplicate!!";
                     }
 
                     msg.Status = false;
@@ -1558,7 +1704,7 @@ namespace TMS_Api.Services
                 await _context.SaveChangesAsync();
 
                 msg.Status = true;
-                msg.MessageContent = "Successfully added";
+                msg.MessageContent = "Successfully Added!";
             }
             catch (DbUpdateException e)
             {
@@ -1577,7 +1723,7 @@ namespace TMS_Api.Services
                 if (pCategory == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -1591,7 +1737,7 @@ namespace TMS_Api.Services
                     pCategory.UpdatedDate = GetLocalStdDT();
                     pCategory.UpdatedUser = info.UpdatedUser;
                     await _context.SaveChangesAsync();
-                    msg.MessageContent = "Successfully Updated";
+                    msg.MessageContent = "Successfully Updated!";
                     msg.Status = true;
                     return msg;
                 }
@@ -1611,7 +1757,7 @@ namespace TMS_Api.Services
                 if (pCategory == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
@@ -1624,14 +1770,12 @@ namespace TMS_Api.Services
                         _context.PCategory.Remove(pCategory);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully Removed";
-                        return msg;
+                        msg.MessageContent = "Successfully Removed!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data Exists in Another Table!";
-                        return msg;
+                        msg.MessageContent = "Data Exists in Another Table!!";
                     }
                 }
             }
@@ -1651,7 +1795,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                PCard card = await _context.PCard.FromSqlRaw("SELECT Top 1* FROM PCard WHERE YardID=@yid And GroupName=@gname Order By CardNo Desc", new SqlParameter("@yid", info.YardID), new SqlParameter("@gname", info.GroupName)).SingleOrDefaultAsync();
+                PCard? card = await _context.PCard.FromSqlRaw("SELECT Top 1* FROM PCard WHERE YardID=@yid And GroupName=@gname Order By CardNo Desc", new SqlParameter("@yid", info.YardID), new SqlParameter("@gname", info.GroupName)).SingleOrDefaultAsync();
                 int srNo = 1;
                 string id = string.IsNullOrEmpty(info.YardID) ? "" : info.YardID + "-";
                 string sg = string.IsNullOrEmpty(info.GroupName) ? "" : info.GroupName.Substring(0, 1) + "-";
@@ -1671,7 +1815,7 @@ namespace TMS_Api.Services
                 _context.PCard.Add(data);
                 await _context.SaveChangesAsync();
                 msg.Status = true;
-                msg.MessageContent = "Successfully added";
+                msg.MessageContent = "Successfully Added!";
             }
             catch (DbUpdateException e)
             {
@@ -1685,11 +1829,11 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                PCard pCard = await _context.PCard.SingleOrDefaultAsync(tt => tt.CardNo == info.CardNo);
+                PCard? pCard = await _context.PCard.SingleOrDefaultAsync(tt => tt.CardNo == info.CardNo);
                 if (pCard == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -1705,7 +1849,7 @@ namespace TMS_Api.Services
                     pCard.UpdatedDate = GetLocalStdDT();
                     pCard.UpdatedUser = info.UpdatedUser;
                     await _context.SaveChangesAsync();
-                    msg.MessageContent = "Successfully Updated";
+                    msg.MessageContent = "Successfully Updated!";
                     msg.Status = true;
                     return msg;
                 }
@@ -1725,26 +1869,26 @@ namespace TMS_Api.Services
                 if (pCard == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
                     ICD_InBoundCheck? ibCheck=await _context.ICD_InBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_InBoundCheck WHERE CardNo=@cardNo",new SqlParameter("@cardNo",id)).SingleOrDefaultAsync();
                     ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
-                    if(ibCheck==null && obCheck==null && tProcess == null)
+                    WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
+
+                    if (ibCheck==null && obCheck==null && tProcess == null && wbQueue==null)
                     {
                         _context.PCard.Remove(pCard);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully Removed";
-                        return msg;
+                        msg.MessageContent = "Successfully Removed!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data Exists in Another table!";
-                        return msg;
+                        msg.MessageContent = "Data Exists in Another table!!";
                     }
                 }
             }
@@ -1764,12 +1908,12 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                DocumentSetting data = await _context.DocumentSetting.FromSqlRaw("SELECT TOP 1* FROM DocumentSetting WHERE REPLACE(DocCode,'','')=REPLACE(@docCode,'','')",
-                    new SqlParameter("@docCode", info.DocCode)).SingleOrDefaultAsync();
+                DocumentSetting? data = await _context.DocumentSetting.FromSqlRaw("SELECT TOP 1* FROM DocumentSetting WHERE REPLACE(DocCode,'','')=REPLACE(@docCode,'','') OR REPLACE(DocName,'','')=REPLACE(@docName,'','')", new SqlParameter("@docCode", info.DocCode),new SqlParameter("@docName",info.DocName)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Document Code Duplicate!!";
+                    msg.MessageContent = "Document Data Duplicate!!";
+                    return msg;
                 }
                 else
                 {
@@ -1794,11 +1938,11 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                DocumentSetting docSetting = await _context.DocumentSetting.SingleOrDefaultAsync(d => d.DocCode == info.DocCode);
+                DocumentSetting? docSetting = await _context.DocumentSetting.SingleOrDefaultAsync(d => d.DocCode == info.DocCode);
                 if (docSetting == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found!";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -1814,7 +1958,7 @@ namespace TMS_Api.Services
                     docSetting.UpdatedUser = info.UpdatedUser;
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully Updated";
+                    msg.MessageContent = "Successfully Updated!";
                     return msg;
                 }
             }
@@ -1833,7 +1977,7 @@ namespace TMS_Api.Services
                 if (docSetting == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
@@ -1844,14 +1988,12 @@ namespace TMS_Api.Services
                         _context.DocumentSetting.Remove(docSetting);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully Removed";
-                        return msg;
+                        msg.MessageContent = "Successfully Removed!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data Exists in Another Table!";
-                        return msg;
+                        msg.MessageContent = "Data Exists in Another Table!!";
                     }
                 }
             }
@@ -1871,12 +2013,12 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                OperationArea data = await _context.OperationArea.FromSqlRaw("SELECT TOP 1* FROM OperationArea WHERE REPLACE(AreaID,'','')=REPLACE(@areaID,'','')",
-                    new SqlParameter("@areaID", info.AreaID)).SingleOrDefaultAsync();
+                OperationArea? data = await _context.OperationArea.FromSqlRaw("SELECT TOP 1* FROM OperationArea WHERE REPLACE(AreaID,'','')=REPLACE(@areaID,'','') OR REPLACE(Name,'','')=REPLACE(@name,'','')",
+                    new SqlParameter("@areaID", info.AreaID),new SqlParameter("@name",info.Name)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Area ID Duplicate!!";
+                    msg.MessageContent = "Area Duplicate!!";
                 }
                 else
                 {
@@ -1901,11 +2043,11 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                OperationArea opArea = await _context.OperationArea.SingleOrDefaultAsync(d => d.AreaID == info.AreaID);
+                OperationArea? opArea = await _context.OperationArea.SingleOrDefaultAsync(d => d.AreaID == info.AreaID);
                 if (opArea == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found!";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else
@@ -1919,7 +2061,7 @@ namespace TMS_Api.Services
                     opArea.UpdatedUser = info.UpdatedUser;
                     await _context.SaveChangesAsync();
                     msg.Status = true;
-                    msg.MessageContent = "Successfully Updated";
+                    msg.MessageContent = "Successfully Updated!";
                     return msg;
                 }
             }
@@ -1938,7 +2080,7 @@ namespace TMS_Api.Services
                 if (opArea == null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
+                    msg.MessageContent = "Data Not Found!!";
                 }
                 else
                 {
@@ -1950,16 +2092,13 @@ namespace TMS_Api.Services
                         _context.OperationArea.Remove(opArea);
                         await _context.SaveChangesAsync();
                         msg.Status = true;
-                        msg.MessageContent = "Successfully Removed";
-                        return msg;
+                        msg.MessageContent = "Successfully Removed!";
                     }
                     else
                     {
                         msg.Status = false;
-                        msg.MessageContent = "Data Exists in Another Table!";
-                        return msg;
+                        msg.MessageContent = "Data Exists in Another Table!!";
                     }
-                    
                 }
             }
             catch (DbUpdateException e)
