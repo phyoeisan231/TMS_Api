@@ -620,7 +620,7 @@ namespace TMS_Api.Services
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE InGateID=@gateID", new SqlParameter("@gateID", id)).SingleOrDefaultAsync();
                     WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE GateID=@gateID", new SqlParameter("@gateID", id)).SingleOrDefaultAsync();
 
-                    if (ibCheck==null && obCheck==null && tProcess == null && wbQueue==null)
+                    if (ibCheck == null && obCheck == null && tProcess == null && wbQueue == null)
                     {
                         _context.Gate.Remove(gate);
                         await _context.SaveChangesAsync();
@@ -774,9 +774,9 @@ namespace TMS_Api.Services
                     ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
                     PCard? pCard = await _context.PCard.FromSqlRaw("SELECT TOP 1* FROM PCard WHERE VehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
-                    WeightBridgeQueue? wbQueue= await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
+                    WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE TruckVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
 
-                    if(ibCheck==null && obCheck==null && tProcess==null && pCard == null && wbQueue==null)
+                    if (ibCheck == null && obCheck == null && tProcess == null && pCard == null && wbQueue == null)
                     {
                         _context.Truck.Remove(truck);
                         await _context.SaveChangesAsync();
@@ -929,7 +929,7 @@ namespace TMS_Api.Services
                     ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE TrailerVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE TrailerVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
                     WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE TrailerVehicleRegNo=@vegNo", new SqlParameter("@vegNo", id)).SingleOrDefaultAsync();
-                    if(ibCheck==null && obCheck==null && tProcess==null && wbQueue == null)
+                    if (ibCheck == null && obCheck == null && tProcess == null && wbQueue == null)
                     {
                         _context.Trailer.Remove(trailer);
                         await _context.SaveChangesAsync();
@@ -1239,7 +1239,7 @@ namespace TMS_Api.Services
                     WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE YardID=@yID", new SqlParameter("@yID", id)).SingleOrDefaultAsync();
 
 
-                    if (gate == null && weightBridge==null && opArea==null && pCard==null && ibCheck==null && obCheck==null && tProcess==null && wbQueue==null)
+                    if (gate == null && weightBridge == null && opArea == null && pCard == null && ibCheck == null && obCheck == null && tProcess == null && wbQueue == null)
                     {
                         _context.Yard.Remove(data);
                         await _context.SaveChangesAsync();
@@ -1344,7 +1344,7 @@ namespace TMS_Api.Services
                     ICD_OutBoundCheck? obCheck = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT TOP 1* FROM ICD_OutBoundCheck WHERE OutWeightBridgeID=@wbID", new SqlParameter("@wbID", id)).SingleOrDefaultAsync();
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE InWeightBridgeID=@wbID", new SqlParameter("@wbID", id)).SingleOrDefaultAsync();
 
-                    if (wbQueue == null && ibCheck==null && obCheck==null && tProcess==null)
+                    if (wbQueue == null && ibCheck == null && obCheck == null && tProcess == null)
                     {
                         _context.WeightBridge.Remove(weightBridge);
                         await _context.SaveChangesAsync();
@@ -1878,7 +1878,7 @@ namespace TMS_Api.Services
                     ICD_TruckProcess? tProcess = await _context.ICD_TruckProcess.FromSqlRaw("SELECT TOP 1* FROM ICD_TruckProcess WHERE CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
                     WeightBridgeQueue? wbQueue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT TOP 1* FROM WeightBridgeQueue WHERE CardNo=@cardNo", new SqlParameter("@cardNo", id)).SingleOrDefaultAsync();
 
-                    if (ibCheck==null && obCheck==null && tProcess == null && wbQueue==null)
+                    if (ibCheck == null && obCheck == null && tProcess == null && wbQueue == null)
                     {
                         _context.PCard.Remove(pCard);
                         await _context.SaveChangesAsync();

@@ -50,9 +50,8 @@ namespace TMS_Api
         public DbSet<OperationArea> OperationArea { get; set; }
         public DbSet<ICD_OutBoundCheck> ICD_OutBoundCheck { get; set; }
         public DbSet<ICD_OutBoundCheck_Document> ICD_OutBoundCheck_Document { get; set; }
-        public DbSet<WeightBridgeQueue> WeightBridgeQueue { get; set; }   
         public DbSet<TMS_Proposal> TMS_Proposal { get; set; }
         public DbSet<TMS_ProposalDetail> TMS_ProposalDetails { get; set; }
-        //public DbSet<WeightBridgeQueue> WeightBridgeQueue { get; set; }       
+        public DbSet<WeightBridgeQueue> WeightBridgeQueue { get; set; }
     }
 }
