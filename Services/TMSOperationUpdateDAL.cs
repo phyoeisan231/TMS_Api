@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using TMS_Api.DBModels;
 using TMS_Api.DTOs;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace TMS_Api.Services
 {
     public class TMSOperationUpdateDAL

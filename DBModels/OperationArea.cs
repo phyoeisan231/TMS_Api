@@ -17,7 +17,8 @@ namespace TMS_Api.DBModels
         public Boolean? Active { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? IsWaitingArea { get; set; }
-
+        [Column(TypeName = "varchar(10)")]
+        public string? GroupName { get; set; }//mandatory
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

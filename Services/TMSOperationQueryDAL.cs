@@ -12,6 +12,7 @@ namespace TMS_Api.Services
         private readonly TMSDBContext _context;
         private readonly IConfiguration _configuration;
         string _conStr;
+        string _portalConStr;
         private readonly IMapper _mapper;
 
         public TMSOperationQueryDAL(IConfiguration config, TMSDBContext context, IMapper mapper, ILogger<TMSOperationQueryDAL> logger)
@@ -19,6 +20,7 @@ namespace TMS_Api.Services
             _context = context;
             _configuration = config;
             _conStr = _configuration.GetConnectionString("DefaultConnection");
+            _portalConStr = _configuration.GetConnectionString("PortalConnection");
             _mapper = mapper;
         }
         public bool IsLinux
@@ -63,6 +65,26 @@ namespace TMS_Api.Services
             });
         }
 
+        public Task<DataTable> GetPortalDataTableAsync(string sSQL, params SqlParameter[] para)
+        {
+            return Task.Run(() =>
+            {
+                using (var newCon = new SqlConnection(_portalConStr))
+                using (var adapt = new SqlDataAdapter(sSQL, newCon))
+                {
+                    newCon.Open();
+                    adapt.SelectCommand.CommandType = CommandType.Text;
+                    if (para != null)
+                        adapt.SelectCommand.Parameters.AddRange(para);
+
+                    DataTable dt = new DataTable();
+                    adapt.Fill(dt);
+                    newCon.Close();
+                    return dt;
+                }
+            });
+        }
+
         #region InBound Check Nov_27_2024
 
         public async Task<DataTable> GetCategoryICDOList()
@@ -79,7 +101,7 @@ namespace TMS_Api.Services
         }
         public async Task<DataTable> GetOperationAreaList(string id)
         {
-            string sql = @"Select AreaID,Name,YardID from OperationArea where YardID=@yard And Active=1 And (IsWaitingArea=0 or IsWaitingArea is null)";
+            string sql = @"Select AreaID,Name,YardID from OperationArea where YardID=@yard And Active=1 And (IsWaitingArea=0 or IsWaitingArea is null) And GroupName in ('ICD','Others')";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
             return dt;
         }
@@ -92,15 +114,17 @@ namespace TMS_Api.Services
         public async Task<DataTable> GetTruckList(string id, string type)
         {
             string sql = "";
+            DataTable dt = new DataTable();
             if (type == "RG")
             {
-                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%" + id + "%' And IsRGL=1 And (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TruckVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
+                sql = @"Select TruckNo as VehicleRegNo from Trucks where TruckNo like '%" + id + "%' And Status='Active'";
+                dt = await GetPortalDataTableAsync(sql);
             }
             else
             {
-                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%" + id + "%' And (IsRGL<>1 OR ISRGL is null) And (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TruckVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
-            }
-            DataTable dt = await GetDataTableAsync(sql);
+                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%" + id + "%' And (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TruckVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
+                dt = await GetDataTableAsync(sql);
+            }           
             return dt;
         }
         public async Task<DataTable> GetDriverList(string id)

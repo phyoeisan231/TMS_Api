@@ -80,6 +80,10 @@ namespace TMS_Api.DBModels
         public string? InWeightBridgeID { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? OutWeightBridgeID { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? InWeightDateTime { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? OutWeightDateTime { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string? Status { get; set; }
         [Column(TypeName = "varchar(max)")]

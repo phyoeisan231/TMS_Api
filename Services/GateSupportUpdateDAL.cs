@@ -115,49 +115,49 @@ namespace TMS_Api.Services
                         process.InGatePassTime = GetLocalStdDT();
                         process.UpdatedUser = info.UpdatedUser;
                         process.UpdatedDate = GetLocalStdDT();
-                        WeightBridgeQueue wbQ = new WeightBridgeQueue();
-                        if(process.InWeightBridgeID!=null && process.InWeightBridgeID != "None")
-                        {
-                            wbQ.InRegNo = data.InRegNo;
-                            wbQ.YardID = data.InYardID;
-                            wbQ.GateID = data.InGateID;
-                            wbQ.DriverLicenseNo = data.DriverLicenseNo;
-                            wbQ.DriverName = data.DriverName;
-                            wbQ.DriverContactNo = data.DriverContactNo;
-                            wbQ.Type = "In";
-                            wbQ.CargoType = data.InCargoType;
-                            wbQ.CargoInfo = data.InCargoInfo;
-                            wbQ.CardNo = data.CardNo;
-                            wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
-                            wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
-                            wbQ.WeightBridgeID = data.InWeightBridgeID;
-                            wbQ.Customer = data.Customer;
-                            wbQ.Status = "Queue";
-                            wbQ.CreatedDate = GetLocalStdDT();
-                            wbQ.CreatedUser = data.InYardID;
-                            _context.WeightBridgeQueue.Add(wbQ);
-                        }
-                        if (process.OutWeightBridgeID != null && process.OutWeightBridgeID != "None")
-                        {
-                            wbQ.InRegNo = data.InRegNo;
-                            wbQ.YardID = data.InYardID;
-                            wbQ.GateID = data.InGateID;
-                            wbQ.DriverLicenseNo = data.DriverLicenseNo;
-                            wbQ.DriverName = data.DriverName;
-                            wbQ.DriverContactNo = data.DriverContactNo;
-                            wbQ.Type = "Out";
-                            wbQ.CargoType = data.InCargoType;
-                            wbQ.CargoInfo = data.InCargoInfo;
-                            wbQ.CardNo = data.CardNo;
-                            wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
-                            wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
-                            wbQ.WeightBridgeID = data.OutWeightBridgeID;
-                            wbQ.Customer = data.Customer;
-                            wbQ.Status = "Queue";
-                            wbQ.CreatedDate = GetLocalStdDT();
-                            wbQ.CreatedUser = data.InYardID;
-                            _context.WeightBridgeQueue.Add(wbQ);
-                        }
+                        //WeightBridgeQueue wbQ = new WeightBridgeQueue();
+                        //if(process.InWeightBridgeID!=null && process.InWeightBridgeID != "None")
+                        //{
+                        //    wbQ.InRegNo = data.InRegNo;
+                        //    wbQ.YardID = data.InYardID;
+                        //    wbQ.GateID = data.InGateID;
+                        //    wbQ.DriverLicenseNo = data.DriverLicenseNo;
+                        //    wbQ.DriverName = data.DriverName;
+                        //    wbQ.DriverContactNo = data.DriverContactNo;
+                        //    wbQ.Type = "In";
+                        //    wbQ.CargoType = data.InCargoType;
+                        //    wbQ.CargoInfo = data.InCargoInfo;
+                        //    wbQ.CardNo = data.CardNo;
+                        //    wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
+                        //    wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
+                        //    wbQ.WeightBridgeID = data.InWeightBridgeID;
+                        //    wbQ.Customer = data.Customer;
+                        //    wbQ.Status = "Queue";
+                        //    wbQ.CreatedDate = GetLocalStdDT();
+                        //    wbQ.CreatedUser = data.InYardID;
+                        //    _context.WeightBridgeQueue.Add(wbQ);
+                        //}
+                        //if (process.OutWeightBridgeID != null && process.OutWeightBridgeID != "None")
+                        //{
+                        //    wbQ.InRegNo = data.InRegNo;
+                        //    wbQ.YardID = data.InYardID;
+                        //    wbQ.GateID = data.InGateID;
+                        //    wbQ.DriverLicenseNo = data.DriverLicenseNo;
+                        //    wbQ.DriverName = data.DriverName;
+                        //    wbQ.DriverContactNo = data.DriverContactNo;
+                        //    wbQ.Type = "Out";
+                        //    wbQ.CargoType = data.InCargoType;
+                        //    wbQ.CargoInfo = data.InCargoInfo;
+                        //    wbQ.CardNo = data.CardNo;
+                        //    wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
+                        //    wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
+                        //    wbQ.WeightBridgeID = data.OutWeightBridgeID;
+                        //    wbQ.Customer = data.Customer;
+                        //    wbQ.Status = "Queue";
+                        //    wbQ.CreatedDate = GetLocalStdDT();
+                        //    wbQ.CreatedUser = data.InYardID;
+                        //    _context.WeightBridgeQueue.Add(wbQ);
+                        //}
                     }
                     Truck? truck = await _context.Truck.FromSqlRaw("SELECT * FROM Truck WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TruckVehicleRegNo)).SingleOrDefaultAsync();
                     if (truck == null)

@@ -7,7 +7,9 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int QueueNo { get; set; } = 0!;//mandatory
+        public int RegNo { get; set; } = 0!;//mandatory
+        [Column(TypeName = "int")]
+        public int? QueueNo { get; set; } //increase no depend on InRegNo And WeighID
         [Column(TypeName = "int")]
         public int? InRegNo { get; set; }//mandatory
         [Column(TypeName = "varchar(25)")]
@@ -33,8 +35,7 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "varchar(100)")]
         public string? DriverContactNo { get; set; }
         [Column(TypeName = "varchar(25)")]
-        public string? CardNo { get; set; }
-        
+        public string? CardNo { get; set; }    
         [Column(TypeName = "varchar(25)")]
         public string? WeightBridgeID { get; set; }
         [Column(TypeName = "varchar(25)")]
