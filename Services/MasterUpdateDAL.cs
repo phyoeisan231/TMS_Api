@@ -107,7 +107,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                TruckType type = await _context.TruckType.FromSqlRaw("SELECT * FROM TruckType WHERE REPLACE(Description,' ','')=REPLACE(@name,' ','') ", new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
+                TruckType? type = await _context.TruckType.FromSqlRaw("SELECT * FROM TruckType WHERE REPLACE(Description,' ','')=REPLACE(@name,' ','') ", new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
                 if (type == null)
                 {
                     msg.Status = false;
@@ -138,7 +138,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                TruckType type = await _context.TruckType.FromSqlRaw("SELECT * FROM TruckType WHERE TypeID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                TruckType? type = await _context.TruckType.FromSqlRaw("SELECT * FROM TruckType WHERE TypeID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                 if (type == null)
                 {
                     msg.MessageContent = "Data Not Found!!";
@@ -146,7 +146,7 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    Truck truck = await _context.Truck.FromSqlRaw("SELECT Top 1 * FROM Truck WHERE TypeID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                    Truck? truck = await _context.Truck.FromSqlRaw("SELECT Top 1 * FROM Truck WHERE TypeID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                     if (truck == null)
                     {
                         _context.TruckType.Remove(type);
@@ -159,6 +159,7 @@ namespace TMS_Api.Services
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exists in Another Table!!";
+                        return msg;
                     }
                 }
             }
@@ -377,7 +378,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Transporter duplicate = await _context.Transporter.FromSqlRaw("SELECT Top 1* FROM Transporter WHERE REPLACE(TransporterName,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.TransporterName)).SingleOrDefaultAsync();
+                Transporter? duplicate = await _context.Transporter.FromSqlRaw("SELECT Top 1* FROM Transporter WHERE REPLACE(TransporterName,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.TransporterName)).SingleOrDefaultAsync();
                 if (duplicate != null)
                 {
                     msg.Status = false;
@@ -386,7 +387,7 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    Transporter transporter = await _context.Transporter.FromSqlRaw("SELECT Top 1 * FROM Transporter Order By TransporterID Desc", new SqlParameter("@name", info.TransporterID)).SingleOrDefaultAsync();
+                    Transporter? transporter = await _context.Transporter.FromSqlRaw("SELECT Top 1 * FROM Transporter Order By TransporterID Desc", new SqlParameter("@name", info.TransporterID)).SingleOrDefaultAsync();
                     if (transporter != null)
                     {
                         info.SrNo = transporter.SrNo + 1;
@@ -419,7 +420,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Transporter transporter = await _context.Transporter.SingleOrDefaultAsync(t => t.TransporterID == info.TransporterID);
+                Transporter? transporter = await _context.Transporter.SingleOrDefaultAsync(t => t.TransporterID == info.TransporterID);
 
                 if (transporter == null)
                 {
@@ -462,7 +463,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Transporter transporter = await _context.Transporter.SingleOrDefaultAsync(t => t.TransporterID == info.TransporterID);
+                Transporter? transporter = await _context.Transporter.SingleOrDefaultAsync(t => t.TransporterID == info.TransporterID);
 
                 if (transporter == null)
                 {
@@ -505,6 +506,7 @@ namespace TMS_Api.Services
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -525,6 +527,7 @@ namespace TMS_Api.Services
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exists in Another Table!!";
+                        return msg;
                     }
                 }
             }
@@ -574,7 +577,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Gate gate = await _context.Gate.FromSqlRaw("SELECT * FROM Gate WHERE REPLACE(GateID,' ','')=REPLACE(@gID,' ','') ", new SqlParameter("@gID", info.GateID)).SingleOrDefaultAsync();
+                Gate? gate = await _context.Gate.FromSqlRaw("SELECT * FROM Gate WHERE REPLACE(GateID,' ','')=REPLACE(@gID,' ','') ", new SqlParameter("@gID", info.GateID)).SingleOrDefaultAsync();
                 if (gate == null)
                 {
                     msg.Status = false;
@@ -607,11 +610,12 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Gate gate = await _context.Gate.FromSqlRaw("SELECT * FROM Gate WHERE  REPLACE(GateID,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                Gate? gate = await _context.Gate.FromSqlRaw("SELECT * FROM Gate WHERE  REPLACE(GateID,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
                 if (gate == null)
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -631,6 +635,7 @@ namespace TMS_Api.Services
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exists in Another Table!!";
+                        return msg;
                     }
                 }
             }
@@ -649,7 +654,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Truck truck = await _context.Truck.FromSqlRaw("SELECT Top 1 * FROM Truck WHERE REPLACE(VehicleRegNo,' ','')=REPLACE(@name,' ','')", new SqlParameter("@name", info.VehicleRegNo)).SingleOrDefaultAsync();
+                Truck? truck = await _context.Truck.FromSqlRaw("SELECT Top 1 * FROM Truck WHERE REPLACE(VehicleRegNo,' ','')=REPLACE(@name,' ','')", new SqlParameter("@name", info.VehicleRegNo)).SingleOrDefaultAsync();
                 if (truck != null)
                 {
                     msg.Status = false;
@@ -679,7 +684,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Truck truck = await _context.Truck.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
+                Truck? truck = await _context.Truck.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
 
                 if (truck == null)
                 {
@@ -723,7 +728,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Truck truck = await _context.Truck.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
+                Truck? truck = await _context.Truck.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
 
                 if (truck == null)
                 {
@@ -762,11 +767,12 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Truck truck = await _context.Truck.FromSqlRaw("SELECT * FROM Truck Where VehicleRegNo=@regNo", new SqlParameter("@regNo", id)).SingleOrDefaultAsync();
+                Truck? truck = await _context.Truck.FromSqlRaw("SELECT * FROM Truck Where VehicleRegNo=@regNo", new SqlParameter("@regNo", id)).SingleOrDefaultAsync();
                 if (truck == null)
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -787,6 +793,7 @@ namespace TMS_Api.Services
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exists in Another Table!!";
+                        return msg;
                     }
                 }
             }
@@ -806,7 +813,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Trailer trailer = await _context.Trailer.FromSqlRaw("SELECT Top 1 * FROM Trailer WHERE REPLACE(VehicleRegNo,' ','')=REPLACE(@name,' ','')", new SqlParameter("@name", info.VehicleRegNo)).SingleOrDefaultAsync();
+                Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT Top 1 * FROM Trailer WHERE REPLACE(VehicleRegNo,' ','')=REPLACE(@name,' ','')", new SqlParameter("@name", info.VehicleRegNo)).SingleOrDefaultAsync();
                 if (trailer != null)
                 {
                     msg.Status = false;
@@ -837,7 +844,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Trailer trailer = await _context.Trailer.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
+                Trailer? trailer = await _context.Trailer.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
 
                 if (trailer == null)
                 {
@@ -879,7 +886,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Trailer trailer = await _context.Trailer.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
+                Trailer? trailer = await _context.Trailer.SingleOrDefaultAsync(t => t.VehicleRegNo == info.VehicleRegNo);
 
                 if (trailer == null)
                 {
@@ -917,11 +924,12 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Trailer trailer = await _context.Trailer.FromSqlRaw("SELECT * FROM Trailer Where VehicleRegNo=@regNo", new SqlParameter("@regNo", id)).SingleOrDefaultAsync();
+                Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT * FROM Trailer Where VehicleRegNo=@regNo", new SqlParameter("@regNo", id)).SingleOrDefaultAsync();
                 if (trailer == null)
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!";
+                    return msg;
                 }
                 else
                 {
@@ -940,6 +948,7 @@ namespace TMS_Api.Services
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exitsts in Another Table!";
+                        return msg;
                     }
                 }
             }
@@ -959,7 +968,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Driver driver = await _context.Driver.FromSqlRaw("SELECT Top 1 * FROM Driver WHERE REPLACE(LicenseNo,' ','')=REPLACE(@name,' ','')", new SqlParameter("@name", info.LicenseNo)).SingleOrDefaultAsync();
+                Driver? driver = await _context.Driver.FromSqlRaw("SELECT Top 1 * FROM Driver WHERE REPLACE(LicenseNo,' ','')=REPLACE(@name,' ','')", new SqlParameter("@name", info.LicenseNo)).SingleOrDefaultAsync();
                 if (driver != null)
                 {
                     msg.Status = false;
@@ -990,7 +999,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Driver driver = await _context.Driver.SingleOrDefaultAsync(tt => tt.LicenseNo == info.LicenseNo);
+                Driver? driver = await _context.Driver.SingleOrDefaultAsync(tt => tt.LicenseNo == info.LicenseNo);
                 if (driver == null)
                 {
                     msg.Status = false;
@@ -1033,7 +1042,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Driver driver = await _context.Driver.SingleOrDefaultAsync(t => t.LicenseNo== info.LicenseNo);
+                Driver? driver = await _context.Driver.SingleOrDefaultAsync(t => t.LicenseNo== info.LicenseNo);
 
                 if (driver == null)
                 {
@@ -1081,6 +1090,7 @@ namespace TMS_Api.Services
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -1096,11 +1106,13 @@ namespace TMS_Api.Services
                         await _context.SaveChangesAsync();
                         msg.Status = true;
                         msg.MessageContent = "Successfully Removed!";
+                        return msg;
                     }
                     else
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exists in Another Table!!";
+                        return msg;
                     }
                 }
             }
@@ -1160,7 +1172,7 @@ namespace TMS_Api.Services
             try
             {
 
-                Yard data = await _context.Yard.FromSqlRaw("SELECT TOP 1* FROM Yard WHERE YardID=@yId OR Name=@name ORDER By YardID", new SqlParameter("@yId", info.YardID), new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
+                Yard? data = await _context.Yard.FromSqlRaw("SELECT TOP 1* FROM Yard WHERE YardID=@yId OR Name=@name ORDER By YardID", new SqlParameter("@yId", info.YardID), new SqlParameter("@name", info.Name)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     msg.Status = false;
@@ -1189,11 +1201,12 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                Yard yard = await _context.Yard.FromSqlRaw("SELECT * FROM Yard WHERE REPLACE(YardID,' ','')=REPLACE(@yID,' ','') ", new SqlParameter("@yID", info.YardID)).SingleOrDefaultAsync();
+                Yard? yard = await _context.Yard.FromSqlRaw("SELECT * FROM Yard WHERE REPLACE(YardID,' ','')=REPLACE(@yID,' ','') ", new SqlParameter("@yID", info.YardID)).SingleOrDefaultAsync();
                 if (yard == null)
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -1225,6 +1238,7 @@ namespace TMS_Api.Services
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -1250,6 +1264,7 @@ namespace TMS_Api.Services
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data exists in Another Table!!";
+                        return msg;
                     }
                 }
             }
@@ -1299,7 +1314,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                WeightBridge weightBridge = await _context.WeightBridge.SingleOrDefaultAsync(tt => tt.WeightBridgeID == info.WeightBridgeID);
+                WeightBridge? weightBridge = await _context.WeightBridge.SingleOrDefaultAsync(tt => tt.WeightBridgeID == info.WeightBridgeID);
                 if (weightBridge == null)
                 {
                     msg.Status = false;
@@ -1331,7 +1346,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                WeightBridge weightBridge = await _context.WeightBridge.FromSqlRaw("SELECT * FROM WeightBridge Where WeightBridgeID=@wID", new SqlParameter("@wID", id)).SingleOrDefaultAsync();
+                WeightBridge? weightBridge = await _context.WeightBridge.FromSqlRaw("SELECT * FROM WeightBridge Where WeightBridgeID=@wID", new SqlParameter("@wID", id)).SingleOrDefaultAsync();
                 if (weightBridge == null)
                 {
                     msg.Status = false;
@@ -1582,7 +1597,7 @@ namespace TMS_Api.Services
                     msg.MessageContent = "A Waiting Area with this Name already exists for this YardID.";
                     return msg;
                 }
-                WaitingArea waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT Top 1* FROM WaitingArea WHERE YardID=@yid Order By AreaID DESC", new SqlParameter("@yid", info.YardID)).SingleOrDefaultAsync();
+                WaitingArea? waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT Top 1* FROM WaitingArea WHERE YardID=@yid Order By AreaID DESC", new SqlParameter("@yid", info.YardID)).SingleOrDefaultAsync();
                 int srNo = 1;
                 string id = string.IsNullOrEmpty(info.YardID) ? "" : info.YardID;
                 if (waitingArea != null)
@@ -1614,7 +1629,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                WaitingArea waitingArea = await _context.WaitingArea.SingleOrDefaultAsync(wa => wa.AreaID == info.AreaID);
+                WaitingArea? waitingArea = await _context.WaitingArea.SingleOrDefaultAsync(wa => wa.AreaID == info.AreaID);
                 if (waitingArea == null)
                 {
                     msg.Status = false;
@@ -1646,7 +1661,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                WaitingArea waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT * FROM WaitingArea Where AreaID=@aID", new SqlParameter("@aID", id)).SingleOrDefaultAsync();
+                WaitingArea? waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT * FROM WaitingArea Where AreaID=@aID", new SqlParameter("@aID", id)).SingleOrDefaultAsync();
                 if (waitingArea == null)
                 {
                     msg.Status = false;
@@ -1758,6 +1773,7 @@ namespace TMS_Api.Services
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -1771,11 +1787,13 @@ namespace TMS_Api.Services
                         await _context.SaveChangesAsync();
                         msg.Status = true;
                         msg.MessageContent = "Successfully Removed!";
+                        return msg;
                     }
                     else
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exists in Another Table!!";
+                        return msg;
                     }
                 }
             }
@@ -1784,7 +1802,6 @@ namespace TMS_Api.Services
                 msg.MessageContent += e.Message;
                 return msg;
             }
-            return msg;
         }
 
         #endregion
@@ -1870,6 +1887,7 @@ namespace TMS_Api.Services
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -1884,11 +1902,14 @@ namespace TMS_Api.Services
                         await _context.SaveChangesAsync();
                         msg.Status = true;
                         msg.MessageContent = "Successfully Removed!";
+                        return msg;
+
                     }
                     else
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exists in Another table!!";
+                        return msg;
                     }
                 }
             }
@@ -1897,7 +1918,6 @@ namespace TMS_Api.Services
                 msg.MessageContent += e.Message;
                 return msg;
             }
-            return msg;
         }
 
         #endregion
@@ -1924,6 +1944,7 @@ namespace TMS_Api.Services
                     msg.Status = true;
                     msg.MessageContent = "Successfully Added!";
                     return msg;
+
                 }
             }
             catch(DbUpdateException e)
@@ -1931,7 +1952,6 @@ namespace TMS_Api.Services
                 msg.MessageContent += e.Message;
                 return msg;
             }
-            return msg;
         }
         public async Task<ResponseMessage> UpdateDocumentSetting(DocumentSettingDto info)
         {
@@ -1978,6 +1998,7 @@ namespace TMS_Api.Services
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -1989,11 +2010,13 @@ namespace TMS_Api.Services
                         await _context.SaveChangesAsync();
                         msg.Status = true;
                         msg.MessageContent = "Successfully Removed!";
+                        return msg;
                     }
                     else
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exists in Another Table!!";
+                        return msg;
                     }
                 }
             }
@@ -2002,7 +2025,6 @@ namespace TMS_Api.Services
                 msg.MessageContent += e.Message;
                 return msg;
             }
-            return msg;
         }
 
         #endregion
@@ -2019,6 +2041,7 @@ namespace TMS_Api.Services
                 {
                     msg.Status = false;
                     msg.MessageContent = "Area Duplicate!!";
+                    return msg;
                 }
                 else
                 {
@@ -2029,6 +2052,7 @@ namespace TMS_Api.Services
                     msg.Status = true;
                     msg.MessageContent = "Successfully Added!";
                     return msg;
+
                 }
             }
             catch (DbUpdateException e)
@@ -2036,7 +2060,6 @@ namespace TMS_Api.Services
                 msg.MessageContent += e.Message;
                 return msg;
             }
-            return msg;
         }
         public async Task<ResponseMessage> UpdateOperationArea(OperationAreaDto info)
         {
@@ -2056,6 +2079,7 @@ namespace TMS_Api.Services
                     opArea.Name = info.Name;
                     opArea.YardID = info.YardID;
                     opArea.Active = info.Active;
+                    opArea.GroupName = info.GroupName;
                     opArea.IsWaitingArea = info.IsWaitingArea;
                     opArea.UpdatedDate = GetLocalStdDT();
                     opArea.UpdatedUser = info.UpdatedUser;
@@ -2081,6 +2105,7 @@ namespace TMS_Api.Services
                 {
                     msg.Status = false;
                     msg.MessageContent = "Data Not Found!!";
+                    return msg;
                 }
                 else
                 {
@@ -2093,11 +2118,13 @@ namespace TMS_Api.Services
                         await _context.SaveChangesAsync();
                         msg.Status = true;
                         msg.MessageContent = "Successfully Removed!";
+                        return msg;
                     }
                     else
                     {
                         msg.Status = false;
                         msg.MessageContent = "Data Exists in Another Table!!";
+                        return msg;
                     }
                 }
             }
@@ -2106,7 +2133,6 @@ namespace TMS_Api.Services
                 msg.MessageContent += e.Message;
                 return msg;
             }
-            return msg;
         }
 
         #endregion
