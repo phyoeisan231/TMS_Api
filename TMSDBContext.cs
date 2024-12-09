@@ -19,6 +19,7 @@ namespace TMS_Api
             //modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.Entity<ICD_InBoundCheck_Document>().HasKey(m => new { m.InRegNo, m.DocCode });
             modelBuilder.Entity<ICD_OutBoundCheck_Document>().HasKey(m => new { m.OutRegNo, m.DocCode });
+            modelBuilder.Entity<TMS_ProposalDetail>().HasKey(m => new { m.PropNo, m.TruckNo });
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -49,6 +50,9 @@ namespace TMS_Api
         public DbSet<OperationArea> OperationArea { get; set; }
         public DbSet<ICD_OutBoundCheck> ICD_OutBoundCheck { get; set; }
         public DbSet<ICD_OutBoundCheck_Document> ICD_OutBoundCheck_Document { get; set; }
+        public DbSet<WeightBridgeQueue> WeightBridgeQueue { get; set; }   
+        public DbSet<TMS_Proposal> TMS_Proposal { get; set; }
+        public DbSet<TMS_ProposalDetail> TMS_ProposalDetails { get; set; }
         //public DbSet<WeightBridgeQueue> WeightBridgeQueue { get; set; }       
     }
 }

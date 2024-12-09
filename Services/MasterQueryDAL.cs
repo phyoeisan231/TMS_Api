@@ -95,50 +95,22 @@ namespace TMS_Api.Services
 
         #endregion
 
-        #region Trailer Type Nov_12_2024
-        public async Task<DataTable> GetTrailerTypeList(string active)
-        {
-            string sql = "";
-            if (active == "All" || active == null)
-            {
-                sql = @"SELECT * from TrailerType Order By Description";
-            }
-            else
-            {
-                sql = @"SELECT * from TrailerType Where Active='" + active + "'";
-            }
-
-            DataTable dt = await GetDataTableAsync(sql);
-            return dt;
-        }
-
-        #endregion
-
-        #region Transporter Type Nov_12_2024
-        public async Task<DataTable> GetTransporterTypeList(string active)
-        {
-            string sql = "";
-            if (active == "All" || active == null)
-            {
-                sql = @"SELECT * from TransporterType Order By Description";
-            }
-            else
-            {
-                sql = @"SELECT * from TransporterType where Active='" + active + "'";
-            }
-            DataTable dt = await GetDataTableAsync(sql);
-            return dt;
-        }
-
-        #endregion
-
         #region Transporter Nov_12_2024
-        public async Task<DataTable> GetTransporterList()
+        public async Task<DataTable> GetTransporterList(string active, string isBlack)
         {
-            string sql = @"SELECT * from Transporter";
+            string sql = "";
+            if ((active == "All" || active == null) && (isBlack == "All" || isBlack == null))
+            {
+                sql = @"SELECT * from Transporter Order By TransporterID";
+            }
+            else
+            {
+                sql = @"select TransporterID,TransporterName,(TransporterID +' | '+TransporterName) as Name from Transporter Where Active=1 And (IsBlack<>1 OR IsBlack is null)";
+            }
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
+
         public async Task<TransporterDto> GetTransporterId(string id)
         {
             TransporterDto transporterDto = new TransporterDto();
@@ -252,22 +224,16 @@ namespace TMS_Api.Services
 
         #region Driver Nov_12_2024
 
-        //public async Task<DataTable> GetDriverList()
-        //{
-        //    string sql = @"SELECT * FROM Driver";
-        //    DataTable dt = await GetDataTableAsync(sql);
-        //    return dt;
-        //}
-        public async Task<DataTable> GetDriverList(string active)
+        public async Task<DataTable> GetDriverList(string active, string isBlack)
         {
             string sql = "";
-            if (active == "All" || active == null)
+            if ((active == "All" || active == null) && (isBlack == "All" || isBlack == null))
             {
                 sql = @"SELECT * from Driver Order By LicenseNo";
             }
             else
             {
-                sql = @"select (LicenseNo+' | '+Name) as DriverName,Name,LicenseNo from Driver where Active='" + active + "'";
+                sql = @"select (LicenseNo+' | '+Name) as DriverName,Name,LicenseNo from Driver  where (IsBlack<>1 OR IsBlack is null) And Active=1";
             }
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
