@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241210095515_UpdateInbound10")]
+    partial class UpdateInbound10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -905,8 +908,8 @@ namespace TMS_Api.Migrations
                     b.Property<string>("JobCode")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("JobDept")
-                        .HasColumnType("varchar(50)");
+                    b.Property<string>("JobDescription")
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("JobType")
                         .HasColumnType("varchar(10)");
