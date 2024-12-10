@@ -54,7 +54,14 @@ namespace TMS_Api.Controllers
             return Ok(msg);
         }
 
-        
+        [HttpGet]
+        public async Task<IActionResult> GetProposalList(DateTime startDate,DateTime endDate, string deptType)
+        {
+            DataTable dt = await _queryDAL.GetProposalList(startDate, endDate, deptType);
+            return Ok(dt);
+        }
+
+
         #endregion
 
     }
