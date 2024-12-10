@@ -113,7 +113,7 @@ namespace TMS_Api.Services
 
         public async Task<DataTable> GetProposalList(DateTime startDate,DateTime endDate, string deptType)
         {
-            string sql = @"SELECT * FROM TMS_Proposal where DeptType in (" + deptType + ") And Cast(EstDate as Date) Between @sDate and @eDate  Order by PropNo DESC";
+            string sql = @"SELECT * FROM TMS_Proposal where JobDept in (" + deptType + ") And Cast(EstDate as Date) Between @sDate and @eDate  Order by PropNo DESC";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
             return dt;
         }
