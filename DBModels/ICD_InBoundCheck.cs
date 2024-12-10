@@ -62,6 +62,10 @@ namespace TMS_Api.DBModels
         public string? InWeightBridgeID { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? OutWeightBridgeID { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? InWBOption { get; set; }//Credit,Cash,None
+        [Column(TypeName = "varchar(25)")]
+        public string? OutWBOption { get; set; }//Credit,Cash,None
         [Column(TypeName = "bit")]
         public Boolean? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
