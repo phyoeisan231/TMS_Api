@@ -279,23 +279,23 @@ namespace TMS_Api.Services
 
         #endregion
 
-        #region TruckEntryType Nov_22_2024
-        public async Task<DataTable> GetTruckEntryTypeList(string active)
-        {
-            string sql = "";
-            if (active == "All" || active == null)
-            {
-                sql = @"SELECT * from TruckEntryType Order By TypeID";
-            }
-            else
-            {
-                sql = @"SELECT * from TruckEntryType where Active='" + active + "'";
-            }
-            DataTable dt = await GetDataTableAsync(sql);
-            return dt;
-        }
+        //#region TruckEntryType Nov_22_2024
+        //public async Task<DataTable> GetTruckEntryTypeList(string active)
+        //{
+        //    string sql = "";
+        //    if (active == "All" || active == null)
+        //    {
+        //        sql = @"SELECT * from TruckEntryType Order By TypeID";
+        //    }
+        //    else
+        //    {
+        //        sql = @"SELECT * from TruckEntryType where Active='" + active + "'";
+        //    }
+        //    DataTable dt = await GetDataTableAsync(sql);
+        //    return dt;
+        //}
 
-        #endregion
+        //#endregion
 
         #region WeightBridge Nov_22_2024
         public async Task<DataTable> GetWeightBridgeList()
@@ -324,43 +324,43 @@ namespace TMS_Api.Services
 
         #endregion
 
-        #region TruckJobType Nov_26_2024
-        public async Task<DataTable> GetTruckJobTypeList(string active)
-        {
-            string sql = "";
-            if (active == "All" || active == null)
-            {
-                sql = @"SELECT * from TruckJobType Order By TypeID";
-            }
-            else
-            {
-                sql = @"SELECT * from TruckJobType Where Active='" + active + "'";
-            }
-            DataTable dt = await GetDataTableAsync(sql);
-            return dt;
+        //#region TruckJobType Nov_26_2024
+        //public async Task<DataTable> GetTruckJobTypeList(string active)
+        //{
+        //    string sql = "";
+        //    if (active == "All" || active == null)
+        //    {
+        //        sql = @"SELECT * from TruckJobType Order By TypeID";
+        //    }
+        //    else
+        //    {
+        //        sql = @"SELECT * from TruckJobType Where Active='" + active + "'";
+        //    }
+        //    DataTable dt = await GetDataTableAsync(sql);
+        //    return dt;
 
-        }
+        //}
 
 
-        #endregion
+        //#endregion
 
-        #region WaitingArea Nov_26_2024
-        public async Task<DataTable> GetWaitingAreaList(string active)
-        {
-            string sql = "";
-            if (active == "All" || active == null)
-            {
-                sql = @"SELECT * from WaitingArea Order By AreaID";
-            }
-            else
-            {
-                sql = @"SELECT * from WaitingArea Where Active='" + active + "'";
-            }
-            DataTable dt = await GetDataTableAsync(sql);
-            return dt;
-        }
+        //#region WaitingArea Nov_26_2024
+        //public async Task<DataTable> GetWaitingAreaList(string active)
+        //{
+        //    string sql = "";
+        //    if (active == "All" || active == null)
+        //    {
+        //        sql = @"SELECT * from WaitingArea Order By AreaID";
+        //    }
+        //    else
+        //    {
+        //        sql = @"SELECT * from WaitingArea Where Active='" + active + "'";
+        //    }
+        //    DataTable dt = await GetDataTableAsync(sql);
+        //    return dt;
+        //}
 
-        #endregion
+        //#endregion
 
         #region PCategory Nov_27_2024
         public async Task<DataTable> GetPCategoryList(string active)

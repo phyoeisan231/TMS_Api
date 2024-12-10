@@ -272,105 +272,105 @@ namespace TMS_Api.Services
 
         #endregion
 
-        #region Transporter Type Nov_12_2024
-        public async Task<ResponseMessage> SaveTransporterType(TransporterTypeDto info)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                TransporterType data = await _context.TransporterType.FromSqlRaw("SELECT Top 1 * FROM TransporterType WHERE REPLACE(Description,'','')=REPLACE(@name,'','')",
-                    new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
-                if (data != null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Name duplicate!";
-                }
-                else
-                {
-                    TransporterType type = _mapper.Map<TransporterType>(info);
-                    type.UpdatedDate = GetLocalStdDT();
-                    _context.TransporterType.Add(type);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully added";
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
-        public async Task<ResponseMessage> UpdateTransporterType(TransporterTypeDto info)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                TransporterType type = await _context.TransporterType.FromSqlRaw("SELECT * FROM TransporterType WHERE REPLACE(Description,' ','')=REPLACE(@name,' ','') ", new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
-                if (type == null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
-                }
-                else
-                {
-                    type.Description = info.Description;
-                    type.Active = info.Active;
-                    type.UpdatedDate = GetLocalStdDT();
-                    type.UpdatedUser = info.UpdatedUser;
-                    _context.TransporterType.Update(type);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully updated";
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
-        public async Task<ResponseMessage> DeleteTransporterType(string id)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                TransporterType type = await _context.TransporterType.FromSqlRaw("SELECT * FROM TransporterType WHERE TypeID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
-                if (type == null)
-                {
-                    msg.MessageContent = "Data not found.";
-                    return msg;
-                }
-                else
-                {
-                    Transporter transporter = await _context.Transporter.FromSqlRaw("SELECT Top 1* FROM Transporter WHERE  REPLACE(TypeID,' ','')=REPLACE(@id,' ','')", new SqlParameter("@id", type.TypeID)).SingleOrDefaultAsync();
-                    if (transporter == null)
-                    {
-                        _context.TransporterType.Remove(type);
+        //#region Transporter Type Nov_12_2024
+        //public async Task<ResponseMessage> SaveTransporterType(TransporterTypeDto info)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        TransporterType data = await _context.TransporterType.FromSqlRaw("SELECT Top 1 * FROM TransporterType WHERE REPLACE(Description,'','')=REPLACE(@name,'','')",
+        //            new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
+        //        if (data != null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Name duplicate!";
+        //        }
+        //        else
+        //        {
+        //            TransporterType type = _mapper.Map<TransporterType>(info);
+        //            type.UpdatedDate = GetLocalStdDT();
+        //            _context.TransporterType.Add(type);
+        //            await _context.SaveChangesAsync();
+        //            msg.Status = true;
+        //            msg.MessageContent = "Successfully added";
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
+        //public async Task<ResponseMessage> UpdateTransporterType(TransporterTypeDto info)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        TransporterType type = await _context.TransporterType.FromSqlRaw("SELECT * FROM TransporterType WHERE REPLACE(Description,' ','')=REPLACE(@name,' ','') ", new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
+        //        if (type == null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Data Not Found";
+        //        }
+        //        else
+        //        {
+        //            type.Description = info.Description;
+        //            type.Active = info.Active;
+        //            type.UpdatedDate = GetLocalStdDT();
+        //            type.UpdatedUser = info.UpdatedUser;
+        //            _context.TransporterType.Update(type);
+        //            await _context.SaveChangesAsync();
+        //            msg.Status = true;
+        //            msg.MessageContent = "Successfully updated";
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
+        //public async Task<ResponseMessage> DeleteTransporterType(string id)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        TransporterType type = await _context.TransporterType.FromSqlRaw("SELECT * FROM TransporterType WHERE TypeID=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+        //        if (type == null)
+        //        {
+        //            msg.MessageContent = "Data not found.";
+        //            return msg;
+        //        }
+        //        else
+        //        {
+        //            Transporter transporter = await _context.Transporter.FromSqlRaw("SELECT Top 1* FROM Transporter WHERE  REPLACE(TypeID,' ','')=REPLACE(@id,' ','')", new SqlParameter("@id", type.TypeID)).SingleOrDefaultAsync();
+        //            if (transporter == null)
+        //            {
+        //                _context.TransporterType.Remove(type);
 
-                        await _context.SaveChangesAsync();
-                        msg.Status = true;
-                        msg.MessageContent = "Removed successfully!";
-                    }
-                    else
-                    {
-                        msg.Status = false;
-                        msg.MessageContent = "Data exists in another table!";
-                    }
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
+        //                await _context.SaveChangesAsync();
+        //                msg.Status = true;
+        //                msg.MessageContent = "Removed successfully!";
+        //            }
+        //            else
+        //            {
+        //                msg.Status = false;
+        //                msg.MessageContent = "Data exists in another table!";
+        //            }
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
 
-            return msg;
-        }
+        //    return msg;
+        //}
 
-        #endregion
+        //#endregion
 
         #region Transporter Nov_12_2024
         public async Task<ResponseMessage> SaveTransporter(TransporterDto info)
@@ -1383,308 +1383,308 @@ namespace TMS_Api.Services
 
         #endregion
 
-        #region TruckEntryType Nov_22_2024
-        public async Task<ResponseMessage> SaveTruckEntryType(TruckEntryTypeDto info)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
+        //#region TruckEntryType Nov_22_2024
+        //public async Task<ResponseMessage> SaveTruckEntryType(TruckEntryTypeDto info)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
 
-                TruckEntryType data = await _context.TruckEntryType.FromSqlRaw("SELECT Top 1 * FROM TruckEntryType WHERE REPLACE(Description,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
-                if (data != null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Name Duplicate!";
-                }
-                else
-                {
-                    TruckEntryType tIDTest = await _context.TruckEntryType.FromSqlRaw("SELECT Top 1* FROM TruckEntryType WHERE REPLACE(TypeID,'','')=REPLACE(@tID,'','')", new SqlParameter("@tID", info.TypeID)).SingleOrDefaultAsync();
-                    if (tIDTest != null)
-                    {
-                        msg.Status = false;
-                        msg.MessageContent = "ID Duplicate!";//For User Input ID Testing
-                    }
-                    else
-                    {
-                        TruckEntryType truck = _mapper.Map<TruckEntryType>(info);
-                        truck.CreatedDate = GetLocalStdDT();
-                        _context.TruckEntryType.Add(truck);
-                        await _context.SaveChangesAsync();
-                        msg.Status = true;
-                        msg.MessageContent = "Successfully Added!";
-                    }
-                }
+        //        TruckEntryType data = await _context.TruckEntryType.FromSqlRaw("SELECT Top 1 * FROM TruckEntryType WHERE REPLACE(Description,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
+        //        if (data != null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Name Duplicate!";
+        //        }
+        //        else
+        //        {
+        //            TruckEntryType tIDTest = await _context.TruckEntryType.FromSqlRaw("SELECT Top 1* FROM TruckEntryType WHERE REPLACE(TypeID,'','')=REPLACE(@tID,'','')", new SqlParameter("@tID", info.TypeID)).SingleOrDefaultAsync();
+        //            if (tIDTest != null)
+        //            {
+        //                msg.Status = false;
+        //                msg.MessageContent = "ID Duplicate!";//For User Input ID Testing
+        //            }
+        //            else
+        //            {
+        //                TruckEntryType truck = _mapper.Map<TruckEntryType>(info);
+        //                truck.CreatedDate = GetLocalStdDT();
+        //                _context.TruckEntryType.Add(truck);
+        //                await _context.SaveChangesAsync();
+        //                msg.Status = true;
+        //                msg.MessageContent = "Successfully Added!";
+        //            }
+        //        }
 
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
-        public async Task<ResponseMessage> UpdateTruckEntryType(TruckEntryTypeDto info)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                TruckEntryType type = await _context.TruckEntryType.FromSqlRaw("SELECT * FROM TruckEntryType WHERE REPLACE(TypeID,' ','')=REPLACE(@name,' ','') ", new SqlParameter("@name", info.TypeID)).SingleOrDefaultAsync();
-                if (type == null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Data Not Found!";
-                }
-                else
-                {
-                    type.Description = info.Description;
-                    type.Active = info.Active;
-                    type.UpdatedDate = GetLocalStdDT();
-                    type.UpdatedUser = info.UpdatedUser;
-                    _context.TruckEntryType.Update(type);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Updated!";
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
-        public async Task<ResponseMessage> DeleteTruckEntryType(string id)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                TruckEntryType type = await _context.TruckEntryType.FromSqlRaw("SELECT * FROM TruckEntryType WHERE  REPLACE(TypeID,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
-                if (type == null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Data Not Found!";
-                }
-                else
-                {
-                    _context.TruckEntryType.Remove(type);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed!";
-                    return msg;
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
+        //public async Task<ResponseMessage> UpdateTruckEntryType(TruckEntryTypeDto info)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        TruckEntryType type = await _context.TruckEntryType.FromSqlRaw("SELECT * FROM TruckEntryType WHERE REPLACE(TypeID,' ','')=REPLACE(@name,' ','') ", new SqlParameter("@name", info.TypeID)).SingleOrDefaultAsync();
+        //        if (type == null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Data Not Found!";
+        //        }
+        //        else
+        //        {
+        //            type.Description = info.Description;
+        //            type.Active = info.Active;
+        //            type.UpdatedDate = GetLocalStdDT();
+        //            type.UpdatedUser = info.UpdatedUser;
+        //            _context.TruckEntryType.Update(type);
+        //            await _context.SaveChangesAsync();
+        //            msg.Status = true;
+        //            msg.MessageContent = "Successfully Updated!";
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
+        //public async Task<ResponseMessage> DeleteTruckEntryType(string id)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        TruckEntryType type = await _context.TruckEntryType.FromSqlRaw("SELECT * FROM TruckEntryType WHERE  REPLACE(TypeID,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+        //        if (type == null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Data Not Found!";
+        //        }
+        //        else
+        //        {
+        //            _context.TruckEntryType.Remove(type);
+        //            await _context.SaveChangesAsync();
+        //            msg.Status = true;
+        //            msg.MessageContent = "Successfully Removed!";
+        //            return msg;
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
 
-        #endregion//Process
+        //#endregion//Process
 
-        #region TruckJobType Nov_26_2024
-        public async Task<ResponseMessage> SaveTruckJobType(TruckJobTypeDto info)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
+        //#region TruckJobType Nov_26_2024
+        //public async Task<ResponseMessage> SaveTruckJobType(TruckJobTypeDto info)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
 
-                TruckJobType data = await _context.TruckJobType.FromSqlRaw("SELECT Top 1 * FROM TruckJobType WHERE REPLACE(Description,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
-                if (data != null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Name Duplicate!";
-                }
-                else
-                {
-                    TruckJobType tIDTest = await _context.TruckJobType.FromSqlRaw("SELECT Top 1* FROM TruckJobType WHERE REPLACE(TypeID,'','')=REPLACE(@tID,'','')", new SqlParameter("@tID", info.TypeID)).SingleOrDefaultAsync();
-                    if (tIDTest != null)
-                    {
-                        msg.Status = false;
-                        msg.MessageContent = "ID Duplicate!";//For User Input ID Testing
-                    }
-                    else
-                    {
-                        TruckJobType truck = _mapper.Map<TruckJobType>(info);
-                        truck.CreatedDate = GetLocalStdDT();
-                        _context.TruckJobType.Add(truck);
-                        await _context.SaveChangesAsync();
-                        msg.Status = true;
-                        msg.MessageContent = "Successfully Added!";
-                    }
-                }
+        //        TruckJobType data = await _context.TruckJobType.FromSqlRaw("SELECT Top 1 * FROM TruckJobType WHERE REPLACE(Description,'','')=REPLACE(@name,'','')", new SqlParameter("@name", info.Description)).SingleOrDefaultAsync();
+        //        if (data != null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Name Duplicate!";
+        //        }
+        //        else
+        //        {
+        //            TruckJobType tIDTest = await _context.TruckJobType.FromSqlRaw("SELECT Top 1* FROM TruckJobType WHERE REPLACE(TypeID,'','')=REPLACE(@tID,'','')", new SqlParameter("@tID", info.TypeID)).SingleOrDefaultAsync();
+        //            if (tIDTest != null)
+        //            {
+        //                msg.Status = false;
+        //                msg.MessageContent = "ID Duplicate!";//For User Input ID Testing
+        //            }
+        //            else
+        //            {
+        //                TruckJobType truck = _mapper.Map<TruckJobType>(info);
+        //                truck.CreatedDate = GetLocalStdDT();
+        //                _context.TruckJobType.Add(truck);
+        //                await _context.SaveChangesAsync();
+        //                msg.Status = true;
+        //                msg.MessageContent = "Successfully Added!";
+        //            }
+        //        }
 
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
-        public async Task<ResponseMessage> UpdateTruckJobType(TruckJobTypeDto info)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                TruckJobType type = await _context.TruckJobType.FromSqlRaw("SELECT * FROM TruckJobType WHERE REPLACE(TypeID,' ','')=REPLACE(@tID,' ','') ", new SqlParameter("@tID", info.TypeID)).SingleOrDefaultAsync();
-                if (type == null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Data Not Found!";
-                }
-                else
-                {
-                    type.TypeID = info.TypeID;
-                    type.Description = info.Description;
-                    type.Active = info.Active;
-                    type.UpdatedDate = GetLocalStdDT();
-                    type.UpdatedUser = info.UpdatedUser;
-                    _context.TruckJobType.Update(type);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Updated!";
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
-        public async Task<ResponseMessage> DeleteTruckJobType(string id)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                TruckJobType type = await _context.TruckJobType.FromSqlRaw("SELECT * FROM TruckJobType WHERE  REPLACE(TypeID,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
-                if (type == null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Data Not Found!";
-                }
-                else
-                {
-                    _context.TruckJobType.Remove(type);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed!";
-                    return msg;
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
+        //public async Task<ResponseMessage> UpdateTruckJobType(TruckJobTypeDto info)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        TruckJobType type = await _context.TruckJobType.FromSqlRaw("SELECT * FROM TruckJobType WHERE REPLACE(TypeID,' ','')=REPLACE(@tID,' ','') ", new SqlParameter("@tID", info.TypeID)).SingleOrDefaultAsync();
+        //        if (type == null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Data Not Found!";
+        //        }
+        //        else
+        //        {
+        //            type.TypeID = info.TypeID;
+        //            type.Description = info.Description;
+        //            type.Active = info.Active;
+        //            type.UpdatedDate = GetLocalStdDT();
+        //            type.UpdatedUser = info.UpdatedUser;
+        //            _context.TruckJobType.Update(type);
+        //            await _context.SaveChangesAsync();
+        //            msg.Status = true;
+        //            msg.MessageContent = "Successfully Updated!";
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
+        //public async Task<ResponseMessage> DeleteTruckJobType(string id)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        TruckJobType type = await _context.TruckJobType.FromSqlRaw("SELECT * FROM TruckJobType WHERE  REPLACE(TypeID,'','')=REPLACE(@id,'','')", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+        //        if (type == null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Data Not Found!";
+        //        }
+        //        else
+        //        {
+        //            _context.TruckJobType.Remove(type);
+        //            await _context.SaveChangesAsync();
+        //            msg.Status = true;
+        //            msg.MessageContent = "Successfully Removed!";
+        //            return msg;
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
 
-        #endregion
+        //#endregion
 
-        #region WaitingArea Nov_27_2024
-        public async Task<ResponseMessage> SaveWaitingArea(WaitingAreaDto info)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                bool nameExists = await _context.WaitingArea.AnyAsync(wa => wa.Name == info.Name && wa.YardID == info.YardID);
+        //#region WaitingArea Nov_27_2024
+        //public async Task<ResponseMessage> SaveWaitingArea(WaitingAreaDto info)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        bool nameExists = await _context.WaitingArea.AnyAsync(wa => wa.Name == info.Name && wa.YardID == info.YardID);
 
-                if (nameExists)
-                {
-                    msg.MessageContent = "A Waiting Area with this Name already exists for this YardID.";
-                    return msg;
-                }
-                WaitingArea? waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT Top 1* FROM WaitingArea WHERE YardID=@yid Order By AreaID DESC", new SqlParameter("@yid", info.YardID)).SingleOrDefaultAsync();
-                int srNo = 1;
-                string id = string.IsNullOrEmpty(info.YardID) ? "" : info.YardID;
-                if (waitingArea != null)
-                {
-                    string srNoPart = waitingArea.AreaID.Substring(info.YardID.Length + 4);//Pool is 4
-                    if(int.TryParse(srNoPart,out srNo)){
-                        srNo++;
-                    }
-                }
-                string newAreaID = $"{id}Pool{srNo}";
-                info.AreaID = newAreaID;
-                WaitingArea data = _mapper.Map<WaitingArea>(info);
-                data.CreatedDate = GetLocalStdDT();
-                _context.WaitingArea.Add(data);
-                await _context.SaveChangesAsync();
-                msg.Status = true;
-                msg.MessageContent = "Successfully added";
+        //        if (nameExists)
+        //        {
+        //            msg.MessageContent = "A Waiting Area with this Name already exists for this YardID.";
+        //            return msg;
+        //        }
+        //        WaitingArea? waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT Top 1* FROM WaitingArea WHERE YardID=@yid Order By AreaID DESC", new SqlParameter("@yid", info.YardID)).SingleOrDefaultAsync();
+        //        int srNo = 1;
+        //        string id = string.IsNullOrEmpty(info.YardID) ? "" : info.YardID;
+        //        if (waitingArea != null)
+        //        {
+        //            string srNoPart = waitingArea.AreaID.Substring(info.YardID.Length + 4);//Pool is 4
+        //            if(int.TryParse(srNoPart,out srNo)){
+        //                srNo++;
+        //            }
+        //        }
+        //        string newAreaID = $"{id}Pool{srNo}";
+        //        info.AreaID = newAreaID;
+        //        WaitingArea data = _mapper.Map<WaitingArea>(info);
+        //        data.CreatedDate = GetLocalStdDT();
+        //        _context.WaitingArea.Add(data);
+        //        await _context.SaveChangesAsync();
+        //        msg.Status = true;
+        //        msg.MessageContent = "Successfully added";
 
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
-        public async Task<ResponseMessage> UpdateWaitingArea(WaitingAreaDto info)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                WaitingArea? waitingArea = await _context.WaitingArea.SingleOrDefaultAsync(wa => wa.AreaID == info.AreaID);
-                if (waitingArea == null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
-                    return msg;
-                }
-                else
-                {
-                    waitingArea.AreaID = info.AreaID;
-                    waitingArea.Name = info.Name;
-                    waitingArea.YardID = info.YardID;
-                    waitingArea.Active = info.Active;
-                    waitingArea.UpdatedUser = info.UpdatedUser;
-                    waitingArea.UpdatedDate = GetLocalStdDT();
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;//optional
-                    msg.MessageContent = "Successfully Updated";
-                    return msg;
-                }
-            }
-            catch(DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-        }
-        public async Task<ResponseMessage> DeleteWaitingArea(string id)
-        {
-            ResponseMessage msg = new ResponseMessage { Status = false };
-            try
-            {
-                WaitingArea? waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT * FROM WaitingArea Where AreaID=@aID", new SqlParameter("@aID", id)).SingleOrDefaultAsync();
-                if (waitingArea == null)
-                {
-                    msg.Status = false;
-                    msg.MessageContent = "Data Not Found";
-                }
-                else
-                {
-                    _context.WaitingArea.Remove(waitingArea);
-                    await _context.SaveChangesAsync();
-                    msg.Status = true;
-                    msg.MessageContent = "Successfully Removed";
-                    return msg;
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                msg.MessageContent += e.Message;
-                return msg;
-            }
-            return msg;
-        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
+        //public async Task<ResponseMessage> UpdateWaitingArea(WaitingAreaDto info)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        WaitingArea? waitingArea = await _context.WaitingArea.SingleOrDefaultAsync(wa => wa.AreaID == info.AreaID);
+        //        if (waitingArea == null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Data Not Found";
+        //            return msg;
+        //        }
+        //        else
+        //        {
+        //            waitingArea.AreaID = info.AreaID;
+        //            waitingArea.Name = info.Name;
+        //            waitingArea.YardID = info.YardID;
+        //            waitingArea.Active = info.Active;
+        //            waitingArea.UpdatedUser = info.UpdatedUser;
+        //            waitingArea.UpdatedDate = GetLocalStdDT();
+        //            await _context.SaveChangesAsync();
+        //            msg.Status = true;//optional
+        //            msg.MessageContent = "Successfully Updated";
+        //            return msg;
+        //        }
+        //    }
+        //    catch(DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //}
+        //public async Task<ResponseMessage> DeleteWaitingArea(string id)
+        //{
+        //    ResponseMessage msg = new ResponseMessage { Status = false };
+        //    try
+        //    {
+        //        WaitingArea? waitingArea = await _context.WaitingArea.FromSqlRaw("SELECT * FROM WaitingArea Where AreaID=@aID", new SqlParameter("@aID", id)).SingleOrDefaultAsync();
+        //        if (waitingArea == null)
+        //        {
+        //            msg.Status = false;
+        //            msg.MessageContent = "Data Not Found";
+        //        }
+        //        else
+        //        {
+        //            _context.WaitingArea.Remove(waitingArea);
+        //            await _context.SaveChangesAsync();
+        //            msg.Status = true;
+        //            msg.MessageContent = "Successfully Removed";
+        //            return msg;
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        msg.MessageContent += e.Message;
+        //        return msg;
+        //    }
+        //    return msg;
+        //}
 
-        #endregion
+        //#endregion
 
         #region PCategory Nov_27_2024
         public async Task<ResponseMessage> SavePCategory(PCategoryDto info)
