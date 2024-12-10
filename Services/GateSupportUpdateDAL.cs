@@ -121,7 +121,7 @@ namespace TMS_Api.Services
                             process.UpdatedUser = data.InYardID;
                             process.UpdatedDate = GetLocalStdDT();
                             int? queueNo = 1;
-                            if (process.InWeightBridgeID != null && process.InWeightBridgeID != "None")
+                            if (!string.IsNullOrEmpty(process.InWeightBridgeID) && process.InWeightBridgeID != "None")
                             {
                                 WeightBridgeQueue wbQ = new WeightBridgeQueue();
                                 WeightBridgeQueue? inwbQ = await _context.WeightBridgeQueue.FromSqlRaw("SELECT Top 1* FROM WeightBridgeQueue WHERE InRegNo=@id And WeightBridgeID=@wbId Order By QueueNo Desc", new SqlParameter("@id", info.InRegNo), new SqlParameter("@wbId", data.InWeightBridgeID)).SingleOrDefaultAsync();
@@ -150,7 +150,7 @@ namespace TMS_Api.Services
                                 _context.WeightBridgeQueue.Add(wbQ);
                                 await _context.SaveChangesAsync();
                             }
-                            if (process.OutWeightBridgeID != null && process.OutWeightBridgeID != "None")
+                            if (!string.IsNullOrEmpty(process.OutWeightBridgeID) && process.OutWeightBridgeID != "None")
                             {
                                 WeightBridgeQueue wbQ = new WeightBridgeQueue();
                                 WeightBridgeQueue? inwbQ = await _context.WeightBridgeQueue.FromSqlRaw("SELECT Top 1* FROM WeightBridgeQueue WHERE InRegNo=@id And WeightBridgeID=@wbId Order By QueueNo Desc", new SqlParameter("@id", info.InRegNo), new SqlParameter("@wbId", data.OutWeightBridgeID)).SingleOrDefaultAsync();

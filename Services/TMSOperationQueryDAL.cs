@@ -156,7 +156,7 @@ namespace TMS_Api.Services
         
         public async Task<DataTable> GetInBoundCheckList(DateTime startDate, DateTime endDate,string yard)
         {          
-           string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InType,InCargoType,InCargoInfo,convert(varchar, InCheckDateTime, 29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,CardNo,TransporterID,TransporterName,Status,Remark,InWeightBridgeID,OutWeightBridgeID FROM ICD_InBoundCheck where InYardID in (" + yard + ") And Cast(InCheckDateTime as Date) Between @sDate and @eDate  Order by InRegNo DESC";
+           string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InType,InCargoType,InCargoInfo,convert(varchar, InCheckDateTime, 29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,CardNo,TransporterID,TransporterName,Status,Remark,InWeightBridgeID,OutWeightBridgeID,Customer,DriverContactNo FROM ICD_InBoundCheck where InYardID in (" + yard + ") And Cast(InCheckDateTime as Date) Between @sDate and @eDate  Order by InRegNo DESC";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
             return dt;
         }
@@ -275,7 +275,7 @@ namespace TMS_Api.Services
 
         public async Task<DataTable> GetOutBoundCheckList(DateTime startDate, DateTime endDate, string yard)
         {
-            string sql = @"SELECT OutRegNo,OutYardID,OutGateID,OutPCCode,OutType,OutCargoType,OutCargoInfo,convert(varchar, OutCheckDateTime, 29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,CardNo,TransporterID,TransporterName,Status,Remark,OutWeightBridgeID FROM ICD_OutBoundCheck where OutYardID in (" + yard + ") And Cast(OutCheckDateTime as Date) Between @sDate and @eDate  Order by OutRegNo DESC";
+            string sql = @"SELECT OutRegNo,OutYardID,OutGateID,OutPCCode,OutType,OutCargoType,OutCargoInfo,convert(varchar, OutCheckDateTime, 29) as OutCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,CardNo,TransporterID,TransporterName,Status,Remark,OutWeightBridgeID,Customer,DriverContactNo  FROM ICD_OutBoundCheck where OutYardID in (" + yard + ") And Cast(OutCheckDateTime as Date) Between @sDate and @eDate  Order by OutRegNo DESC";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
             return dt;
         }
