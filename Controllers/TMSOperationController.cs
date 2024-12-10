@@ -22,7 +22,7 @@ namespace TMS_Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCategoryICDOList()
         {
-            DataTable dt = await _queryDAL.GetCategoryICDOList();
+            DataTable dt = await _queryDAL.GetCategoryICDOInList();
             return Ok(dt);
         }
         
@@ -197,6 +197,54 @@ namespace TMS_Api.Controllers
         #endregion
         #endregion
 
+        #region Out Check Dec_9_2024
+        [HttpGet]
+        public async Task<IActionResult> GetCardICDOInList(string card,string yard)
+        {
+            DataTable dt = await _queryDAL.GetCardICDOInList(card,yard);
+            return Ok(dt);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> GetGateOutBoundList(string yard)
+        {
+            DataTable dt = await _queryDAL.GetGateOutBoundList(yard);
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCategoryICDOOutList()
+        {
+            DataTable dt = await _queryDAL.GetCategoryICDOOutList();
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOutBoundCheckList(DateTime startDate, DateTime endDate, string yard)
+        {
+            DataTable dt = await _queryDAL.GetOutBoundCheckList(startDate, endDate, yard);
+            return Ok(dt);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteOutCheck(int id, string user)
+        {
+            ResponseMessage msg = await _updateDAL.DeleteOutCheck(id, user);
+            return Ok(msg);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SaveOutCheck(ICD_OutBoundCheckDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveOutCheck(info);
+            return Ok(msg);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetOutBoundCheckById(int id)
+        {
+            ICD_OutBoundCheckDto data = await _queryDAL.GetOutBoundCheckById(id);
+            return Ok(data);
+        }
+
+        #endregion
     }
 }

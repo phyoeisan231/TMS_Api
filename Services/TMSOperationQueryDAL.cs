@@ -87,9 +87,9 @@ namespace TMS_Api.Services
 
         #region InBound Check Nov_27_2024
 
-        public async Task<DataTable> GetCategoryICDOList()
+        public async Task<DataTable> GetCategoryICDOInList()
         {
-            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName in ('ICD','Others')  And Active=1";
+            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName in ('ICD','Others')  And Active=1 And (InboundWeight=1 Or InboundWeight is null)";
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
@@ -212,6 +212,73 @@ namespace TMS_Api.Services
             return dt;
         }
         #endregion
+
+        #endregion
+
+        #region Out Check Dec_9_2024
+        public async Task<DataTable> GetCardICDOInList(string card,string id)
+        {
+            string sql = @"SELECT CardNo,TruckVehicleRegNo,DriverLicenseNo,DriverContactNo,DriverName,TrailerVehicleRegNo,Customer,InCargoInfo,InCargoType,OutWeightBridgeID,InRegNo,OutboundWeight,TruckType,AreaID  from ICD_TruckProcess Where  Status='In' And InYardID=@yard And CardNo like '%" + card + "%'";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
+            return dt;
+        }
+
+        public async Task<DataTable> GetGateOutBoundList(string id)
+        {
+            string sql = @"Select GateID,Name,YardID from Gate where YardID=@yard And Type in('OutBound','Both') And Active=1";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
+            return dt;
+        }
+
+        public async Task<DataTable> GetCategoryICDOOutList()
+        {
+            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName in ('ICD','Others')  And Active=1 And (OutboundWeight=1 Or OutboundWeight is null)";
+            DataTable dt = await GetDataTableAsync(sql);
+            return dt;
+        }
+
+        public async Task<DataTable> GetDocumentSettingOutList(string id)
+        {
+            string sql = @"SELECT DocCode,DocName,'' as CheckStatus FROM DocumentSetting WHERE PCCode=@id And IsOutDoc=1 And Active=1";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@id", id));
+            return dt;
+        }
+
+        public async Task<ICD_OutBoundCheckDto> GetOutBoundCheckById(int id)
+        {
+            ICD_OutBoundCheckDto info = new ICD_OutBoundCheckDto();
+            try
+            {
+                ICD_OutBoundCheck? data = await _context.ICD_OutBoundCheck.FromSqlRaw("SELECT * FROM  ICD_OutBoundCheck WHERE OutRegNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                if (data != null)
+                {
+                    info = _mapper.Map<ICD_OutBoundCheckDto>(data);
+
+                    List<ICD_OutBoundCheck_Document> documentList = await _context.ICD_OutBoundCheck_Document.FromSqlRaw("SELECT * FROM ICD_OutBoundCheck_Document WHERE OutRegNo=@id", new SqlParameter("@id", id)).ToListAsync();
+
+                    info.DocumentList = new List<ICD_OutBoundCheck_DocumentDto>();
+                    foreach (var d in documentList)
+                    {
+
+                        ICD_OutBoundCheck_DocumentDto docDto = _mapper.Map<ICD_OutBoundCheck_DocumentDto>(d);
+                        info.DocumentList.Add(docDto);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return info;
+        }
+
+        public async Task<DataTable> GetOutBoundCheckList(DateTime startDate, DateTime endDate, string yard)
+        {
+            string sql = @"SELECT OutRegNo,OutYardID,OutGateID,OutPCCode,OutType,OutCargoType,OutCargoInfo,convert(varchar, OutCheckDateTime, 29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,CardNo,TransporterID,TransporterName,Status,Remark,OutWeightBridgeID FROM ICD_OutBoundCheck where OutYardID in (" + yard + ") And Cast(OutCheckDateTime as Date) Between @sDate and @eDate  Order by OutRegNo DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
+            return dt;
+        }
 
         #endregion
 

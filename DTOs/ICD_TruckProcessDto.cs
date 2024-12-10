@@ -36,5 +36,13 @@
         public string? InWeightBridgeID { get; set; }
         public string? OutWeightBridgeID { get; set; }
         public IFormFile? UploadPhoto { get; set; }
+        public int OutRegNo { get; set; } = 0!;//mandatory
+        public string? OutYardID { get; set; }//mandatory
+        public string? OutGateID { get; set; }//mandatory
+        public string? OutPCCode { get; set; }//Category//mandatory
+        public string? OutType { get; set; }
+        public string? OutCargoType { get; set; }
+        public string? OutCargoInfo { get; set; }
+        public DateTime? OutCheckDateTime { get; set; }
     }
 }

@@ -68,5 +68,14 @@ namespace TMS_Api.Services
             return dt;
         }
         #endregion
+
+        #region Gate In Dec_9_2024
+        public async Task<DataTable> GetOutBoundCheckCardList(string yard, string gate)
+        {
+            string sql = @"SELECT * from ICD_TruckProcess where OutYardID=@yard And OutGateID=@gate And InYard=0 And Status='Out(Check)'";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate));
+            return dt;
+        }
+        #endregion
     }
 }

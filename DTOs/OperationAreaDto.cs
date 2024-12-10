@@ -7,6 +7,7 @@
         public string? YardID { get; set; }
         public Boolean? Active { get; set; }
         public Boolean? IsWaitingArea { get; set; }
+        public string? GroupName { get; set; }
         public string? UpdatedUser { get; set; }
         public string? CreatedUser { get; set; }
         public DateTime? CreatedDate { get; set; }
