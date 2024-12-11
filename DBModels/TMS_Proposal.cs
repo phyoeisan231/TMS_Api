@@ -14,9 +14,9 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "datetime")]
         public DateTime? EstDate { get; set; }
         [Column(TypeName = "varchar(50)")]
+        public string? JobDept { get; set; }
+        [Column(TypeName = "varchar(50)")]
         public string? JobCode { get; set; }
-        [Column(TypeName = "varchar(250)")]
-        public string? JobDescription { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string? JobType { get; set; }
         [Column(TypeName = "varchar(250)")]

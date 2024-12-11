@@ -2079,7 +2079,7 @@ namespace TMS_Api.Services
                     opArea.Name = info.Name;
                     opArea.YardID = info.YardID;
                     opArea.Active = info.Active;
-                    opArea.GroupName = info.GroupName;
+                    //opArea.GroupName = info.GroupName;
                     opArea.IsWaitingArea = info.IsWaitingArea;
                     opArea.UpdatedDate = GetLocalStdDT();
                     opArea.UpdatedUser = info.UpdatedUser;
