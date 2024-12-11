@@ -37,6 +37,8 @@ namespace TMS_Api.DTOs
         public Boolean? OutboundWeight { get; set; }
         public string? InWeightBridgeID { get; set; }
         public string? OutWeightBridgeID { get; set; }
+        public string? InWBOption { get; set; }//Credit,Cash,None
+        public string? OutWBOption { get; set; }//Credit,Cash,None
         public List<ICD_InBoundCheck_DocumentDto>? DocumentList { get; set; }
 
     }

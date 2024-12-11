@@ -32,6 +32,11 @@ namespace TMS_Api
             CreateMap<ICD_OutBoundCheck_Document, ICD_OutBoundCheck_DocumentDto>().ReverseMap();
             CreateMap<ICD_TruckProcess, ICD_OutBoundCheck>().ReverseMap();
 
+
+
+            //For Proposal
+            CreateMap<TMS_Proposal,TMS_ProposalDto>().ReverseMap();
+
         }
     }
 }

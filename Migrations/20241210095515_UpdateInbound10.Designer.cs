@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241210095515_UpdateInbound10")]
+    partial class UpdateInbound10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -905,8 +908,8 @@ namespace TMS_Api.Migrations
                     b.Property<string>("JobCode")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("JobDept")
-                        .HasColumnType("varchar(50)");
+                    b.Property<string>("JobDescription")
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("JobType")
                         .HasColumnType("varchar(10)");
@@ -1326,76 +1329,6 @@ namespace TMS_Api.Migrations
                     b.HasKey("RegNo");
 
                     b.ToTable("WeightBridgeQueue");
-                });
-
-            modelBuilder.Entity("TMS_Api.DBModels.WeightServiceBill", b =>
-                {
-                    b.Property<string>("ServiceBillNo")
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("CargoInfo")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<decimal?>("CashAmt")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<int?>("CheckInRegNo")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("CreatedUser")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("CustomerName")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("DriverLicense")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("DriverName")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<int?>("QRegNo")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ServiceBillDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("TrailerNo")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("TruckNo")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("UpdatedUser")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<decimal?>("Weight")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("WeightBridgeID")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("WeightCategory")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("WeightOption")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("WeightType")
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("ServiceBillNo");
-
-                    b.ToTable("WeightServiceBill");
                 });
 
             modelBuilder.Entity("TMS_Api.DBModels.Yard", b =>
