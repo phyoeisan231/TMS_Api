@@ -53,5 +53,6 @@ namespace TMS_Api
         public DbSet<TMS_Proposal> TMS_Proposal { get; set; }
         public DbSet<TMS_ProposalDetail> TMS_ProposalDetails { get; set; }
         public DbSet<WeightBridgeQueue> WeightBridgeQueue { get; set; }
+        public DbSet<WeightServiceBill> WeightServiceBill { get; set; }
     }
 }

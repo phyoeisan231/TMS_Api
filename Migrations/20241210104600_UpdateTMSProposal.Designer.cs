@@ -12,7 +12,7 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    [Migration("20241210083149_UpdateTMSProposal")]
+    [Migration("20241210104600_UpdateTMSProposal")]
     partial class UpdateTMSProposal
     {
         /// <inheritdoc />
@@ -411,6 +411,9 @@ namespace TMS_Api.Migrations
                     b.Property<string>("InType")
                         .HasColumnType("varchar(25)");
 
+                    b.Property<string>("InWBOption")
+                        .HasColumnType("varchar(25)");
+
                     b.Property<string>("InWeightBridgeID")
                         .HasColumnType("varchar(25)");
 
@@ -419,6 +422,9 @@ namespace TMS_Api.Migrations
 
                     b.Property<bool?>("InboundWeight")
                         .HasColumnType("bit");
+
+                    b.Property<string>("OutWBOption")
+                        .HasColumnType("varchar(25)");
 
                     b.Property<string>("OutWeightBridgeID")
                         .HasColumnType("varchar(25)");
@@ -667,6 +673,9 @@ namespace TMS_Api.Migrations
                     b.Property<string>("InType")
                         .HasColumnType("varchar(25)");
 
+                    b.Property<string>("InWBOption")
+                        .HasColumnType("varchar(25)");
+
                     b.Property<string>("InWeightBridgeID")
                         .HasColumnType("varchar(25)");
 
@@ -704,6 +713,9 @@ namespace TMS_Api.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("OutType")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("OutWBOption")
                         .HasColumnType("varchar(25)");
 
                     b.Property<string>("OutWeightBridgeID")
