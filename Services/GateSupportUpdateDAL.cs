@@ -120,6 +120,7 @@ namespace TMS_Api.Services
                             process.InGatePassTime = GetLocalStdDT();
                             process.UpdatedUser = data.InYardID;
                             process.UpdatedDate = GetLocalStdDT();
+                            process.InYard = true;
                             int? queueNo = 1;
                             if (!string.IsNullOrEmpty(process.InWeightBridgeID) && process.InWeightBridgeID != "None")
                             {
@@ -143,6 +144,7 @@ namespace TMS_Api.Services
                                 wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
                                 wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
                                 wbQ.WeightBridgeID = data.InWeightBridgeID;
+                                wbQ.WOption = data.InWBOption;
                                 wbQ.Customer = data.Customer;
                                 wbQ.Status = "Queue";
                                 wbQ.CreatedDate = GetLocalStdDT();
@@ -168,6 +170,7 @@ namespace TMS_Api.Services
                                 wbQ.Type = "Out";
                                 wbQ.CargoType = data.InCargoType;
                                 wbQ.CargoInfo = data.InCargoInfo;
+                                wbQ.WOption = data.OutWBOption;
                                 wbQ.CardNo = data.CardNo;
                                 wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
                                 wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
@@ -273,6 +276,7 @@ namespace TMS_Api.Services
                         }
                         else
                         {
+                            process.InYard = false;
                             process.Status = "Out";
                             process.OutGatePassTime = GetLocalStdDT();
                             process.UpdatedUser = data.OutYardID;

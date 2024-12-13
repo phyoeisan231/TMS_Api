@@ -67,15 +67,57 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate));
             return dt;
         }
+
+        public async Task<DataTable> GetInBoundCheckList(string yard, string gate, string fDate, string tDate)
+        {
+            string sql = @"SELECT * from ICD_TruckProcess where InYardID=@yard And InGateID=@gate And InYard=0 And Status='In(Check)' And Cast(InCheckDateTime as Date) Between @fDate And @tDate";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate), new SqlParameter("@fDate", fDate), new SqlParameter("@tDate", tDate));
+            return dt;
+        }
         #endregion
 
-        #region Gate In Dec_9_2024
+        #region Gate Out Dec_9_2024
         public async Task<DataTable> GetOutBoundCheckCardList(string yard, string gate)
         {
-            string sql = @"SELECT * from ICD_TruckProcess where OutYardID=@yard And OutGateID=@gate And InYard=0 And Status='Out(Check)'";
+            string sql = @"SELECT * from ICD_TruckProcess where OutYardID=@yard And OutGateID=@gate And InYard=1 And Status='Out(Check)'";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate));
             return dt;
         }
+
+        public async Task<DataTable> GetOutBoundCheckList(string yard, string gate, string fDate, string tDate)
+        {
+            string sql = @"SELECT * from ICD_TruckProcess where OutYardID=@yard And OutGateID=@gate And InYard=1 And Status='Out(Check)' And Cast(OutCheckDateTime as Date) Between @fDate And @tDate";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate), new SqlParameter("@fDate", fDate), new SqlParameter("@tDate", tDate));
+            return dt;
+        }
+
+        #endregion
+
+        #region Truck Status Dec_12_2024
+        public async Task<DataTable> GetTruckStatusReport(string yard, string gate, string fDate, string tDate)
+        {
+            string sql = @"SELECT * from ICD_TruckProcess where InYardID=@yard And InGateID=@gate  And Cast(InCheckDateTime as Date) Between @fDate And @tDate";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate), new SqlParameter("@fDate", fDate), new SqlParameter("@tDate", tDate));
+            return dt;
+        }
+
+        #endregion
+
+        #region Daily Report Dec_12_2024
+        public async Task<DataTable> GetDailyInReport(string yard, string gate, string fDate, string tDate)
+        {
+            string sql = @"SELECT * from ICD_TruckProcess where InYardID=@yard And InGateID=@gate And InYard=1 And Status='In' And Cast(InCheckDateTime as Date) Between @fDate And @tDate";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate), new SqlParameter("@fDate", fDate), new SqlParameter("@tDate", tDate));
+            return dt;
+        }
+
+        public async Task<DataTable> GetDailyOutReport(string yard, string gate, string fDate, string tDate)
+        {
+            string sql = @"SELECT * from ICD_TruckProcess where OutYardID=@yard And OutGateID=@gate And InYard=0 And Status='Out' And Cast(OutCheckDateTime as Date) Between @fDate And @tDate";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate), new SqlParameter("@fDate", fDate), new SqlParameter("@tDate", tDate));
+            return dt;
+        }
+
         #endregion
     }
 }
