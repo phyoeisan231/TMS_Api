@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241211065316_DeleteTMSProposal")]
+    partial class DeleteTMSProposal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -876,79 +879,12 @@ namespace TMS_Api.Migrations
                     b.ToTable("PCategory");
                 });
 
-            modelBuilder.Entity("TMS_Api.DBModels.TMS_Proposal", b =>
-                {
-                    b.Property<int>("PropNo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PropNo"));
-
-                    b.Property<string>("CargoInfo")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<string>("CompanyName")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("CreatedUser")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("varchar(12)");
-
-                    b.Property<string>("CustomerName")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<DateTime?>("EstDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("JobCode")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("JobDept")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("JobType")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<int?>("LCLQty")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoOfFEU")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoOfTEU")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoOfTruck")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("UpdatedUser")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Yard")
-                        .HasColumnType("varchar(25)");
-
-                    b.HasKey("PropNo");
-
-                    b.ToTable("TMS_Proposal");
-                });
-
             modelBuilder.Entity("TMS_Api.DBModels.TMS_ProposalDetail", b =>
                 {
                     b.Property<int>("PropNo")
                         .HasColumnType("int");
 
                     b.Property<string>("TruckNo")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("AssignType")
                         .HasColumnType("varchar(10)");
 
                     b.Property<DateTime?>("CreatedDate")
@@ -961,9 +897,6 @@ namespace TMS_Api.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("DriverName")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("JobType")
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("NightStop")

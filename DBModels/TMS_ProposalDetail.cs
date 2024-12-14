@@ -15,6 +15,10 @@ namespace TMS_Api.DBModels
         public string? TruckAssignId { get; set; }
         [Column(TypeName = "varchar(30)")]
         public string? TruckAssignOption { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string? AssignType { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? JobType { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? DriverName { get; set; }
         [Column(TypeName = "varchar(50)")]
