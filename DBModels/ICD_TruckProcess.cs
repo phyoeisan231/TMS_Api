@@ -51,9 +51,9 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "bit")]
         public Boolean? InYard { get; set; }
         [Column(TypeName = "varchar(25)")]
-        public string? InWBOption { get; set; }//Credit,Foc,Cash,None
+        public string? InWBOption { get; set; }//Credit,Cash,None
         [Column(TypeName = "varchar(25)")]
-        public string? OutWBOption { get; set; }//Credit,Foc,Cash,None
+        public string? OutWBOption { get; set; }//Credit,Cash,None
         //Out
         [Column(TypeName = "int")]
         public int? OutRegNo { get; set; }

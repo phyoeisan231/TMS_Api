@@ -31,6 +31,13 @@ namespace TMS_Api.Controllers
             ResponseMessage msg = await _updateDAL.SaveGateIn(info);
             return Ok(msg);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetInBoundCheckList(string yard, string gate,string fDate,string tDate)
+        {
+            DataTable dt = await _queryDAL.GetInBoundCheckList(yard, gate, fDate, tDate);
+            return Ok(dt);
+        }
         #endregion
 
         #region Gate In December_9_2024
@@ -41,11 +48,43 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetOutBoundCheckList(string yard, string gate, string fDate, string tDate)
+        {
+            DataTable dt = await _queryDAL.GetOutBoundCheckList(yard, gate, fDate, tDate);
+            return Ok(dt);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SaveGateOut([FromForm] ICD_TruckProcessDto info)
         {
             ResponseMessage msg = await _updateDAL.SaveGateOut(info);
             return Ok(msg);
+        }
+        #endregion
+
+        #region Truck Status Dec_12_2024
+        [HttpGet]
+        public async Task<IActionResult> GetTruckStatusReport(string yard, string gate, string fDate, string tDate)
+        {
+            DataTable dt = await _queryDAL.GetTruckStatusReport(yard, gate, fDate, tDate);
+            return Ok(dt);
+        }
+        #endregion
+
+        #region Daily Report Dec_12_2024
+        [HttpGet]
+        public async Task<IActionResult> GetDailyInReport(string yard, string gate, string fDate, string tDate)
+        {
+            DataTable dt = await _queryDAL.GetDailyInReport(yard, gate, fDate, tDate);
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDailyOutReport(string yard, string gate, string fDate, string tDate)
+        {
+            DataTable dt = await _queryDAL.GetDailyOutReport(yard, gate, fDate, tDate);
+            return Ok(dt);
         }
         #endregion
 

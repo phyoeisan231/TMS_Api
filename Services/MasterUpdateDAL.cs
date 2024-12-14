@@ -552,7 +552,7 @@ namespace TMS_Api.Services
                 if (data != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Duplicate!1";
+                    msg.MessageContent = "Data Duplicate!!";
                     return msg;
                 }
                 else
@@ -658,7 +658,7 @@ namespace TMS_Api.Services
                 if (truck != null)
                 {
                     msg.Status = false;
-                    msg.MessageContent = "Data Not Found!1";
+                    msg.MessageContent = "Data Not Found!!";
                     return msg;
                 }
                 else

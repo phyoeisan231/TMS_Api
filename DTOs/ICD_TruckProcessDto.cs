@@ -36,7 +36,7 @@
         public string? InWeightBridgeID { get; set; }
         public string? OutWeightBridgeID { get; set; }
         public IFormFile? UploadPhoto { get; set; }
-        public int OutRegNo { get; set; } = 0!;//mandatory
+        public int? OutRegNo { get; set; }//mandatory
         public string? OutYardID { get; set; }//mandatory
         public string? OutGateID { get; set; }//mandatory
         public string? OutPCCode { get; set; }//Category//mandatory
