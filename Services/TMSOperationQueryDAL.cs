@@ -161,6 +161,13 @@ namespace TMS_Api.Services
             return dt;
         }
 
+        public async Task<DataTable> GetTruckProcessList(DateTime startDate, DateTime endDate, string status, string yard)
+        {
+            string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InType,InCargoType,InCargoInfo,convert(varchar,InCheckDateTime,29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,DriverContactNo,CardNo,Status,TransporterID,TransporterName,Customer,OutRegNo,OutYardID,OutGateID,OutPCCode,OutType,OutCargoType,OutCargoInfo,InboundWeight,OutboundWeight,InWeightBridgeID,OutWeightBridgeID FROM ICD_TruckProcess where Status in (" + status+") And InYardID in (" + yard + ") And Cast(InCheckDateTime as Date) Between @sDate and @eDate Order by InRegNo DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
+            return dt;
+        }
+
         #region New
         public async Task<ICD_InBoundCheckDto> GetInBoundCheckById(int id)
         {

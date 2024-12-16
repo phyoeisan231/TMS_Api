@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Security.Cryptography.Xml;
 using TMS_Api.DBModels;
 
 namespace TMS_Api.Services
@@ -83,10 +84,19 @@ namespace TMS_Api.Services
             });
         }
 
-        public async Task<DataTable> GetRailDailyJobList(DateTime sDate, string jobType,string yard)
+
+        #region In Check Proposal
+        public async Task<DataTable> GetYardList()
         {
-            string sql = @"SELECT * FROM RailDailyJobs where  CAST(JobDate As Date)=@jobDate AND JobType=@jobType AND YCode=@yard";
-            DataTable dt = await GetPortalDataTableAsync(sql,new SqlParameter("@jobDate",sDate),new SqlParameter("@jobType",jobType), new SqlParameter("@yard",yard));
+            string sql = @"SELECT * FROM Yards";
+            DataTable dt = await GetPortalDataTableAsync(sql);
+            return dt;
+        }
+
+        public async Task<DataTable> GetRailDailyJobList(string jobType, string yard)
+        {
+            string sql = @"SELECT * FROM RailDailyJobs where JobType=@jobType AND YCode=@yard AND JobStatus='In Progress'";
+            DataTable dt = await GetPortalDataTableAsync(sql, new SqlParameter("@jobType", jobType), new SqlParameter("@yard", yard));
             return dt;
         }
 
@@ -97,34 +107,56 @@ namespace TMS_Api.Services
             return dt;
         }
 
-        public async Task<DataTable> GetWHDailyJobList(DateTime sDate, string jobType)
+        public async Task<DataTable> GetWHDailyJobList(string jobType,string yard)
         {
-            string sql = @"SELECT * FROM WarehouseDailyJobs where  CAST(JobDate As Date)=@jobDate AND ServiceType=@jobType";
-            DataTable dt = await GetPortalDataTableAsync(sql, new SqlParameter("@jobDate", sDate), new SqlParameter("@jobType", jobType));
+            string sql = @"SELECT *, ServiceType As JobType FROM WarehouseDailyJobs where ServiceType=@jobType
+AND  JobStatus='In Progress' AND LocationCode in (Select LocationCode from Locations where Description like '%"+yard+"%')";
+            DataTable dt = await GetPortalDataTableAsync(sql,  new SqlParameter("@jobType", jobType));
             return dt;
         }
 
-        public async Task<DataTable> GetCCADailyJobList(DateTime sDate, string jobType)
+        public async Task<DataTable> GetCCADailyJobList(string jobType,string yard)
         {
-            string sql = @"SELECT * FROM CCADailyJobs where  CAST(JobDate As Date)=@jobDate AND JobType=@jobType";
-            DataTable dt = await GetPortalDataTableAsync(sql, new SqlParameter("@jobDate", sDate), new SqlParameter("@jobType", jobType));
+            string sql = @"SELECT * FROM CCADailyJobs where JobType=@jobType AND JobStatus='In Progress' 
+AND LocationCode in (Select LocationCode from Locations where Description like '%"+yard+"%')";
+            DataTable dt = await GetPortalDataTableAsync(sql, new SqlParameter("@jobType", jobType));
             return dt;
         }
 
-        public async Task<DataTable> GetProposalList(DateTime startDate,DateTime endDate, string deptType)
+        public async Task<DataTable> GetProposalList(DateTime startDate, DateTime endDate, string deptType)
         {
             string sql = @"SELECT * FROM TMS_Proposal where JobDept in (" + deptType + ") And Cast(EstDate as Date) Between @sDate and @eDate  Order by PropNo DESC";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
             return dt;
         }
 
+        public async Task<DataTable> GetTruckList(string type,string jobType)
+        {
+            string sql = @"SELECT * FROM TruckAssigns where  AssignType=@type AND JobType=@jobType AND JobStatus='In Progress'";
+            DataTable dt = await GetPortalDataTableAsync(sql, new SqlParameter("@type", type),new SqlParameter("@jobType",jobType));
+            return dt;
+        }
+
+        public async Task<DataTable> GetProposalDetailList(string propNo)
+        {
+            string sql = @"SELECT * FROM TMS_ProposalDetails WHERE  PropNo=@propNo";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@propNo", propNo));
+            return dt;
+        }
+
+        public  async Task<DataTable> GetProposalListById(string id)
+        {
+            string sql = @"SELECT * FROM TMS_Proposal WHERE  PropNo=@propNo";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@propNo", id));
+            return dt;
+        }
+        #endregion
 
 
-
-
-        #region In Check Proposal
+        #region ProposalDetail
 
         #endregion
+
     }
 
 

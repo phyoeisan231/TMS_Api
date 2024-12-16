@@ -36,6 +36,7 @@ namespace TMS_Api
 
             //For Proposal
             CreateMap<TMS_Proposal,TMS_ProposalDto>().ReverseMap();
+            CreateMap<TMS_ProposalDetail, TMS_ProposalDetailDto>().ReverseMap();
 
 
 

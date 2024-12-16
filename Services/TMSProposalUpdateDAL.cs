@@ -73,6 +73,8 @@ namespace TMS_Api.Services
             try
             {
                 TMS_Proposal proposal = _mapper.Map<TMS_Proposal>(info);
+                proposal.CreatedDate = GetLocalStdDT();
+                proposal.CreatedUser = info.CreatedUser;
                 _context.TMS_Proposal.Add(proposal);
                 await _context.SaveChangesAsync();
                 msg.Status = true;
@@ -84,5 +86,144 @@ namespace TMS_Api.Services
             }
             return msg;
         }
+
+        #region TMS Proposal Detail
+
+        public async Task<ResponseMessage> CreateProposalDetail(TMS_ProposalDetailDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+
+            try
+            {
+                TMS_Proposal proposal= await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE PropNo=@propNo", new SqlParameter("@propNo", info.PropNo)).SingleOrDefaultAsync();
+                if(proposal != null)
+                {
+                    TMS_ProposalDetail proDetail = await _context.TMS_ProposalDetails.FromSqlRaw("SELECT * FROM  TMS_ProposalDetails WHERE PropNo=@propNo AND TruckNo=@truckNo", new SqlParameter("@propNo", info.PropNo), new SqlParameter("@truckNo", info.TruckNo)).SingleOrDefaultAsync();
+                    if (proDetail != null)
+                    {
+                        msg.MessageContent = "Truck No Duplicated!";
+                        return msg;
+                    }
+                    else
+                    {
+                        TMS_ProposalDetail newPropDetial = _mapper.Map<TMS_ProposalDetail>(info);
+                        newPropDetial.CreatedDate = GetLocalStdDT();
+                        if (info.AssignType == "Customer") newPropDetial.TruckAssignOption = "None";
+                        else newPropDetial.TruckAssignOption = "Assign";
+                        _context.TMS_ProposalDetails.Add(newPropDetial);
+                        await _context.SaveChangesAsync();
+                        msg.MessageContent = "Successfully Created!";
+                        msg.Status = true;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                msg.MessageContent = e.Message;
+            }
+            return msg;
+        }
+
+        public async Task<ResponseMessage> DeleteProposal(string id)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                TMS_Proposal proposal = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE PropNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                if (proposal == null)
+                {
+                    msg.MessageContent = "Data Not Found!";
+                    return msg;
+                }
+                else
+                {
+                    List<TMS_ProposalDetail> propDetail = await _context.TMS_ProposalDetails.FromSqlRaw("SELECT * FROM TMS_ProposalDetails WHERE PropNo=@id", new SqlParameter("@id", id)).ToListAsync();
+                    if (propDetail != null)
+                    {
+                        _context.TMS_ProposalDetails.RemoveRange(propDetail);
+                    }
+                    _context.TMS_Proposal.Remove(proposal);
+                    await _context.SaveChangesAsync();
+                    msg.MessageContent = "Successfully Delete!";
+                    msg.Status = true;
+                }
+            }
+            catch(Exception e)
+            {
+                msg.MessageContent = e.Message;
+            }
+            return msg;
+        }
+
+        public async Task<ResponseMessage> UpdateTMSProposal(TMS_ProposalDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                TMS_Proposal proposal = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE PropNo=@id", new SqlParameter("@id", info.PropNo)).SingleOrDefaultAsync();
+                if (proposal == null)
+                {
+                    msg.MessageContent = "Data Not Found!";
+                    return msg;
+                }
+
+                proposal.JobDept = info.JobDept;
+                proposal.Yard = info.Yard;
+                proposal.JobCode = info.JobCode;
+                proposal.JobType = info.JobType;
+                proposal.CustomerId = info.CustomerId;
+                proposal.CustomerName = info.CustomerName;
+                proposal.CompanyName = info.CompanyName;
+                proposal.NoOfTruck = info.NoOfTruck;
+                proposal.NoOfTEU = info.NoOfTEU;
+                proposal.NoOfFEU = info.NoOfFEU;
+                proposal.LCLQty = info.LCLQty;
+                proposal.CargoInfo = info.CargoInfo;
+                proposal.UpdatedDate = GetLocalStdDT();
+                proposal.UpdatedUser = info.UpdatedUser;
+
+                await _context.SaveChangesAsync();
+                msg.MessageContent = "Successfully Updated!";
+                msg.Status = true;
+            }
+            catch(Exception e)
+            {
+                msg.MessageContent = e.Message;
+            }
+            return msg;
+        }
+
+
+
+        #endregion
+
+        #region ProposalDetail
+        public async Task<ResponseMessage> DeleteProposalDetail(string id, string truckNo)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                TMS_ProposalDetail propDetail = await _context.TMS_ProposalDetails.FromSqlRaw("SELECT * FROM TMS_ProposalDetails WHERE PropNo=@id AND TruckNo=@truckNo", new SqlParameter("@id", id), new SqlParameter("@truckNo", truckNo)).SingleOrDefaultAsync();
+                if (propDetail == null)
+                {
+                    msg.MessageContent = "Data Not Found!";
+                    return msg;
+                }
+
+                _context.TMS_ProposalDetails.Remove(propDetail);
+                await _context.SaveChangesAsync();
+                msg.MessageContent = "Successfully Delete!";
+                msg.Status = true;
+            }
+            catch(Exception e)
+            {
+                msg.MessageContent = e.Message;
+                
+            }
+            return msg;
+        }
+        #endregion
+
+
     }
 }

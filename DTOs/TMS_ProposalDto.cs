@@ -5,11 +5,11 @@ namespace TMS_Api.DTOs
 {
     public class TMS_ProposalDto
     {
-        public int PropNo { get; set; }= 0!;
+        public int PropNo { get; set; }
         public string? Yard { get; set; }
         public DateTime? EstDate { get; set; }
         public string? JobCode { get; set; }
-        public string? JobDescription { get; set; }
+        public string? JobDept { get; set; }
         public string? JobType { get; set; }
         public string? CompanyName { get; set; }
         public int? NoOfTruck { get; set; }

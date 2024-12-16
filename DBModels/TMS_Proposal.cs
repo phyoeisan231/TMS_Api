@@ -6,9 +6,8 @@ namespace TMS_Api.DBModels
     public class TMS_Proposal
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Column(TypeName = "int")]
-        public int? PropNo { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int PropNo { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? Yard { get; set; }
         [Column(TypeName = "datetime")]
@@ -21,9 +20,9 @@ namespace TMS_Api.DBModels
         public string? JobType { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string? CompanyName { get; set; }
-        [Column(TypeName ="int")]
+        [Column(TypeName = "int")]
         public int? NoOfTruck { get; set; }
-        [Column(TypeName ="int")]
+        [Column(TypeName = "int")]
         public int? NoOfTEU { get; set; }
         [Column(TypeName = "int")]
         public int? NoOfFEU { get; set; }
@@ -33,7 +32,7 @@ namespace TMS_Api.DBModels
         public string? CargoInfo { get; set; }
         [Column(TypeName = "varchar(12)")]
         public string? CustomerId { get; set; }
-        [Column(TypeName = "varchar(50)")]
+        [Column(TypeName = "varchar(250)")]
         public string? CustomerName { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
