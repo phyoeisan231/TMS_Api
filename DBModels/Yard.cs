@@ -10,6 +10,13 @@ namespace TMS_Api.DBModels
         public string YardID { get; set; } = null!;//mandatory
         [Column(TypeName = "varchar(30)")]
         public string? Name { get; set; }//mandatory
+        [Column(TypeName = "varchar(50)")]
+        public string? Phone { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? Email { get; set; }
+        [Column(TypeName = "varchar(250)")]
+        public string? Address { get; set; }
+
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
         [Column(TypeName = "datetime")]
