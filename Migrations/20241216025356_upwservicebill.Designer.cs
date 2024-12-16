@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241216025356_upwservicebill")]
+    partial class upwservicebill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,17 +341,8 @@ namespace TMS_Api.Migrations
                     b.Property<string>("CreatedUser")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("varchar(50)");
-
                     b.Property<string>("Name")
                         .HasColumnType("varchar(30)");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Remark")
-                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("Type")
                         .HasColumnType("varchar(25)");

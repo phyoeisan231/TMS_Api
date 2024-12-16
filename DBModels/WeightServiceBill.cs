@@ -40,6 +40,16 @@ namespace TMS_Api.DBModels
         public string? DriverName { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? DriverLicense { get; set; }
+        [Column(TypeName = "varchar(15)")]
+        public string? ContainerNo { get; set; }
+        [Column(TypeName = "varchar(20)")]
+        public string? DONo { get; set; }
+        [Column(TypeName = "varchar(20)")]
+        public string? BLNo { get; set; }
+        [Column(TypeName = "varchar(20)")]
+        public string? VesselName { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? TransporterID { get; set; } 
         [Column(TypeName = "varchar(250)")]
         public string? Remark { get; set; }
         [Column(TypeName = "datetime")]

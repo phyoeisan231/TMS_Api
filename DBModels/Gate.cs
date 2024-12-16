@@ -17,6 +17,13 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
 
+        [Column(TypeName = "varchar(50)")]
+        public string? Phone { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? Email { get; set; }
+        [Column(TypeName = "varchar(250)")]
+        public string? Remark { get; set; }
+
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
