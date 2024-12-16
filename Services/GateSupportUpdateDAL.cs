@@ -180,7 +180,7 @@ namespace TMS_Api.Services
                                 outWbQ.Status = "Queue";
                                 outWbQ.CreatedDate = GetLocalStdDT();
                                 outWbQ.CreatedUser = data.InYardID;
-                                _context.WeightBridgeQueue.Add(wbQ);
+                                _context.WeightBridgeQueue.Add(outWbQ);
                                 await _context.SaveChangesAsync();
                             }
                             else if(process.WBOption == "Single")
@@ -215,7 +215,7 @@ namespace TMS_Api.Services
                                 await _context.SaveChangesAsync();
                             }                            
                         }
-                        if (data.TruckType != "RG")
+                        if (data.TruckType != "RGL")
                         {
                             Truck? truck = await _context.Truck.FromSqlRaw("SELECT * FROM Truck WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TruckVehicleRegNo)).SingleOrDefaultAsync();
                             if (truck == null)
@@ -265,7 +265,7 @@ namespace TMS_Api.Services
         }
         #endregion
 
-        #region Gate In Dec_9_2024
+        #region Gate Out Dec_9_2024
         public async Task<ResponseMessage> SaveGateOut([FromForm] ICD_TruckProcessDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
@@ -298,7 +298,7 @@ namespace TMS_Api.Services
                                 await blob.UploadAsync(stream, overwrite: true);
                             }
                         }
-                        ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id And InYard=0 And Status='Out(Check)' ", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
+                        ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id And InYard=1 And Status='Out(Check)' ", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
                         if (process == null)
                         {
                             msg.Status = false;
@@ -312,7 +312,7 @@ namespace TMS_Api.Services
                             process.OutGatePassTime = GetLocalStdDT();
                             process.UpdatedUser = data.OutYardID;
                             process.UpdatedDate = GetLocalStdDT();
-                            if (data.TruckType != "RG")
+                            if (data.TruckType != "RGL")
                             {
                                 Truck? truck = await _context.Truck.FromSqlRaw("SELECT * FROM Truck WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TruckVehicleRegNo)).SingleOrDefaultAsync();
                                 if (truck == null)
