@@ -37,6 +37,13 @@ namespace TMS_Api
             //For Proposal
             CreateMap<TMS_Proposal,TMS_ProposalDto>().ReverseMap();
 
+
+
+
+            ///Weight Bridge
+            CreateMap<WeightServiceBill, WeightServiceBillDto>().ReverseMap();
+
+
         }
     }
 }
