@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241216050720_upyard")]
+    partial class upyard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1345,9 +1348,6 @@ namespace TMS_Api.Migrations
                     b.Property<string>("BLNo")
                         .HasColumnType("varchar(20)");
 
-                    b.Property<string>("BillOption")
-                        .HasColumnType("varchar(15)");
-
                     b.Property<string>("CargoInfo")
                         .HasColumnType("varchar(250)");
 
@@ -1381,29 +1381,14 @@ namespace TMS_Api.Migrations
                     b.Property<string>("DriverName")
                         .HasColumnType("varchar(250)");
 
-                    b.Property<string>("GateID")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<decimal?>("InWeight")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<DateTime?>("InWeightTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<decimal?>("NetWeight")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<decimal?>("OutWeight")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<DateTime?>("OutWeightTime")
-                        .HasColumnType("datetime");
-
                     b.Property<int?>("QRegNo")
                         .HasColumnType("int");
 
                     b.Property<string>("Remark")
                         .HasColumnType("varchar(250)");
+
+                    b.Property<DateTime?>("ServiceBillDate")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("TrailerNo")
                         .HasColumnType("varchar(25)");
@@ -1423,6 +1408,9 @@ namespace TMS_Api.Migrations
                     b.Property<string>("VesselName")
                         .HasColumnType("varchar(20)");
 
+                    b.Property<decimal?>("Weight")
+                        .HasColumnType("decimal(18, 2)");
+
                     b.Property<string>("WeightBridgeID")
                         .HasColumnType("varchar(25)");
 
@@ -1434,9 +1422,6 @@ namespace TMS_Api.Migrations
 
                     b.Property<string>("WeightType")
                         .HasColumnType("varchar(50)");
-
-                    b.Property<string>("YardID")
-                        .HasColumnType("varchar(25)");
 
                     b.HasKey("ServiceBillNo");
 
