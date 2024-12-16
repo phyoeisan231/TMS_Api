@@ -18,7 +18,7 @@ namespace TMS_Api.DBModels
         public string? GateID { get; set; }//mandatory
        
         [Column(TypeName = "varchar(15)")]
-        public string? Type { get; set; }//In,Out
+        public string? Type { get; set; }//In,Out/Single
         [Column(TypeName = "varchar(25)")]
         public string? CargoType { get; set; }
         [Column(TypeName = "varchar(50)")]
@@ -39,7 +39,9 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "varchar(25)")]
         public string? WeightBridgeID { get; set; }
         [Column(TypeName = "varchar(25)")]
-        public string? WOption { get; set; }//Credit,Foc,Cash,None
+        public string? WBOption { get; set; }//Single,Both
+        [Column(TypeName = "varchar(25)")]
+        public string? BillOption { get; set; }//Credit,Foc,Cash,None
         [Column(TypeName = "int")]
         public int? WBillNo { get; set; }
         [Column(TypeName = "varchar(150)")]
