@@ -8,10 +8,10 @@ namespace TMS_Api.DBModels
         [Key]
         [Column(TypeName = "varchar(20)")]
         public string ServiceBillNo { get; set; } = null!;
-        [Column(TypeName = "varchar(25)")]
-        public string? WeightBridgeID { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? ServiceBillDate { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? WeightBridgeID { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? InWeightTime { get; set; }
         [Column(TypeName = "datetime")]
