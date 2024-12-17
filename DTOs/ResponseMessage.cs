@@ -6,5 +6,7 @@ namespace TMS_Api.DTOs
         public string? MessageContent { get; set; }
         public bool Status { get; set; }
         public string? Message { get; set; }
+        public string? ServiceBillNo { get; set; }
+        public string? Yard { get; set; }
     }
 }
