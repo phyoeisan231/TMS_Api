@@ -40,12 +40,12 @@ namespace TMS_Api.Controllers
             return Ok(msg);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCustomerList()
-        {
-            DataTable dt = await _queryDAL.GetCustomerList();
-            return Ok(dt);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetJobCodeList(string id)
+        //{
+        //    DataTable dt = await _queryDAL.GetJobCodeList(id);
+        //    return Ok(dt);
+        //}
 
         [HttpGet]
         public async Task<IActionResult> GetWHDailyJobList(string jobType,string yard)
@@ -109,8 +109,8 @@ namespace TMS_Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProposalDetailList(string propNo)
         {
-            DataTable dt = await _queryDAL.GetProposalDetailList(propNo);
-            return Ok(dt);
+            TMS_ProposalDto data = await _queryDAL.GetProposalDetailList(propNo);
+            return Ok(data);
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteProposalDetail(string id, string truckNo)

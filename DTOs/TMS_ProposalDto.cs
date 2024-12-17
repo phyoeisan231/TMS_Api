@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace TMS_Api.DTOs
 {
@@ -23,5 +24,7 @@ namespace TMS_Api.DTOs
         public string? UpdatedUser { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
+
+        public DataTable? ProposalDetailList { get; set; }
     }
 }
