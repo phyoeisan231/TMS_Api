@@ -50,10 +50,12 @@ namespace TMS_Api.DBModels
         public string? Customer { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? InYard { get; set; }
+        [Column(TypeName = "varchar(20)")]
+        public string? WBOption { get; set; }//Single,Both,None
         [Column(TypeName = "varchar(25)")]
-        public string? InWBOption { get; set; }//Credit,Cash,None
+        public string? InWBBillOption { get; set; }
         [Column(TypeName = "varchar(25)")]
-        public string? OutWBOption { get; set; }//Credit,Cash,None
+        public string? OutWBBillOption { get; set; }//Credit,Cash,None
         //Out
         [Column(TypeName = "int")]
         public int? OutRegNo { get; set; }
@@ -76,10 +78,6 @@ namespace TMS_Api.DBModels
         public DateTime? InGatePassTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? OutGatePassTime { get; set; }
-        [Column(TypeName = "bit")]
-        public Boolean? InboundWeight { get; set; }
-        [Column(TypeName = "bit")]
-        public Boolean? OutboundWeight { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? InWeightBridgeID { get; set; }
         [Column(TypeName = "varchar(25)")]

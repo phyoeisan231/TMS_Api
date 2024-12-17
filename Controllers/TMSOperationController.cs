@@ -101,46 +101,6 @@ namespace TMS_Api.Controllers
 
         #endregion
 
-        #region old 
-
-
-        //[HttpPost]
-        //public async Task<IActionResult> SaveInBoundCheck(ICD_InBoundCheckDto info)
-        //{
-        //    ResponseMessage msg = await _updateDAL.SaveInBoundCheck(info);
-        //    return Ok(msg);
-        //}
-
-        //[HttpPut]
-        //public async Task<IActionResult> UpdateInBoundCheck(ICD_InBoundCheckDto info)
-        //{
-        //    ResponseMessage msg = await _updateDAL.UpdateInBoundCheck(info);
-        //    return Ok(msg);
-        //}
-
-        //[HttpPut]
-        //public async Task<IActionResult> UpdateInBoundCheckDocument(int id,string docList,string user)
-        //{
-        //    ResponseMessage msg = await _updateDAL.UpdateInBoundCheckDocument(id,docList,user);
-        //    return Ok(msg);
-        //}
-
-        //[HttpDelete]
-        //public async Task<IActionResult> DeleteInBoundCheck(int id,string user)
-        //{
-        //    ResponseMessage msg = await _updateDAL.DeleteInBoundCheck(id,user);
-        //    return Ok(msg);
-        //}
-
-        //[HttpDelete]
-        //public async Task<IActionResult> DeleteInBoundCheckDocument(int id, string code)
-        //{
-        //    ResponseMessage msg = await _updateDAL.DeleteInBoundCheckDocument(id, code);
-        //    return Ok(msg);
-        //}
-
-        #endregion
-
         #region TruckProcessReport
 
         [HttpGet]
@@ -177,7 +137,6 @@ namespace TMS_Api.Controllers
 
         #endregion
       
-
         #region Out Check Dec_9_2024
         [HttpGet]
         public async Task<IActionResult> GetCardICDOInList(string card,string yard)

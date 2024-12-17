@@ -40,7 +40,7 @@ namespace TMS_Api.Controllers
         }
         #endregion
 
-        #region Gate In December_9_2024
+        #region Gate Out December_9_2024
         [HttpGet]
         public async Task<IActionResult> GetOutBoundCheckCardList(string yard, string gate)
         {

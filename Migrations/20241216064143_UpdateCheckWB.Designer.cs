@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241216064143_UpdateCheckWB")]
+    partial class UpdateCheckWB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -960,8 +963,8 @@ namespace TMS_Api.Migrations
                     b.Property<string>("JobType")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<bool>("NightStop")
-                        .HasColumnType("bit");
+                    b.Property<string>("NightStop")
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("OtherInfo")
                         .HasColumnType("varchar(250)");
@@ -1401,11 +1404,6 @@ namespace TMS_Api.Migrations
 
                     b.Property<string>("Remark")
                         .HasColumnType("varchar(250)");
-                    b.Property<string>("Remark")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<DateTime?>("ServiceBillDate")
-                        .HasColumnType("datetime");
 
                     b.Property<string>("TrailerNo")
                         .HasColumnType("varchar(25)");

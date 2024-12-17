@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Data;
 using System.Data.Common;
 using TMS_Api.DBModels;
@@ -106,11 +107,25 @@ namespace TMS_Api.Services
                     }
                     else
                     {
-                        TMS_ProposalDetail newPropDetial = _mapper.Map<TMS_ProposalDetail>(info);
-                        newPropDetial.CreatedDate = GetLocalStdDT();
-                        if (info.AssignType == "Customer") newPropDetial.TruckAssignOption = "None";
-                        else newPropDetial.TruckAssignOption = "Assign";
-                        _context.TMS_ProposalDetails.Add(newPropDetial);
+                        List<String> truckNo = JsonConvert.DeserializeObject<List<String>>(info.TruckNo);
+                        if (truckNo != null)
+                        {
+                            foreach(String truck in truckNo)
+                            {
+                               TMS_ProposalDetail detail = await _context.TMS_ProposalDetails.FromSqlRaw("SELECT * FROM TMS_ProposalDetails WHERE PropNo=@id AND TruckNo=@truckNo", new SqlParameter("@id", info.PropNo), new SqlParameter("@truckNo", truck)).SingleOrDefaultAsync();
+                                if (detail == null)
+                                {
+                                    info.TruckNo = truck;
+                                    TMS_ProposalDetail newPropDetial = _mapper.Map<TMS_ProposalDetail>(info);
+                                    newPropDetial.CreatedDate = GetLocalStdDT();
+                                    if (info.AssignType == "Customer") newPropDetial.TruckAssignOption = "None";
+                                    else newPropDetial.TruckAssignOption = "Assign";
+                                    _context.TMS_ProposalDetails.AddRange(newPropDetial);
+                                }
+                            }
+                           
+                        }
+                       
                         await _context.SaveChangesAsync();
                         msg.MessageContent = "Successfully Created!";
                         msg.Status = true;

@@ -23,8 +23,8 @@ namespace TMS_Api.DBModels
         public string? DriverName { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string? DriverContact { get; set; }
-        [Column(TypeName = "varchar(50)")]
-        public string? NightStop { get; set; }
+        [Column(TypeName = "bit")]
+        public bool NightStop { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string? OtherInfo { get; set; }
         [Column(TypeName = "datetime")]

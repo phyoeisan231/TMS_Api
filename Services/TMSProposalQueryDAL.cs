@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Cryptography.Xml;
 using TMS_Api.DBModels;
+using TMS_Api.DTOs;
+using TMS_Api.Migrations;
+using TMS_Proposal = TMS_Api.DBModels.TMS_Proposal;
 
 namespace TMS_Api.Services
 {
@@ -88,37 +92,39 @@ namespace TMS_Api.Services
         #region In Check Proposal
         public async Task<DataTable> GetYardList()
         {
-            string sql = @"SELECT * FROM Yards";
-            DataTable dt = await GetPortalDataTableAsync(sql);
+            string sql = @"SELECT * FROM Yard";
+            DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
 
         public async Task<DataTable> GetRailDailyJobList(string jobType, string yard)
         {
-            string sql = @"SELECT * FROM RailDailyJobs where JobType=@jobType AND YCode=@yard AND JobStatus='In Progress'";
+            string sql = @"SELECT r.*, k.Name, (k.CustomerId +' | '+ k.Name) As Customer FROM RailDailyJobs r LEFT JOIN KYCCustomers k ON k.CustomerId=r.CustomerId 
+                          WHERE JobType=@jobType AND YCode=@yard AND JobStatus='In Progress'";
             DataTable dt = await GetPortalDataTableAsync(sql, new SqlParameter("@jobType", jobType), new SqlParameter("@yard", yard));
             return dt;
         }
 
-        public async Task<DataTable> GetCustomerList()
-        {
-            string sql = @"select * from KYCCustomers";
-            DataTable dt = await GetPortalDataTableAsync(sql);
-            return dt;
-        }
+        //public async Task<DataTable> GetJobCodeList(string id)
+        //{
+        //    string sql = @"select * from KYCCustomers";
+        //    DataTable dt = await GetPortalDataTableAsync(sql);
+        //    return dt;
+        //}
 
         public async Task<DataTable> GetWHDailyJobList(string jobType,string yard)
         {
-            string sql = @"SELECT *, ServiceType As JobType FROM WarehouseDailyJobs where ServiceType=@jobType
-AND  JobStatus='In Progress' AND LocationCode in (Select LocationCode from Locations where Description like '%"+yard+"%')";
-            DataTable dt = await GetPortalDataTableAsync(sql,  new SqlParameter("@jobType", jobType));
+            string sql = @"SELECT w.*, k.Name, (k.CustomerId +' | '+ k.Name)  As Customer FROM WarehouseDailyJobs w
+                          LEFT JOIN KYCCustomers k ON k.CustomerId=w.CustomerId
+                          WHERE ServiceType=@jobType AND  JobStatus='In Progress' AND LocationCode in (Select LocationCode from Locations where Description like '%" + yard + "%')";
+            DataTable dt = await GetPortalDataTableAsync(sql, new SqlParameter("@jobType", jobType));
             return dt;
         }
 
         public async Task<DataTable> GetCCADailyJobList(string jobType,string yard)
         {
-            string sql = @"SELECT * FROM CCADailyJobs where JobType=@jobType AND JobStatus='In Progress' 
-AND LocationCode in (Select LocationCode from Locations where Description like '%"+yard+"%')";
+            string sql = @"SELECT c.*, k.Name, (k.CustomerId +' | '+ k.Name) ,k.Name As Customer FROM CCADailyJobs c LEFT JOIN KYCCustomers k ON k.CustomerId=c.CustomerId
+                          WHERE JobType=@jobType AND JobStatus='In Progress' AND LocationCode in (Select LocationCode from Locations where Description like '%" + yard+"%')";
             DataTable dt = await GetPortalDataTableAsync(sql, new SqlParameter("@jobType", jobType));
             return dt;
         }
@@ -137,16 +143,26 @@ AND LocationCode in (Select LocationCode from Locations where Description like '
             return dt;
         }
 
-        public async Task<DataTable> GetProposalDetailList(string propNo)
+        public async Task<TMS_ProposalDto> GetProposalDetailList(string propNo)
+        
         {
-            string sql = @"SELECT * FROM TMS_ProposalDetails WHERE  PropNo=@propNo";
-            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@propNo", propNo));
-            return dt;
+            TMS_ProposalDto proDto = new TMS_ProposalDto();
+
+            TMS_Proposal propsal = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE PropNo=@propNo", new SqlParameter("@propNo", propNo)).SingleOrDefaultAsync();
+
+            if (propsal != null)
+            {
+                proDto = _mapper.Map<TMS_ProposalDto>(propsal);
+                string sql = @"SELECT * FROM TMS_ProposalDetails WHERE  PropNo=@propNo";
+                proDto.ProposalDetailList = await GetDataTableAsync(sql, new SqlParameter("@propNo", propNo));
+
+            }
+            return proDto;
         }
 
         public  async Task<DataTable> GetProposalListById(string id)
         {
-            string sql = @"SELECT * FROM TMS_Proposal WHERE  PropNo=@propNo";
+            string sql = @"SELECT *, (CustomerId +' | '+ CustomerName ) As Customer FROM TMS_Proposal  WHERE  PropNo=@propNo";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@propNo", id));
             return dt;
         }
