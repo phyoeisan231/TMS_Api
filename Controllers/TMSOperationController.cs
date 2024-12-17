@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using TMS_Api.DBModels;
 using TMS_Api.DTOs;
 using TMS_Api.Services;
 
@@ -18,11 +17,11 @@ namespace TMS_Api.Controllers
             _updateDAL = updateDAL;
         }
 
-        #region InBound Check Doc Nov_27_2024
+        #region ICD/Other InBound Check Doc Nov_27_2024
         [HttpGet]
-        public async Task<IActionResult> GetCategoryICDOList()
+        public async Task<IActionResult> GetCategoryICDOList(string type)
         {
-            DataTable dt = await _queryDAL.GetCategoryICDOInList();
+            DataTable dt = await _queryDAL.GetCategoryICDOInList(type);
             return Ok(dt);
         }
         
@@ -98,22 +97,9 @@ namespace TMS_Api.Controllers
             return Ok(data);
         }
 
-
         #endregion
 
-        #region TruckProcessReport
-
-        [HttpGet]
-        public async Task<IActionResult> GetTruckProcessList(DateTime startDate, DateTime endDate, string status,string yard)
-        {
-            DataTable dt = await _queryDAL.GetTruckProcessList(startDate, endDate, status,yard);
-            return Ok(dt);
-        }
-
-
-        #endregion
-
-        #region New
+        #region ICD/Other In Check New
 
         [HttpDelete]
         public async Task<IActionResult> DeleteInCheck(int id, string user)
@@ -136,8 +122,8 @@ namespace TMS_Api.Controllers
         }
 
         #endregion
-      
-        #region Out Check Dec_9_2024
+
+        #region ICD/Other Out Check Dec_9_2024
         [HttpGet]
         public async Task<IActionResult> GetCardICDOInList(string card,string yard)
         {
@@ -153,9 +139,9 @@ namespace TMS_Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategoryICDOOutList()
+        public async Task<IActionResult> GetCategoryICDOOutList(string type)
         {
-            DataTable dt = await _queryDAL.GetCategoryICDOOutList();
+            DataTable dt = await _queryDAL.GetCategoryICDOOutList(type);
             return Ok(dt);
         }
 
@@ -185,6 +171,33 @@ namespace TMS_Api.Controllers
             return Ok(data);
         }
 
+        #endregion
+
+        #region ICD/Other Truck Status
+
+        [HttpGet]
+        public async Task<IActionResult> GetTruckProcessList(DateTime startDate, DateTime endDate, string status, string yard)
+        {
+            DataTable dt = await _queryDAL.GetTruckProcessList(startDate, endDate, status, yard);
+            return Ok(dt);
+        }
+
+        #endregion
+
+        #region TMS In Check Dec_17_2024
+        [HttpGet]
+        public async Task<IActionResult> GetTMSProposalList(DateTime startDate, DateTime endDate, string yard, string deptType)
+        {
+            DataTable dt = await _queryDAL.GetTMSProposalList(startDate, endDate, yard, deptType);
+            return Ok(dt);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTMSProposalById(int id)
+        {
+            TMS_ProposalDto data = await _queryDAL.GetTMSProposalById(id);
+            return Ok(data);
+        }
         #endregion
     }
 }

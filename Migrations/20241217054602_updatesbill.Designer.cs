@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241217054602_updatesbill")]
+    partial class updatesbill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1401,9 +1404,6 @@ namespace TMS_Api.Migrations
 
                     b.Property<string>("Remark")
                         .HasColumnType("varchar(250)");
-
-                    b.Property<DateTime?>("ServiceBillDate")
-                        .HasColumnType("datetime");
 
                     b.Property<string>("TrailerNo")
                         .HasColumnType("varchar(25)");
