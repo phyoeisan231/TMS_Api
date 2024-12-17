@@ -11,6 +11,8 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "varchar(25)")]
         public string? WeightBridgeID { get; set; }
         [Column(TypeName = "datetime")]
+        public DateTime? ServiceBillDate { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime? InWeightTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? OutWeightTime { get; set; }

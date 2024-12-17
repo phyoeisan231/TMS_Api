@@ -79,7 +79,7 @@ namespace TMS_Api.Services
                 {
                     int num = Convert.ToInt32(wserviceBill.ServiceBillNo[^6..]);
                     num++;
-                    info.ServiceBillNo = info.WeightBridgeID + num.ToString("D3");
+                    info.ServiceBillNo = info.WeightBridgeID + num.ToString("D6");
                 }
                 else
                 {
@@ -88,10 +88,13 @@ namespace TMS_Api.Services
 
 
                 WeightServiceBill sBill = _mapper.Map<WeightServiceBill>(info);
+                sBill.NetWeight = info.OutWeight;
                 sBill.CreatedDate = GetLocalStdDT();
                 _context.WeightServiceBill.Add(sBill);
                 await _context.SaveChangesAsync();
                 msg.Status = true;
+                msg.ServiceBillNo = info.ServiceBillNo;
+                msg.Yard = info.YardID;
                 msg.MessageContent = "Successfully created!";
 
 

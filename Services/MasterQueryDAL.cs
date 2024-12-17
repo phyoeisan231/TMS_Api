@@ -137,11 +137,11 @@ namespace TMS_Api.Services
             string sql = "";
             if (active == "All" || active == null)
             {
-                sql = @"SELECT * from Gate Order By GateID";
+                sql = @"SELECT *, (YardID +' | '+GateID) as GateInfo  from Gate Order By GateID";
             }
             else
             {
-                sql = @"SELECT * from Gate Where Active='" + active + "'";
+                sql = @"SELECT *, (YardID +' | '+GateID) as GateInfo from Gate Where Active='" + active + "'";
             }
             DataTable dt = await GetDataTableAsync(sql);
             return dt;
