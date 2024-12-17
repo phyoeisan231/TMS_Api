@@ -50,8 +50,8 @@ namespace TMS_Api.DBModels
         public string? Customer { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? InYard { get; set; }
-        [Column(TypeName = "varchar(20)")]
-        public string? WBOption { get; set; }//Single,Both,None
+        [Column(TypeName = "bit")]
+        public Boolean? IsUseWB { get; set; }//IsUseWeightBridge
         [Column(TypeName = "varchar(25)")]
         public string? InWBBillOption { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -90,6 +90,8 @@ namespace TMS_Api.DBModels
         public string? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string? GroupName { get; set; }//mandatory"ICD","TMS","Others"
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

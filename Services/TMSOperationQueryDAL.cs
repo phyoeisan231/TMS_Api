@@ -85,12 +85,12 @@ namespace TMS_Api.Services
             });
         }
 
-        #region InBound Check Nov_27_2024
+        #region ICD/Other InBound Check Nov_27_2024
 
-        public async Task<DataTable> GetCategoryICDOInList()
+        public async Task<DataTable> GetCategoryICDOInList(string type)
         {
-            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName in ('ICD','Others')  And Active=1 And (InboundWeight=1 Or InboundWeight is null)";
-            DataTable dt = await GetDataTableAsync(sql);
+            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName=@type And Active=1 And (InboundWeight=1 Or InboundWeight is null)";
+            DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@type",type));
             return dt;
         }
         public async Task<DataTable> GetGateInBoundList(string id)
@@ -158,19 +158,13 @@ namespace TMS_Api.Services
         {          
            string sql = @"SELECT i.InRegNo,i.InYardID,i.InGateID,i.InPCCode,i.InType,i.InCargoType,i.InCargoInfo,convert(varchar, i.InCheckDateTime, 29) as InCheckDateTime,i.AreaID,i.TruckType,i.TruckVehicleRegNo,i.TrailerVehicleRegNo,i.DriverLicenseNo,i.DriverName,i.CardNo,i.TransporterID,i.TransporterName,
 				        t.Status,i.Remark,i.InWeightBridgeID,i.OutWeightBridgeID,i.Customer,i.DriverContactNo,i.InWBBillOption,i.OutWBBillOption,i.WBOption FROM ICD_InBoundCheck i
-				        Left Join ICD_TruckProcess t On t.InRegNo=i.InRegNo where i.InYardID in (" + yard + ") And Cast(i.InCheckDateTime as Date) Between @sDate and @eDate  Order by i.InRegNo DESC";
-            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
+				        Left Join ICD_TruckProcess t On t.InRegNo=i.InRegNo where i.InYardID=@yard And Cast(i.InCheckDateTime as Date) Between @sDate and @eDate  Order by i.InRegNo DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate), new SqlParameter("@yard", yard));
             return dt;
         }
 
-        public async Task<DataTable> GetTruckProcessList(DateTime startDate, DateTime endDate, string status, string yard)
-        {
-            string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InType,InCargoType,InCargoInfo,convert(varchar,InCheckDateTime,29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,DriverContactNo,CardNo,Status,TransporterID,TransporterName,Customer,OutRegNo,OutYardID,OutGateID,OutPCCode,OutType,OutCargoType,OutCargoInfo,InWeightBridgeID,OutWeightBridgeID FROM ICD_TruckProcess where Status in (" + status+") And InYardID in (" + yard + ") And Cast(InCheckDateTime as Date) Between @sDate and @eDate Order by InRegNo DESC";
-            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
-            return dt;
-        }
 
-        #region New
+        #region New ICD/Other InBound Check
         public async Task<ICD_InBoundCheckDto> GetInBoundCheckById(int id)
         {
             ICD_InBoundCheckDto info = new ICD_InBoundCheckDto();
@@ -224,7 +218,7 @@ namespace TMS_Api.Services
 
         #endregion
 
-        #region Out Check Dec_9_2024
+        #region ICD/Other Out Check Dec_9_2024
         public async Task<DataTable> GetCardICDOInList(string card,string id)
         {
             string sql = @"SELECT CardNo,TruckVehicleRegNo,DriverLicenseNo,DriverContactNo,DriverName,TrailerVehicleRegNo,Customer,InCargoInfo,InCargoType,OutWeightBridgeID,InRegNo,WBOption,OutWeightBridgeID,TruckType,AreaID  from ICD_TruckProcess Where  Status='In' And InYardID=@yard And CardNo like '%" + card + "%'";
@@ -239,12 +233,12 @@ namespace TMS_Api.Services
             return dt;
         }
 
-        public async Task<DataTable> GetCategoryICDOOutList()
+        public async Task<DataTable> GetCategoryICDOOutList(string type)
         {
-            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName in ('ICD','Others')  And Active=1 And (OutboundWeight=1 Or OutboundWeight is null)";
-            DataTable dt = await GetDataTableAsync(sql);
+            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName=@type And Active=1 And (OutboundWeight=1 Or OutboundWeight is null)";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@type", type));
             return dt;
-        }
+        }      
 
         public async Task<DataTable> GetDocumentSettingOutList(string id)
         {
@@ -286,11 +280,60 @@ namespace TMS_Api.Services
         {
             string sql = @"SELECT o.OutRegNo,o.OutYardID,o.OutGateID,o.OutPCCode,o.OutType,o.OutCargoType,o.OutCargoInfo,convert(varchar, o.OutCheckDateTime, 29) as OutCheckDateTime,o.AreaID,o.TruckType,o.TruckVehicleRegNo,o.TrailerVehicleRegNo,o.DriverLicenseNo,o.DriverName,o.CardNo,o.TransporterID,o.TransporterName,t.Status,o.Remark,o.OutWeightBridgeID,o.Customer,o.DriverContactNo  FROM ICD_OutBoundCheck o
 				            Left Join ICD_TruckProcess t On t.OutRegNo=o.OutRegNo
-				            where o.OutYardID in (" + yard + ") And Cast(o.OutCheckDateTime as Date) Between @sDate and @eDate  Order by o.OutRegNo DESC";
-            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
+				            where o.OutYardID=@yard And Cast(o.OutCheckDateTime as Date) Between @sDate and @eDate  Order by o.OutRegNo DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate), new SqlParameter("@yard", yard));
             return dt;
         }
 
+        #endregion
+
+        #region ICD/Other Truck Status Dec_16_12_2024
+        public async Task<DataTable> GetTruckProcessList(DateTime startDate, DateTime endDate, string status, string yard)
+        {
+            string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InType,InCargoType,InCargoInfo,convert(varchar,InCheckDateTime,29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,DriverContactNo,CardNo,Status,TransporterID,TransporterName,Customer,OutRegNo,OutYardID,OutGateID,OutPCCode,OutType,OutCargoType,OutCargoInfo,InWeightBridgeID,OutWeightBridgeID FROM ICD_TruckProcess where Status in (" + status + ") And InYardID in (" + yard + ") And Cast(InCheckDateTime as Date) Between @sDate and @eDate Order by InRegNo DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
+            return dt;
+        }
+        #endregion
+
+        #region TMS In Check Dec_17_2024
+       
+        public async Task<DataTable> GetTMSProposalList(DateTime startDate, DateTime endDate, string yard,string deptType)
+        {
+            string sql = @"SELECT PropNo,Yard,convert(varchar, EstDate, 29) as EstDate,JobDept,JobCode,JobType,CompanyName,NoOfTruck,NoOfTEU,LCLQty,CargoInfo,CustomerId,CustomerName from TMS_Proposal  where Yard=@yard And JobDept in (" + deptType + ") And Cast(EstDate as Date) Between @sDate and @eDate  Order by PropNo DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate), new SqlParameter("@yard", yard));
+            return dt;
+        }
+
+        public async Task<TMS_ProposalDto> GetTMSProposalById(int id)
+        {
+            TMS_ProposalDto info = new TMS_ProposalDto();
+            try
+            {
+                TMS_Proposal? data = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM  TMS_Proposal WHERE PropNo=@id", new SqlParameter("@id", id)).SingleOrDefaultAsync();
+                if (data != null)
+                {
+                    info = _mapper.Map<TMS_ProposalDto>(data);
+
+                    List<TMS_ProposalDetail> detailList = await _context.TMS_ProposalDetails.FromSqlRaw("SELECT * FROM TMS_ProposalDetails WHERE PropNo=@id", new SqlParameter("@id", id)).ToListAsync();
+
+                    info.DetailList = new List<TMS_ProposalDetailDto>();
+                    foreach (var d in detailList)
+                    {
+
+                        TMS_ProposalDetailDto docDto = _mapper.Map<TMS_ProposalDetailDto>(d);
+                        info.DetailList.Add(docDto);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return info;
+        }
+        
         #endregion
 
     }
