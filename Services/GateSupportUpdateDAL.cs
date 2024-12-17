@@ -122,8 +122,9 @@ namespace TMS_Api.Services
                             process.UpdatedDate = GetLocalStdDT();
                             process.InYard = true;
                             int? queueNo = 1;
-                            if (!string.IsNullOrEmpty(process.InWeightBridgeID) && process.InWeightBridgeID != "None")
+                            if (process.WBOption=="Both")
                             {
+                                //In
                                 WeightBridgeQueue wbQ = new WeightBridgeQueue();
                                 WeightBridgeQueue? inwbQ = await _context.WeightBridgeQueue.FromSqlRaw("SELECT Top 1* FROM WeightBridgeQueue WHERE InRegNo=@id And WeightBridgeID=@wbId Order By QueueNo Desc", new SqlParameter("@id", info.InRegNo), new SqlParameter("@wbId", data.InWeightBridgeID)).SingleOrDefaultAsync();
                                 if (inwbQ != null)
@@ -144,18 +145,48 @@ namespace TMS_Api.Services
                                 wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
                                 wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
                                 wbQ.WeightBridgeID = data.InWeightBridgeID;
-                                wbQ.WOption = data.InWBOption;
+                                wbQ.WBOption = data.WBOption;
+                                wbQ.BillOption = data.InWBBillOption;
                                 wbQ.Customer = data.Customer;
                                 wbQ.Status = "Queue";
                                 wbQ.CreatedDate = GetLocalStdDT();
                                 wbQ.CreatedUser = data.InYardID;
                                 _context.WeightBridgeQueue.Add(wbQ);
                                 await _context.SaveChangesAsync();
+                                //Out
+                                WeightBridgeQueue outWbQ = new WeightBridgeQueue();
+                                WeightBridgeQueue? wbQData = await _context.WeightBridgeQueue.FromSqlRaw("SELECT Top 1* FROM WeightBridgeQueue WHERE InRegNo=@id And WeightBridgeID=@wbId Order By QueueNo Desc", new SqlParameter("@id", info.InRegNo), new SqlParameter("@wbId", data.OutWeightBridgeID)).SingleOrDefaultAsync();
+                                if (wbQData != null)
+                                {
+                                    queueNo += wbQData.QueueNo;
+                                }
+                                outWbQ.QueueNo = queueNo;
+                                outWbQ.InRegNo = data.InRegNo;
+                                outWbQ.YardID = data.InYardID;
+                                outWbQ.GateID = data.InGateID;
+                                outWbQ.DriverLicenseNo = data.DriverLicenseNo;
+                                outWbQ.DriverName = data.DriverName;
+                                outWbQ.DriverContactNo = data.DriverContactNo;
+                                outWbQ.Type = "Out";
+                                outWbQ.CargoType = data.InCargoType;
+                                outWbQ.CargoInfo = data.InCargoInfo;
+                                outWbQ.WBOption = data.WBOption;
+                                outWbQ.BillOption = data.OutWBBillOption;
+                                outWbQ.CardNo = data.CardNo;
+                                outWbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
+                                outWbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
+                                outWbQ.WeightBridgeID = data.OutWeightBridgeID;
+                                outWbQ.Customer = data.Customer;
+                                outWbQ.Status = "Queue";
+                                outWbQ.CreatedDate = GetLocalStdDT();
+                                outWbQ.CreatedUser = data.InYardID;
+                                _context.WeightBridgeQueue.Add(outWbQ);
+                                await _context.SaveChangesAsync();
                             }
-                            if (!string.IsNullOrEmpty(process.OutWeightBridgeID) && process.OutWeightBridgeID != "None")
+                            else if(process.WBOption == "Single")
                             {
                                 WeightBridgeQueue wbQ = new WeightBridgeQueue();
-                                WeightBridgeQueue? inwbQ = await _context.WeightBridgeQueue.FromSqlRaw("SELECT Top 1* FROM WeightBridgeQueue WHERE InRegNo=@id And WeightBridgeID=@wbId Order By QueueNo Desc", new SqlParameter("@id", info.InRegNo), new SqlParameter("@wbId", data.OutWeightBridgeID)).SingleOrDefaultAsync();
+                                WeightBridgeQueue? inwbQ = await _context.WeightBridgeQueue.FromSqlRaw("SELECT Top 1* FROM WeightBridgeQueue WHERE InRegNo=@id And WeightBridgeID=@wbId Order By QueueNo Desc", new SqlParameter("@id", info.InRegNo), new SqlParameter("@wbId", data.InWeightBridgeID)).SingleOrDefaultAsync();
                                 if (inwbQ != null)
                                 {
                                     queueNo += inwbQ.QueueNo;
@@ -167,24 +198,24 @@ namespace TMS_Api.Services
                                 wbQ.DriverLicenseNo = data.DriverLicenseNo;
                                 wbQ.DriverName = data.DriverName;
                                 wbQ.DriverContactNo = data.DriverContactNo;
-                                wbQ.Type = "Out";
+                                wbQ.Type = "Single";
                                 wbQ.CargoType = data.InCargoType;
                                 wbQ.CargoInfo = data.InCargoInfo;
-                                wbQ.WOption = data.OutWBOption;
                                 wbQ.CardNo = data.CardNo;
                                 wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
                                 wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
-                                wbQ.WeightBridgeID = data.OutWeightBridgeID;
+                                wbQ.WeightBridgeID = data.InWeightBridgeID;
+                                wbQ.WBOption = data.WBOption;
+                                wbQ.BillOption = data.InWBBillOption;
                                 wbQ.Customer = data.Customer;
                                 wbQ.Status = "Queue";
                                 wbQ.CreatedDate = GetLocalStdDT();
                                 wbQ.CreatedUser = data.InYardID;
                                 _context.WeightBridgeQueue.Add(wbQ);
                                 await _context.SaveChangesAsync();
-                            }
+                            }                            
                         }
-
-                        if (data.TruckType != "RG")
+                        if (data.TruckType != "RGL")
                         {
                             Truck? truck = await _context.Truck.FromSqlRaw("SELECT * FROM Truck WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TruckVehicleRegNo)).SingleOrDefaultAsync();
                             if (truck == null)
@@ -234,7 +265,7 @@ namespace TMS_Api.Services
         }
         #endregion
 
-        #region Gate In Dec_9_2024
+        #region Gate Out Dec_9_2024
         public async Task<ResponseMessage> SaveGateOut([FromForm] ICD_TruckProcessDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
@@ -267,7 +298,7 @@ namespace TMS_Api.Services
                                 await blob.UploadAsync(stream, overwrite: true);
                             }
                         }
-                        ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id And InYard=0 And Status='Out(Check)' ", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
+                        ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id And InYard=1 And Status='Out(Check)' ", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
                         if (process == null)
                         {
                             msg.Status = false;
@@ -281,7 +312,7 @@ namespace TMS_Api.Services
                             process.OutGatePassTime = GetLocalStdDT();
                             process.UpdatedUser = data.OutYardID;
                             process.UpdatedDate = GetLocalStdDT();
-                            if (data.TruckType != "RG")
+                            if (data.TruckType != "RGL")
                             {
                                 Truck? truck = await _context.Truck.FromSqlRaw("SELECT * FROM Truck WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TruckVehicleRegNo)).SingleOrDefaultAsync();
                                 if (truck == null)

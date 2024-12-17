@@ -115,7 +115,7 @@ namespace TMS_Api.Services
         {
             string sql = "";
             DataTable dt = new DataTable();
-            if (type == "RG")
+            if (type == "RGL")
             {
                 sql = @"Select TruckNo as VehicleRegNo from Trucks where TruckNo like '%" + id + "%' And Status='Active'";
                 dt = await GetPortalDataTableAsync(sql);
@@ -156,14 +156,16 @@ namespace TMS_Api.Services
         
         public async Task<DataTable> GetInBoundCheckList(DateTime startDate, DateTime endDate,string yard)
         {          
-           string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InType,InCargoType,InCargoInfo,convert(varchar, InCheckDateTime, 29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,CardNo,TransporterID,TransporterName,Status,Remark,InWeightBridgeID,OutWeightBridgeID,Customer,DriverContactNo FROM ICD_InBoundCheck where InYardID in (" + yard + ") And Cast(InCheckDateTime as Date) Between @sDate and @eDate  Order by InRegNo DESC";
+           string sql = @"SELECT i.InRegNo,i.InYardID,i.InGateID,i.InPCCode,i.InType,i.InCargoType,i.InCargoInfo,convert(varchar, i.InCheckDateTime, 29) as InCheckDateTime,i.AreaID,i.TruckType,i.TruckVehicleRegNo,i.TrailerVehicleRegNo,i.DriverLicenseNo,i.DriverName,i.CardNo,i.TransporterID,i.TransporterName,
+				        t.Status,i.Remark,i.InWeightBridgeID,i.OutWeightBridgeID,i.Customer,i.DriverContactNo,i.InWBBillOption,i.OutWBBillOption,i.WBOption FROM ICD_InBoundCheck i
+				        Left Join ICD_TruckProcess t On t.InRegNo=i.InRegNo where i.InYardID in (" + yard + ") And Cast(i.InCheckDateTime as Date) Between @sDate and @eDate  Order by i.InRegNo DESC";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
             return dt;
         }
 
         public async Task<DataTable> GetTruckProcessList(DateTime startDate, DateTime endDate, string status, string yard)
         {
-            string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InType,InCargoType,InCargoInfo,convert(varchar,InCheckDateTime,29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,DriverContactNo,CardNo,Status,TransporterID,TransporterName,Customer,OutRegNo,OutYardID,OutGateID,OutPCCode,OutType,OutCargoType,OutCargoInfo,InboundWeight,OutboundWeight,InWeightBridgeID,OutWeightBridgeID FROM ICD_TruckProcess where Status in (" + status+") And InYardID in (" + yard + ") And Cast(InCheckDateTime as Date) Between @sDate and @eDate Order by InRegNo DESC";
+            string sql = @"SELECT InRegNo,InYardID,InGateID,InPCCode,InType,InCargoType,InCargoInfo,convert(varchar,InCheckDateTime,29) as InCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,DriverContactNo,CardNo,Status,TransporterID,TransporterName,Customer,OutRegNo,OutYardID,OutGateID,OutPCCode,OutType,OutCargoType,OutCargoInfo,InWeightBridgeID,OutWeightBridgeID FROM ICD_TruckProcess where Status in (" + status+") And InYardID in (" + yard + ") And Cast(InCheckDateTime as Date) Between @sDate and @eDate Order by InRegNo DESC";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
             return dt;
         }
@@ -225,7 +227,7 @@ namespace TMS_Api.Services
         #region Out Check Dec_9_2024
         public async Task<DataTable> GetCardICDOInList(string card,string id)
         {
-            string sql = @"SELECT CardNo,TruckVehicleRegNo,DriverLicenseNo,DriverContactNo,DriverName,TrailerVehicleRegNo,Customer,InCargoInfo,InCargoType,OutWeightBridgeID,InRegNo,OutboundWeight,TruckType,AreaID  from ICD_TruckProcess Where  Status='In' And InYardID=@yard And CardNo like '%" + card + "%'";
+            string sql = @"SELECT CardNo,TruckVehicleRegNo,DriverLicenseNo,DriverContactNo,DriverName,TrailerVehicleRegNo,Customer,InCargoInfo,InCargoType,OutWeightBridgeID,InRegNo,WBOption,OutWeightBridgeID,TruckType,AreaID  from ICD_TruckProcess Where  Status='In' And InYardID=@yard And CardNo like '%" + card + "%'";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
             return dt;
         }
@@ -282,7 +284,9 @@ namespace TMS_Api.Services
 
         public async Task<DataTable> GetOutBoundCheckList(DateTime startDate, DateTime endDate, string yard)
         {
-            string sql = @"SELECT OutRegNo,OutYardID,OutGateID,OutPCCode,OutType,OutCargoType,OutCargoInfo,convert(varchar, OutCheckDateTime, 29) as OutCheckDateTime,AreaID,TruckType,TruckVehicleRegNo,TrailerVehicleRegNo,DriverLicenseNo,DriverName,CardNo,TransporterID,TransporterName,Status,Remark,OutWeightBridgeID,Customer,DriverContactNo  FROM ICD_OutBoundCheck where OutYardID in (" + yard + ") And Cast(OutCheckDateTime as Date) Between @sDate and @eDate  Order by OutRegNo DESC";
+            string sql = @"SELECT o.OutRegNo,o.OutYardID,o.OutGateID,o.OutPCCode,o.OutType,o.OutCargoType,o.OutCargoInfo,convert(varchar, o.OutCheckDateTime, 29) as OutCheckDateTime,o.AreaID,o.TruckType,o.TruckVehicleRegNo,o.TrailerVehicleRegNo,o.DriverLicenseNo,o.DriverName,o.CardNo,o.TransporterID,o.TransporterName,t.Status,o.Remark,o.OutWeightBridgeID,o.Customer,o.DriverContactNo  FROM ICD_OutBoundCheck o
+				            Left Join ICD_TruckProcess t On t.OutRegNo=o.OutRegNo
+				            where o.OutYardID in (" + yard + ") And Cast(o.OutCheckDateTime as Date) Between @sDate and @eDate  Order by o.OutRegNo DESC";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate));
             return dt;
         }

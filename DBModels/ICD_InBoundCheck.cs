@@ -12,11 +12,7 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "varchar(25)")]
         public string? InGateID { get; set; }//mandatory
         [Column(TypeName = "varchar(10)")]
-        public string? InPCCode { get; set; }//Category//mandatory
-        //[Column(TypeName = "varchar(25)")]
-        //public string? InContainerType { get; set; }
-        //[Column(TypeName = "int")]
-        //public int? InContainerSize { get; set; }
+        public string? InPCCode { get; set; }//Category//mandatory     
         [Column(TypeName = "varchar(25)")]
         public string? InType { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -24,9 +20,6 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "varchar(50)")]
         public string? InCargoInfo { get; set; }
        
-        //[Column(TypeName = "int")]
-        //public int? InNoOfContainer { get; set; }
-
         [Column(TypeName = "datetime")]
         public DateTime? InCheckDateTime { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -44,35 +37,29 @@ namespace TMS_Api.DBModels
         public string? DriverName { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string? DriverContactNo { get; set; }
-        //[Column(TypeName = "varchar(30)")]
-        //public string? JobCode { get; set; }
-        //[Column(TypeName = "varchar(150)")]
-        //public string? JobDescription { get; set; }
+
         [Column(TypeName = "varchar(25)")]
         public string? CardNo { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? TransporterID { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string? TransporterName { get; set; }
-        [Column(TypeName = "bit")]
-        public Boolean? InboundWeight { get; set; }
-        [Column(TypeName = "bit")]
-        public Boolean? OutboundWeight { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? InWeightBridgeID { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? OutWeightBridgeID { get; set; }
+        [Column(TypeName = "varchar(20)")]
+        public string? WBOption { get; set; }//Single,Both,None
         [Column(TypeName = "varchar(25)")]
-        public string? InWBOption { get; set; }//Credit,Cash,None
+        public string? InWBBillOption { get; set; }//Credit,Cash,None
         [Column(TypeName = "varchar(25)")]
-        public string? OutWBOption { get; set; }//Credit,Cash,None
+        public string? OutWBBillOption { get; set; }//Credit,Cash,None
         [Column(TypeName = "bit")]
         public Boolean? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
         [Column(TypeName = "varchar(150)")]
         public string? Customer { get; set; }
-
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
