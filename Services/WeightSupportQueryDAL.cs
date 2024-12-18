@@ -92,10 +92,10 @@ namespace TMS_Api.Services
         }
 
 
-        public async Task<DataTable> GetServiceBillList(DateTime fromDate, DateTime toDate, string gate)
+        public async Task<DataTable> GetServiceBillList(DateTime fromDate, DateTime toDate, string yard, string gate)
         {
-            string sql = @"SELECT * FROM WeightServiceBill WHERE Cast(ServiceBillDate as Date) Between @fDate and @tDate AND GateID=@gate  ORDER BY ServiceBillDate DESC";
-            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@fDate", fromDate), new SqlParameter("@tDate", toDate), new SqlParameter("@gate", gate));
+            string sql = @"SELECT * FROM WeightServiceBill WHERE Cast(ServiceBillDate as Date) Between @fDate and @tDate AND GateID=@gate AND YardID=@yard  ORDER BY ServiceBillDate DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@fDate", fromDate), new SqlParameter("@tDate", toDate), new SqlParameter("@gate", gate), , new SqlParameter("@yard", yard));
             return dt;
         }
         #endregion
