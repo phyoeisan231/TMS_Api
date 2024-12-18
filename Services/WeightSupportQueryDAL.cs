@@ -98,6 +98,28 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@fDate", fromDate), new SqlParameter("@tDate", toDate), new SqlParameter("@gate", gate));
             return dt;
         }
+
+        //public async Task<DataTable> GetServiceBillListOne(DateTime fromDate, DateTime toDate, string gate)
+        //{
+        //    string sql = @"
+        //SELECT 
+        //    ServiceBillNo,CONVERT(varchar, ServiceBillDate, 120) AS ServiceBillDate,CONVERT(varchar, InWeightTime, 120) AS InWeightTime,CONVERT(varchar, OutWeightTime, 120) AS OutWeightTime,
+        //    WeightBridgeID,TruckNo,TrailerNo,QRegNo,InWeight,OutWeight,NetWeight,WeightType,CargoInfo,WeightOption,BillOption,CustomerId,CustomerName,
+        //    CashAmt,CheckInRegNo,WeightCategory,DriverName,DriverLicense,ContainerNo,DONo,BLNo,VesselName,TransporterID,YardID,GateID,Remark
+        //FROM 
+        //    WeightServiceBill
+        //WHERE 
+        //    CAST(ServiceBillDate AS DATE) BETWEEN @fDate AND @tDate
+        //    AND GateID = @gate
+        //ORDER BY 
+        //    ServiceBillNo DESC";
+
+        //    DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@fDate", fromDate),new SqlParameter("@tDate", toDate),new SqlParameter("@gate", gate));
+
+        //    return dt;
+        //}
+
+
         #endregion
 
     }
