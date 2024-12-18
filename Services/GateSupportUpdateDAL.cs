@@ -187,17 +187,38 @@ namespace TMS_Api.Services
                             Truck? truck = await _context.Truck.FromSqlRaw("SELECT * FROM Truck WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TruckVehicleRegNo)).SingleOrDefaultAsync();
                             if (truck == null)
                             {
-                                // Rollback the transaction if any exception occurs
-                                await transaction.RollbackAsync();
-                                msg.Status = false;
-                                msg.MessageContent = "Truck Data not found!";
-                                return msg;
+                                if (data.PropNo != null)
+                                {
+                                    TMS_ProposalDetail? proposal = await _context.TMS_ProposalDetails.FromSqlRaw("SELECT * FROM TMS_ProposalDetails WHERE TruckNo=@id And PropNo=@pNo", new SqlParameter("@id", data.TruckVehicleRegNo), new SqlParameter("@pNo", data.PropNo)).SingleOrDefaultAsync();
+                                    if (proposal == null)
+                                    {
+                                        // Rollback the transaction if any exception occurs
+                                        await transaction.RollbackAsync();
+                                        msg.Status = false;
+                                        msg.MessageContent = "Truck Data not found!";
+                                        return msg;
+                                    }
+                                    proposal.UpdatedDate = GetLocalStdDT();
+                                    proposal.UpdatedUser = data.InYardID;
+                                }
+                                else
+                                {
+                                    // Rollback the transaction if any exception occurs
+                                    await transaction.RollbackAsync();
+                                    msg.Status = false;
+                                    msg.MessageContent = "Truck Data not found!";
+                                    return msg;
+                                }
+
                             }
-                            truck.LastPassedDate = GetLocalStdDT();
-                            truck.UpdatedDate = GetLocalStdDT();
-                            truck.UpdatedUser = data.InYardID;
+                            else
+                            {
+                                truck.LastPassedDate = GetLocalStdDT();
+                                truck.UpdatedDate = GetLocalStdDT();
+                                truck.UpdatedUser = data.InYardID;
+                            }
                         }
-                        
+
                         if (!string.IsNullOrEmpty(data.TrailerVehicleRegNo))
                         {
                             Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT * FROM Trailer WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TrailerVehicleRegNo)).SingleOrDefaultAsync();
@@ -220,7 +241,7 @@ namespace TMS_Api.Services
                         return msg;
                     }
                 }
-                catch (DbUpdateException e)
+                catch (DbUpdateConcurrencyException e)
                 {
                     // Rollback the transaction if any exception occurs
                     await transaction.RollbackAsync();
@@ -284,16 +305,37 @@ namespace TMS_Api.Services
                                 Truck? truck = await _context.Truck.FromSqlRaw("SELECT * FROM Truck WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TruckVehicleRegNo)).SingleOrDefaultAsync();
                                 if (truck == null)
                                 {
-                                    // Rollback the transaction if any exception occurs
-                                    await transaction.RollbackAsync();
-                                    msg.Status = false;
-                                    msg.MessageContent = "Truck Data not found!";
-                                    return msg;
+                                    if (process.PropNo != null)
+                                    {
+                                        TMS_ProposalDetail? proposal = await _context.TMS_ProposalDetails.FromSqlRaw("SELECT * FROM TMS_ProposalDetails WHERE TruckNo=@id And PropNo=@pNo", new SqlParameter("@id", data.TruckVehicleRegNo), new SqlParameter("@pNo", process.PropNo)).SingleOrDefaultAsync();
+                                        if (proposal == null)
+                                        {
+                                            // Rollback the transaction if any exception occurs
+                                            await transaction.RollbackAsync();
+                                            msg.Status = false;
+                                            msg.MessageContent = "Truck Data not found!";
+                                            return msg;
+                                        }
+                                        proposal.UpdatedDate = GetLocalStdDT();
+                                        proposal.UpdatedUser = data.OutYardID;
+                                    }
+                                    else
+                                    {
+                                        // Rollback the transaction if any exception occurs
+                                        await transaction.RollbackAsync();
+                                        msg.Status = false;
+                                        msg.MessageContent = "Truck Data not found!";
+                                        return msg;
+                                    }
+                                    
                                 }
-                                truck.LastPassedDate = GetLocalStdDT();
-                                truck.UpdatedDate = GetLocalStdDT();
-                                truck.UpdatedUser = data.OutYardID;
-                            }                               
+                                else
+                                {
+                                    truck.LastPassedDate = GetLocalStdDT();
+                                    truck.UpdatedDate = GetLocalStdDT();
+                                    truck.UpdatedUser = data.OutYardID;
+                                }
+                            }
 
                             PCard? card = await _context.PCard.FromSqlRaw("SELECT * FROM PCard WHERE CardNo=@id", new SqlParameter("@id", data.CardNo)).SingleOrDefaultAsync();
                             if (card == null)
@@ -307,6 +349,7 @@ namespace TMS_Api.Services
                             card.IsUse=false;
                             card.UpdatedDate = GetLocalStdDT();
                             card.UpdatedUser = data.OutYardID;
+                            card.CardReturnDate = GetLocalStdDT();
                             if (!string.IsNullOrEmpty(data.TrailerVehicleRegNo))
                             {
                                 Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT * FROM Trailer WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TrailerVehicleRegNo)).SingleOrDefaultAsync();
@@ -330,7 +373,7 @@ namespace TMS_Api.Services
                         }
                     }
                 }
-                catch (DbUpdateException e)
+                catch (DbUpdateConcurrencyException e)
                 {
                     // Rollback the transaction if any exception occurs
                     await transaction.RollbackAsync();

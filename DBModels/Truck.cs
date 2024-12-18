@@ -28,7 +28,7 @@ namespace TMS_Api.DBModels
         public Boolean? Active { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? DriverLicenseNo { get; set; }
-
+        [ConcurrencyCheck]
         [Column(TypeName = "datetime")]
         public DateTime? LastPassedDate { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -51,8 +51,10 @@ namespace TMS_Api.DBModels
 
         [Column(TypeName = "varchar(max)")]
         public string? Remarks { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "varchar(50)")]
         public string? UpdatedUser { get; set; }
         [Column(TypeName = "datetime")]

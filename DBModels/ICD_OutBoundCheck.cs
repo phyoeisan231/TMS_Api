@@ -47,17 +47,32 @@ namespace TMS_Api.DBModels
         public Boolean? OutboundWeight { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? OutWeightBridgeID { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? OutContainerType { get; set; }
+        [Column(TypeName = "int")]
+        public int? OutContainerSize { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? OutContainerNo { get; set; }
         [Column(TypeName = "bit")]
         public Boolean? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
         [Column(TypeName = "varchar(150)")]
         public string? Customer { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? JobDept { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? JobCode { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string? JobType { get; set; }
+        [Column(TypeName = "varchar(30)")]
+        public string? BlNo { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string? GroupName { get; set; }//mandatory
-
+        [ConcurrencyCheck]
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "varchar(50)")]
         public string? UpdatedUser { get; set; }
         [Column(TypeName = "datetime")]

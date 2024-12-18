@@ -201,8 +201,31 @@ namespace TMS_Api.Services
             return msg;
         }
 
-
-
+        public async Task<ResponseMessage> CompleteProposal(int id, string user)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                TMS_Proposal proposal = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE PropNo=@id And Status='Open'", new SqlParameter("@id",id)).SingleOrDefaultAsync();
+                if (proposal == null)
+                {
+                    msg.MessageContent = "Data Not Found!";
+                    return msg;
+                }
+                proposal.Status = "Complete";
+                proposal.UpdatedDate = GetLocalStdDT();
+                proposal.UpdatedUser = user;
+                await _context.SaveChangesAsync();
+                msg.MessageContent = "Successfully completed!";
+                msg.Status = true;
+            }
+            catch (Exception e)
+            {
+                msg.MessageContent = e.Message;
+            }
+            return msg;
+        }
+        
         #endregion
 
         #region ProposalDetail

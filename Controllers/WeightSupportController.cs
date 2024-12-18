@@ -68,10 +68,19 @@ namespace TMS_Api.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetServiceBillList(DateTime fromDate, DateTime toDate, string gate)
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateServiceBillForQueue(WeightServiceBillDto info)
         {
-            DataTable dt = await _queryDAL.GetServiceBillList(fromDate, toDate, gate);
+            ResponseMessage msg = await _updateDAL.UpdateServiceBillForQueue(info);
+            return Ok(msg);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetServiceBillList(DateTime fromDate, DateTime toDate, string yard, string gate)
+        {
+            DataTable dt = await _queryDAL.GetServiceBillList(fromDate, toDate, yard, gate);
             return Ok(dt);
         }
         #endregion
