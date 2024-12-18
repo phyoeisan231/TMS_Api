@@ -53,10 +53,26 @@ namespace TMS_Api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> SaveWeightServiceBill(WeightServiceBillDto info)
+        public async Task<IActionResult> SaveServiceBillForAdHoc(WeightServiceBillDto info)
         {
-            ResponseMessage msg = await _updateDAL.SaveWeightServiceBill(info);
+            ResponseMessage msg = await _updateDAL.SaveServiceBillForAdHoc(info);
             return Ok(msg);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SaveServiceBillForQueue(WeightServiceBillDto info)
+        {
+            ResponseMessage msg = await _updateDAL.SaveServiceBillForQueue(info);
+            return Ok(msg);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetServiceBillList(DateTime fromDate, DateTime toDate, string gate)
+        {
+            DataTable dt = await _queryDAL.GetServiceBillList(fromDate, toDate, gate);
+            return Ok(dt);
         }
         #endregion
     }
