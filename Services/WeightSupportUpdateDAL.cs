@@ -188,6 +188,8 @@ namespace TMS_Api.Services
                         WeightBridgeQueue queue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT * FROM WeightBridgeQueue WHERE RegNo=@id", new SqlParameter("@id", info.QRegNo)).SingleOrDefaultAsync();
                         queue.Status = "Done";
                         queue.WeightDateTime = info.ServiceBillDate;
+
+
                     }
 
                     #endregion
