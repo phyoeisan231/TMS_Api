@@ -22,6 +22,12 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "datetime")]
         public DateTime? InCheckDateTime { get; set; }
         [Column(TypeName = "varchar(25)")]
+        public string? InContainerType { get; set; }
+        [Column(TypeName = "int")]
+        public int? InContainerSize { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? InContainerNo { get; set; }
+        [Column(TypeName = "varchar(25)")]
         public string? AreaID { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? TruckType { get; set; }      
@@ -62,8 +68,18 @@ namespace TMS_Api.DBModels
         public int? PropNo { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string? GroupName { get; set; }//mandatory
+        [Column(TypeName = "varchar(50)")]
+        public string? JobDept { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? JobCode { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string? JobType { get; set; }
+        [Column(TypeName = "varchar(30)")]
+        public string? BlNo { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "varchar(50)")]
         public string? UpdatedUser { get; set; }
         [Column(TypeName = "datetime")]

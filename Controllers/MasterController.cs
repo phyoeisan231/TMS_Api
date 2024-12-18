@@ -19,13 +19,14 @@ namespace TMS_Api.Controllers
             _updateDAL = updateDAL;
         }
 
-        //For Testing
+        //For Testing 
+
 
         [AllowAnonymous]
         [HttpGet]
         public IActionResult GetTesting()
         {
-            return Ok("Working...");
+            return Ok("Working...123");
         }
 
         #region Truck Type Nov_11_2024

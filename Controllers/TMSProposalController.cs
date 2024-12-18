@@ -95,6 +95,15 @@ namespace TMS_Api.Controllers
             ResponseMessage msg = await _updateDAL.UpdateTMSProposal(info);
             return Ok(msg);
         }
+
+
+        [HttpPut]
+        public async Task<IActionResult> CompleteProposal(int id,string user)
+        {
+            ResponseMessage msg = await _updateDAL.CompleteProposal(id,user);
+            return Ok(msg);
+        }
+        
         #endregion
 
 

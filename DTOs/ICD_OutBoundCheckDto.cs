@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace TMS_Api.DTOs
+﻿namespace TMS_Api.DTOs
 {
     public class ICD_OutBoundCheckDto
     {
@@ -19,16 +17,25 @@ namespace TMS_Api.DTOs
         public string? DriverLicenseNo { get; set; }
         public string? DriverName { get; set; }
         public string? DriverContactNo { get; set; }
-        public string? CardNo { get; set; }    
+        public string? CardNo { get; set; }
+        public string? TransporterID { get; set; }
+        public string? TransporterName { get; set; }
         public Boolean? OutboundWeight { get; set; }
         public string? OutWeightBridgeID { get; set; }
+        public string? OutContainerType { get; set; }
+        public int? OutContainerSize { get; set; }
+        public string? OutContainerNo { get; set; }
         public Boolean? Status { get; set; }
         public string? Remark { get; set; }
         public string? Customer { get; set; }
+        public string? JobDept { get; set; }
+        public string? JobCode { get; set; }
+        public string? JobType { get; set; }
+        public string? BlNo { get; set; }
+        public string? GroupName { get; set; }//mandatory
         public string? UpdatedUser { get; set; }
         public string? CreatedUser { get; set; }
         public int? InRegNo { get; set; }
-        public string? GroupName { get; set; }//mandatory
         public List<ICD_OutBoundCheck_DocumentDto>? DocumentList { get; set; }
 
     }

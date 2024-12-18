@@ -50,6 +50,10 @@ namespace TMS_Api.DBModels
         public string? JobCode { get; set; }
         [Column(TypeName = "varchar(150)")]
         public string? JobDescription { get; set; }
+        [Column(TypeName = "varchar(30)")]
+        public string? BlNo { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? ContainerNo { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? WeightDateTime { get; set; }
         [Column(TypeName = "varchar(25)")]

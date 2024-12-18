@@ -16,17 +16,22 @@ namespace TMS_Api.DBModels
 
         [Column(TypeName = "bit")]
         public Boolean? Active { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "bit")]
         public Boolean? IsUse { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "varchar(25)")]
         public string? VehicleRegNo { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName ="datetime")]
         public DateTime? CardIssueDate { get; set; }
-
+        [ConcurrencyCheck]
         [Column(TypeName ="datetime")]
         public DateTime? CardReturnDate { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "varchar(50)")]
         public string? UpdatedUser { get; set; }
         [Column(TypeName = "datetime")]

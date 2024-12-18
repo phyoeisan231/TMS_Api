@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241218031352_UpdateInCheckForTMS")]
+    partial class UpdateInCheckForTMS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -475,11 +478,9 @@ namespace TMS_Api.Migrations
                         .HasColumnType("varchar(25)");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .IsConcurrencyToken()
                         .HasColumnType("datetime");
 
                     b.Property<string>("UpdatedUser")
-                        .IsConcurrencyToken()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("InRegNo");
@@ -532,9 +533,6 @@ namespace TMS_Api.Migrations
                     b.Property<string>("AreaID")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<string>("BlNo")
-                        .HasColumnType("varchar(30)");
-
                     b.Property<string>("CardNo")
                         .HasColumnType("varchar(25)");
 
@@ -557,15 +555,6 @@ namespace TMS_Api.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("GroupName")
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("JobCode")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("JobDept")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("JobType")
                         .HasColumnType("varchar(10)");
 
                     b.Property<string>("OutCargoInfo")
@@ -626,11 +615,9 @@ namespace TMS_Api.Migrations
                         .HasColumnType("varchar(25)");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .IsConcurrencyToken()
                         .HasColumnType("datetime");
 
                     b.Property<string>("UpdatedUser")
-                        .IsConcurrencyToken()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("OutRegNo");
@@ -684,7 +671,6 @@ namespace TMS_Api.Migrations
                         .HasColumnType("varchar(30)");
 
                     b.Property<string>("CardNo")
-                        .IsConcurrencyToken()
                         .HasColumnType("varchar(25)");
 
                     b.Property<DateTime?>("CreatedDate")
@@ -810,14 +796,10 @@ namespace TMS_Api.Migrations
                     b.Property<string>("OutYardID")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<int?>("PropNo")
-                        .HasColumnType("int");
-
                     b.Property<string>("Remark")
                         .HasColumnType("varchar(max)");
 
                     b.Property<string>("Status")
-                        .IsConcurrencyToken()
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("TrailerVehicleRegNo")
@@ -836,11 +818,9 @@ namespace TMS_Api.Migrations
                         .HasColumnType("varchar(25)");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .IsConcurrencyToken()
                         .HasColumnType("datetime");
 
                     b.Property<string>("UpdatedUser")
-                        .IsConcurrencyToken()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("InRegNo");
@@ -894,11 +874,9 @@ namespace TMS_Api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("CardIssueDate")
-                        .IsConcurrencyToken()
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("CardReturnDate")
-                        .IsConcurrencyToken()
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("CreatedDate")
@@ -911,19 +889,15 @@ namespace TMS_Api.Migrations
                         .HasColumnType("varchar(10)");
 
                     b.Property<bool?>("IsUse")
-                        .IsConcurrencyToken()
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .IsConcurrencyToken()
                         .HasColumnType("datetime");
 
                     b.Property<string>("UpdatedUser")
-                        .IsConcurrencyToken()
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("VehicleRegNo")
-                        .IsConcurrencyToken()
                         .HasColumnType("varchar(25)");
 
                     b.Property<string>("YardID")
@@ -1020,10 +994,6 @@ namespace TMS_Api.Migrations
 
                     b.Property<int?>("NoOfTruck")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsConcurrencyToken()
-                        .HasColumnType("varchar(20)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime");
@@ -1261,7 +1231,6 @@ namespace TMS_Api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastPassedDate")
-                        .IsConcurrencyToken()
                         .HasColumnType("datetime");
 
                     b.Property<string>("Remarks")
@@ -1277,11 +1246,9 @@ namespace TMS_Api.Migrations
                         .HasColumnType("varchar(30)");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .IsConcurrencyToken()
                         .HasColumnType("datetime");
 
                     b.Property<string>("UpdatedUser")
-                        .IsConcurrencyToken()
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("VehicleBackRegNo")

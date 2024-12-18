@@ -19,9 +19,9 @@ namespace TMS_Api.Controllers
 
         #region ICD/Other InBound Check Doc Nov_27_2024
         [HttpGet]
-        public async Task<IActionResult> GetCategoryICDOList(string type)
+        public async Task<IActionResult> GetCategoryInList(string type)
         {
-            DataTable dt = await _queryDAL.GetCategoryICDOInList(type);
+            DataTable dt = await _queryDAL.GetCategoryInList(type);
             return Ok(dt);
         }
         
@@ -139,9 +139,9 @@ namespace TMS_Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategoryICDOOutList(string type)
+        public async Task<IActionResult> GetCategoryOutList(string type)
         {
-            DataTable dt = await _queryDAL.GetCategoryICDOOutList(type);
+            DataTable dt = await _queryDAL.GetCategoryOutList(type);
             return Ok(dt);
         }
 
@@ -185,6 +185,13 @@ namespace TMS_Api.Controllers
         #endregion
 
         #region TMS In Check Dec_17_2024
+
+        [HttpGet]
+        public async Task<IActionResult> GetInBoundCheckTMSList(DateTime startDate, DateTime endDate, string yard)
+        {
+            DataTable dt = await _queryDAL.GetInBoundCheckTMSList(startDate, endDate, yard);
+            return Ok(dt);
+        }
         [HttpGet]
         public async Task<IActionResult> GetTMSProposalList(DateTime startDate, DateTime endDate, string yard, string deptType)
         {
@@ -204,7 +211,23 @@ namespace TMS_Api.Controllers
             DataTable dt = await _queryDAL.GetTruckDataListByProposal(id, poNo);
             return Ok(dt);
         }
-        
+
+        #endregion
+
+        #region TMS Out Check Dec_18_2024
+
+        [HttpGet]
+        public async Task<IActionResult> GetCardTMSInList(string card, string yard)
+        {
+            DataTable dt = await _queryDAL.GetCardTMSInList(card, yard);
+            return Ok(dt);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetOutBoundCheckTMSList(DateTime startDate, DateTime endDate, string yard)
+        {
+            DataTable dt = await _queryDAL.GetOutBoundCheckTMSList(startDate, endDate, yard);
+            return Ok(dt);
+        }
         #endregion
     }
 }
