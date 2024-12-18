@@ -23,6 +23,7 @@ namespace TMS_Api.DTOs
         public string? UpdatedUser { get; set; }
         public string? CreatedUser { get; set; }
         public string? Customer { get; set; }
+        public string? InYardID { get; set; }
         public List<TMS_ProposalDetailDto>? DetailList { get; set; }
         public DataTable? ProposalDetailList { get; set; }
         
