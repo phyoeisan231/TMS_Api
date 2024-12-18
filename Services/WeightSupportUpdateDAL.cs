@@ -68,7 +68,7 @@ namespace TMS_Api.Services
         }
 
         #region WeightServiceBill 14_Dec_2024
-        public async Task<ResponseMessage> SaveWeightServiceBill(WeightServiceBillDto info)
+        public async Task<ResponseMessage> SaveServiceBillForAdHoc(WeightServiceBillDto info)
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
@@ -89,12 +89,63 @@ namespace TMS_Api.Services
 
                 WeightServiceBill sBill = _mapper.Map<WeightServiceBill>(info);
                 sBill.NetWeight = info.OutWeight;
+                sBill.ServiceBillDate = info.OutWeightTime;
                 sBill.CreatedDate = GetLocalStdDT();
                 _context.WeightServiceBill.Add(sBill);
                 await _context.SaveChangesAsync();
                 msg.Status = true;
-                msg.ServiceBillNo = info.ServiceBillNo;
-                msg.Yard = info.YardID;
+                msg.MessageContent = "Successfully created!";
+
+
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+
+            return msg;
+        }
+
+
+
+        public async Task<ResponseMessage> SaveServiceBillForQueue(WeightServiceBillDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                WeightServiceBill wserviceBill = await _context.WeightServiceBill.FromSqlRaw("SELECT Top 1 * FROM WeightServiceBill WHERE ServiceBillNo LIKE '" + info.WeightBridgeID + "%' ORDER BY ServiceBillNo DESC").SingleOrDefaultAsync();
+                if (wserviceBill != null)
+                {
+                    int num = Convert.ToInt32(wserviceBill.ServiceBillNo[^6..]);
+                    num++;
+                    info.ServiceBillNo = info.WeightBridgeID + num.ToString("D6");
+                }
+                else
+                {
+                    info.ServiceBillNo = info.WeightBridgeID + "000001";
+                }
+
+                if(info.QRegNo != null)
+                {
+                    WeightBridgeQueue queue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT * FROM WeightBridgeQueue WHERE RegNo=@id", new SqlParameter("@id", info.QRegNo)).SingleOrDefaultAsync();
+                    queue.Status = "Done";
+                    queue.WeightDateTime = info.ServiceBillDate;
+                }
+
+                if (info.CheckInRegNo != null)
+                {
+                    WeightBridgeQueue queue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT * FROM WeightBridgeQueue WHERE RegNo=@id", new SqlParameter("@id", info.QRegNo)).SingleOrDefaultAsync();
+                    queue.Status = "Done";
+                }
+
+
+                WeightServiceBill sBill = _mapper.Map<WeightServiceBill>(info);
+                
+                sBill.CreatedDate = GetLocalStdDT();
+                _context.WeightServiceBill.Add(sBill);
+                await _context.SaveChangesAsync();
+                msg.Status = true;
                 msg.MessageContent = "Successfully created!";
 
 

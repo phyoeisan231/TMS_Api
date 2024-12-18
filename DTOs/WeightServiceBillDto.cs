@@ -6,6 +6,8 @@ namespace TMS_Api.DTOs
     {
         public string ServiceBillNo { get; set; } = null!;
         public string? WeightBridgeID { get; set; }
+
+        public DateTime? ServiceBillDate { get; set; }
         public DateTime? InWeightTime { get; set; }
         public DateTime? OutWeightTime { get; set; }
         public string? TruckNo { get; set; }
