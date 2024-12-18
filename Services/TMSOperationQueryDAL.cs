@@ -336,12 +336,13 @@ namespace TMS_Api.Services
         {
             string sql = "";
             DataTable dt = new DataTable();
-            sql = @"Select TruckNo as VehicleRegNo,'' as DriverLicenseNo from TMS_ProposalDetails where TruckNo like '%" + id + "%' And PropNo=@poNo And TruckNo not in (select TruckVehicleRegNo as TruckNo from ICD_TruckProcess where Status<>'Out')";
-            dt = await GetDataTableAsync(sql,new SqlParameter("@poNo",poNo));
-            if (dt.Rows.Count==0){
-                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%" + id + "%' And (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TruckVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
+            sql = @"Select TruckNo as VehicleRegNo,'' as DriverLicenseNo,'' as TransporterID,'' as TypeID,AssignType as TruckType from TMS_ProposalDetails where TruckNo like '%" + id + "%' And PropNo=@poNo And TruckNo not in (select TruckVehicleRegNo as TruckNo from ICD_TruckProcess where Status<>'Out')";
+            dt = await GetDataTableAsync(sql, new SqlParameter("@poNo", poNo));
+            if (dt.Rows.Count == 0)
+            {
+                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo,'' as TruckType from Truck where VehicleRegNo like '%" + id + "%' And (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TruckVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
                 dt = await GetDataTableAsync(sql);
-            }          
+            }
             return dt;
         }
 
