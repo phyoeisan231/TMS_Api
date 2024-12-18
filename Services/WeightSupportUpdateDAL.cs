@@ -136,7 +136,7 @@ namespace TMS_Api.Services
                 if (info.CheckInRegNo != null)
                 {
                     WeightBridgeQueue queue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT * FROM WeightBridgeQueue WHERE RegNo=@id", new SqlParameter("@id", info.QRegNo)).SingleOrDefaultAsync();
-
+                    queue.Status = "Done";
                 }
 
 
