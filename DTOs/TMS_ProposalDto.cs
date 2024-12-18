@@ -9,8 +9,8 @@ namespace TMS_Api.DTOs
         public int PropNo { get; set; }
         public string? Yard { get; set; }
         public DateTime? EstDate { get; set; }
-        public string? JobCode { get; set; }
         public string? JobDept { get; set; }
+        public string? JobCode { get; set; }
         public string? JobType { get; set; }
         public string? CompanyName { get; set; }
         public int? NoOfTruck { get; set; }
@@ -20,12 +20,17 @@ namespace TMS_Api.DTOs
         public string? CargoInfo { get; set; }
         public string? CustomerId { get; set; }
         public string? CustomerName { get; set; }
+        public string? Status { get; set; }
+        public string? PCCode { get; set; }
+        public string? AreaID { get; set; }
+        public string? BLNo { get; set; }
         public string? UpdatedUser { get; set; }
         public string? CreatedUser { get; set; }
-        public string? Customer { get; set; }
-        public string? InYardID { get; set; }
         public List<TMS_ProposalDetailDto>? DetailList { get; set; }
         public DataTable? ProposalDetailList { get; set; }
+        public string? Customer { get; set; }
+        public string? InYardID { get; set; }
+        public string? InPCCode { get; set; }
         
     }
 }

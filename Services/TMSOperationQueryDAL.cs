@@ -130,7 +130,7 @@ namespace TMS_Api.Services
         public async Task<DataTable> GetDriverList(string id)
         {
             DateTime strDate = GetLocalStdDT();
-            string sql = @"Select Name,LicenseNo,(LicenseNo +' | '+Name) as DriverName,LicenseExpiration,ContactNo from Driver where (IsBlack<>1 OR IsBlack is null) And Active=1 And LicenseNo not in (select DriverLicenseNo as LicenseNo from ICD_TruckProcess where Status<>'Out') And Cast(LicenseExpiration as Date)>=@eDate And LicenseNo like '%" + id + "%' ";
+            string sql = @"Select Name,LicenseNo,(LicenseNo +' | '+Name) as DriverName,LicenseExpiration,ContactNo from Driver where (IsBlack<>1 OR IsBlack is null) And Active=1 And LicenseNo not in (select DriverLicenseNo as LicenseNo from ICD_TruckProcess where Status<>'Out') And Cast(LicenseExpiration as Date)>=@eDate And Name like '%" + id + "%' ";
             DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@eDate", strDate));
             return dt;
         }
@@ -316,6 +316,8 @@ namespace TMS_Api.Services
                     info = _mapper.Map<TMS_ProposalDto>(data);
                     info.Customer = data.CustomerName;
                     info.InYardID = data.Yard;
+                    info.InPCCode = data.PCCode;
+                    info.AreaID = data.AreaID;
                     List<TMS_ProposalDetail> detailList = await _context.TMS_ProposalDetails.FromSqlRaw("SELECT * FROM TMS_ProposalDetails WHERE PropNo=@id", new SqlParameter("@id", id)).ToListAsync();
                     info.DetailList = new List<TMS_ProposalDetailDto>();
                     foreach (var d in detailList)
