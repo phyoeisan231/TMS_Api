@@ -122,7 +122,7 @@ namespace TMS_Api.Services
                             process.UpdatedDate = GetLocalStdDT();
                             process.InYard = true;
                             int? queueNo = 1;
-                            if (process.WBOption=="Both")
+                            if (process.IsUseWB==true)
                             {
                                 //In
                                 WeightBridgeQueue wbQ = new WeightBridgeQueue();
@@ -145,7 +145,6 @@ namespace TMS_Api.Services
                                 wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
                                 wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
                                 wbQ.WeightBridgeID = data.InWeightBridgeID;
-                                wbQ.WBOption = data.WBOption;
                                 wbQ.BillOption = data.InWBBillOption;
                                 wbQ.Customer = data.Customer;
                                 wbQ.Status = "Queue";
@@ -170,7 +169,6 @@ namespace TMS_Api.Services
                                 outWbQ.Type = "Out";
                                 outWbQ.CargoType = data.InCargoType;
                                 outWbQ.CargoInfo = data.InCargoInfo;
-                                outWbQ.WBOption = data.WBOption;
                                 outWbQ.BillOption = data.OutWBBillOption;
                                 outWbQ.CardNo = data.CardNo;
                                 outWbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
@@ -182,38 +180,7 @@ namespace TMS_Api.Services
                                 outWbQ.CreatedUser = data.InYardID;
                                 _context.WeightBridgeQueue.Add(outWbQ);
                                 await _context.SaveChangesAsync();
-                            }
-                            else if(process.WBOption == "Single")
-                            {
-                                WeightBridgeQueue wbQ = new WeightBridgeQueue();
-                                WeightBridgeQueue? inwbQ = await _context.WeightBridgeQueue.FromSqlRaw("SELECT Top 1* FROM WeightBridgeQueue WHERE InRegNo=@id And WeightBridgeID=@wbId Order By QueueNo Desc", new SqlParameter("@id", info.InRegNo), new SqlParameter("@wbId", data.InWeightBridgeID)).SingleOrDefaultAsync();
-                                if (inwbQ != null)
-                                {
-                                    queueNo += inwbQ.QueueNo;
-                                }
-                                wbQ.QueueNo = queueNo;
-                                wbQ.InRegNo = data.InRegNo;
-                                wbQ.YardID = data.InYardID;
-                                wbQ.GateID = data.InGateID;
-                                wbQ.DriverLicenseNo = data.DriverLicenseNo;
-                                wbQ.DriverName = data.DriverName;
-                                wbQ.DriverContactNo = data.DriverContactNo;
-                                wbQ.Type = "Single";
-                                wbQ.CargoType = data.InCargoType;
-                                wbQ.CargoInfo = data.InCargoInfo;
-                                wbQ.CardNo = data.CardNo;
-                                wbQ.TruckVehicleRegNo = data.TruckVehicleRegNo;
-                                wbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
-                                wbQ.WeightBridgeID = data.InWeightBridgeID;
-                                wbQ.WBOption = data.WBOption;
-                                wbQ.BillOption = data.InWBBillOption;
-                                wbQ.Customer = data.Customer;
-                                wbQ.Status = "Queue";
-                                wbQ.CreatedDate = GetLocalStdDT();
-                                wbQ.CreatedUser = data.InYardID;
-                                _context.WeightBridgeQueue.Add(wbQ);
-                                await _context.SaveChangesAsync();
-                            }                            
+                            }                                                  
                         }
                         if (data.TruckType != "RGL")
                         {

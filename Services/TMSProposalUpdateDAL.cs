@@ -182,13 +182,6 @@ namespace TMS_Api.Services
                     return msg;
                 }
 
-                proposal.JobDept = info.JobDept;
-                proposal.Yard = info.Yard;
-                proposal.JobCode = info.JobCode;
-                proposal.JobType = info.JobType;
-                proposal.CustomerId = info.CustomerId;
-                proposal.CustomerName = info.CustomerName;
-                proposal.CompanyName = info.CompanyName;
                 proposal.NoOfTruck = info.NoOfTruck;
                 proposal.NoOfTEU = info.NoOfTEU;
                 proposal.NoOfFEU = info.NoOfFEU;

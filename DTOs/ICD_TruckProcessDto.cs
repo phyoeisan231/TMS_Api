@@ -37,7 +37,7 @@
         public string? OutCargoType { get; set; }
         public string? OutCargoInfo { get; set; }
         public DateTime? OutCheckDateTime { get; set; }
-        public string? WBOption { get; set; }//Single,Both,None
+        public Boolean? IsUseWB { get; set; }//IsUseWeightBridge
         public string? InWBBillOption { get; set; }
         public string? OutWBBillOption { get; set; }//Credit,Cash,None
 

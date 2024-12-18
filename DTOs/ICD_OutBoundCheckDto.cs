@@ -28,6 +28,7 @@ namespace TMS_Api.DTOs
         public string? UpdatedUser { get; set; }
         public string? CreatedUser { get; set; }
         public int? InRegNo { get; set; }
+        public string? GroupName { get; set; }//mandatory
         public List<ICD_OutBoundCheck_DocumentDto>? DocumentList { get; set; }
 
     }

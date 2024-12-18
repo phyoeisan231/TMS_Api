@@ -6,7 +6,7 @@ namespace TMS_Api.DBModels
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int InRegNo { get; set; } = 0!;//mandatory
+        public int InRegNo { get; set; } = 0!;//mandatory     
         [Column(TypeName = "varchar(25)")]
         public string? InYardID { get; set; }//mandatory
         [Column(TypeName = "varchar(25)")]
@@ -18,15 +18,13 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "varchar(25)")]
         public string? InCargoType { get; set; }
         [Column(TypeName = "varchar(50)")]
-        public string? InCargoInfo { get; set; }
-       
+        public string? InCargoInfo { get; set; }     
         [Column(TypeName = "datetime")]
         public DateTime? InCheckDateTime { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? AreaID { get; set; }
         [Column(TypeName = "varchar(25)")]
-        public string? TruckType { get; set; }
-       
+        public string? TruckType { get; set; }      
         [Column(TypeName = "varchar(25)")]
         public string? TruckVehicleRegNo { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -48,8 +46,8 @@ namespace TMS_Api.DBModels
         public string? InWeightBridgeID { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? OutWeightBridgeID { get; set; }
-        [Column(TypeName = "varchar(20)")]
-        public string? WBOption { get; set; }//Single,Both,None
+        [Column(TypeName = "bit")]
+        public Boolean? IsUseWB { get; set; }//IsUseWeightBridge
         [Column(TypeName = "varchar(25)")]
         public string? InWBBillOption { get; set; }//Credit,Cash,None
         [Column(TypeName = "varchar(25)")]
@@ -60,6 +58,10 @@ namespace TMS_Api.DBModels
         public string? Remark { get; set; }
         [Column(TypeName = "varchar(150)")]
         public string? Customer { get; set; }
+        [Column(TypeName = "int")]
+        public int? PropNo { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string? GroupName { get; set; }//mandatory
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

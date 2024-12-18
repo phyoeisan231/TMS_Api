@@ -53,6 +53,8 @@ namespace TMS_Api.DBModels
         public string? Remark { get; set; }
         [Column(TypeName = "varchar(150)")]
         public string? Customer { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string? GroupName { get; set; }//mandatory
 
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }

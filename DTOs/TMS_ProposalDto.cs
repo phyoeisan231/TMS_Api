@@ -20,11 +20,10 @@ namespace TMS_Api.DTOs
         public string? CargoInfo { get; set; }
         public string? CustomerId { get; set; }
         public string? CustomerName { get; set; }
-        public DateTime? UpdatedDate { get; set; }
         public string? UpdatedUser { get; set; }
-        public DateTime? CreatedDate { get; set; }
         public string? CreatedUser { get; set; }
-
+        public List<TMS_ProposalDetailDto>? DetailList { get; set; }
         public DataTable? ProposalDetailList { get; set; }
+        
     }
 }

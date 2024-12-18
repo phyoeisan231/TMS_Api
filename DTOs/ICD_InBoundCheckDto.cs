@@ -28,9 +28,10 @@
         public string? CreatedUser { get; set; }
         public string? InWeightBridgeID { get; set; }
         public string? OutWeightBridgeID { get; set; }
-        public string? WBOption { get; set; }//Single,Both,None
+        public Boolean? IsUseWB { get; set; }//IsUseWeightBridge
         public string? InWBBillOption { get; set; }//Credit,Cash,None
         public string? OutWBBillOption { get; set; }//Credit,Cash,None
+        public string? GroupName { get; set; }//mandatory
         public List<ICD_InBoundCheck_DocumentDto>? DocumentList { get; set; }
 
     }
