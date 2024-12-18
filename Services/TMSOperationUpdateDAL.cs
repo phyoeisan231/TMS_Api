@@ -117,7 +117,7 @@ namespace TMS_Api.Services
                     return msg;
                 }
             }
-            catch (DbUpdateException e)
+            catch (DbUpdateConcurrencyException e)
             {
                 msg.Status = false;
                 msg.MessageContent += e.Message;
@@ -179,12 +179,29 @@ namespace TMS_Api.Services
                         truck.InYard = false;
                         _context.ICD_TruckProcess.Add(truck);
                     }
+                    if (info.PropNo != null)
+                    {
+                        TMS_Proposal? proposal = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE PropNo=@id And Status='Open'", new SqlParameter("@id", info.PropNo)).SingleOrDefaultAsync();
+                        if (proposal != null)
+                        {
+                            proposal.UpdatedDate = GetLocalStdDT();
+                            proposal.UpdatedUser = info.CreatedUser;
+                        }
+                        else
+                        {
+                            // Rollback the transaction if any exception occurs
+                            await transaction.RollbackAsync();
+                            msg.Status = false;
+                            msg.MessageContent = "TMS_Proposal Data not found!";
+                            return msg;
+                        }
+                    }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     msg.Status = true;
                     msg.MessageContent = "Successfuly added!";
                 }
-                catch (DbUpdateException e)
+                catch (DbUpdateConcurrencyException e)
                 {
                     // Rollback the transaction if any exception occurs
                     await transaction.RollbackAsync();
@@ -242,7 +259,7 @@ namespace TMS_Api.Services
                     return msg;
                 }
             }
-            catch (DbUpdateException e)
+            catch (DbUpdateConcurrencyException e)
             {
                 msg.Status = false;
                 msg.MessageContent += e.Message;
@@ -311,13 +328,23 @@ namespace TMS_Api.Services
                         process.UpdatedDate = GetLocalStdDT();
                         process.UpdatedUser = info.CreatedUser;
                         process.Status = "Out(Check)";
+
+                        if (process.PropNo != null)
+                        {
+                            TMS_Proposal? proposal = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE PropNo=@id", new SqlParameter("@id", process.PropNo)).SingleOrDefaultAsync();
+                            if (proposal != null)
+                            {
+                                proposal.UpdatedDate = GetLocalStdDT();
+                                proposal.UpdatedUser = info.CreatedUser;
+                            }
+                        }
                     }
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     msg.Status = true;
                     msg.MessageContent = "Successfuly added!";
                 }
-                catch (DbUpdateException e)
+                catch (DbUpdateConcurrencyException e)
                 {
                     // Rollback the transaction if any exception occurs
                     await transaction.RollbackAsync();

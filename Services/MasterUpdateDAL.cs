@@ -1928,7 +1928,7 @@ namespace TMS_Api.Services
             ResponseMessage msg = new ResponseMessage { Status = false };
             try
             {
-                DocumentSetting? data = await _context.DocumentSetting.FromSqlRaw("SELECT TOP 1* FROM DocumentSetting WHERE REPLACE(DocCode,'','')=REPLACE(@docCode,'','') OR REPLACE(DocName,'','')=REPLACE(@docName,'','')", new SqlParameter("@docCode", info.DocCode),new SqlParameter("@docName",info.DocName)).SingleOrDefaultAsync();
+                DocumentSetting? data = await _context.DocumentSetting.FromSqlRaw("SELECT TOP 1* FROM DocumentSetting WHERE REPLACE(DocCode,'','')=REPLACE(@docCode,'','')", new SqlParameter("@docCode", info.DocCode)).SingleOrDefaultAsync();
                 if (data != null)
                 {
                     msg.Status = false;
@@ -1967,7 +1967,6 @@ namespace TMS_Api.Services
                 }
                 else
                 {
-                    docSetting.DocCode = info.DocCode;
                     docSetting.DocName = info.DocName;
                     docSetting.PCCode = info.PCCode;
                     docSetting.AttachRequired = info.AttachRequired;

@@ -25,6 +25,12 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "datetime")]
         public DateTime? InCheckDateTime { get; set; }
         [Column(TypeName = "varchar(25)")]
+        public string? InContainerType { get; set; }
+        [Column(TypeName = "int")]
+        public int? InContainerSize { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? InContainerNo { get; set; }
+        [Column(TypeName = "varchar(25)")]
         public string? AreaID { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? TruckType { get; set; }
@@ -39,6 +45,7 @@ namespace TMS_Api.DBModels
         public string? DriverName { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string? DriverContactNo { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "varchar(25)")]
         public string? CardNo { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -79,6 +86,12 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "datetime")]
         public DateTime? OutGatePassTime { get; set; }
         [Column(TypeName = "varchar(25)")]
+        public string? OutContainerType { get; set; }
+        [Column(TypeName = "int")]
+        public int? OutContainerSize { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string? OutContainerNo { get; set; }
+        [Column(TypeName = "varchar(25)")]
         public string? InWeightBridgeID { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? OutWeightBridgeID { get; set; }
@@ -86,14 +99,27 @@ namespace TMS_Api.DBModels
         public DateTime? InWeightDateTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? OutWeightDateTime { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "varchar(20)")]
         public string? Status { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? JobDept { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string? JobCode { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string? JobType { get; set; }
+        [Column(TypeName = "varchar(30)")]
+        public string? BlNo { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string? GroupName { get; set; }//mandatory"ICD","TMS","Others"
+        [Column(TypeName = "int")]
+        public int? PropNo { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
+        [ConcurrencyCheck]
         [Column(TypeName = "varchar(50)")]
         public string? UpdatedUser { get; set; }
         [Column(TypeName = "datetime")]
