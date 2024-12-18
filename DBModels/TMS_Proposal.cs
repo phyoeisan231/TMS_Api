@@ -17,7 +17,7 @@ namespace TMS_Api.DBModels
         [Column(TypeName = "varchar(50)")]
         public string? JobCode { get; set; }
         [Column(TypeName = "varchar(10)")]
-        public string? JobType { get; set; }//
+        public string? JobType { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string? CompanyName { get; set; }
         [Column(TypeName = "int")]
@@ -37,6 +37,12 @@ namespace TMS_Api.DBModels
         [ConcurrencyCheck]
         [Column(TypeName = "varchar(20)")]
         public string? Status { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string? PCCode { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? AreaID { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? BLNo { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
