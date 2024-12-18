@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using TMS_Api.DBModels;
 using TMS_Api.DTOs;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TMS_Api.Services
 {
@@ -90,6 +91,7 @@ namespace TMS_Api.Services
                 WeightServiceBill sBill = _mapper.Map<WeightServiceBill>(info);
                 sBill.NetWeight = info.OutWeight;
                 sBill.ServiceBillDate = info.OutWeightTime;
+                sBill.InWeight = 0;
                 sBill.CreatedDate = GetLocalStdDT();
                 _context.WeightServiceBill.Add(sBill);
                 await _context.SaveChangesAsync();
@@ -126,27 +128,95 @@ namespace TMS_Api.Services
                     info.ServiceBillNo = info.WeightBridgeID + "000001";
                 }
 
-                if(info.QRegNo != null)
+
+                #region Update WeightBridgeQueue
+                if (info.QRegNo != null)
                 {
                     WeightBridgeQueue queue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT * FROM WeightBridgeQueue WHERE RegNo=@id", new SqlParameter("@id", info.QRegNo)).SingleOrDefaultAsync();
                     queue.Status = "Done";
                     queue.WeightDateTime = info.ServiceBillDate;
                 }
 
+                #endregion
+
+
+                #region Update ICD_TruckProcess
                 if (info.CheckInRegNo != null)
                 {
-                    WeightBridgeQueue queue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT * FROM WeightBridgeQueue WHERE RegNo=@id", new SqlParameter("@id", info.QRegNo)).SingleOrDefaultAsync();
-                    queue.Status = "Done";
+                    ICD_TruckProcess truck = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", info.CheckInRegNo)).SingleOrDefaultAsync();
+                    truck.InWeightDateTime = info.InWeightTime;
                 }
+                #endregion
 
 
                 WeightServiceBill sBill = _mapper.Map<WeightServiceBill>(info);
-                
                 sBill.CreatedDate = GetLocalStdDT();
                 _context.WeightServiceBill.Add(sBill);
                 await _context.SaveChangesAsync();
                 msg.Status = true;
                 msg.MessageContent = "Successfully created!";
+
+
+            }
+            catch (DbUpdateException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+
+            return msg;
+        }
+
+
+
+        public async Task<ResponseMessage> UpdateServiceBillForQueue(WeightServiceBillDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                WeightServiceBill sBill = await _context.WeightServiceBill.FromSqlRaw("SELECT * FROM WeightServiceBill WHERE CheckInRegNo=@id", new SqlParameter("@id", info.CheckInRegNo)).SingleOrDefaultAsync();
+                if (sBill == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Data Not Found!!";
+                }
+                else
+                {
+                    #region Update WeightBridgeQueue
+                    if (info.QRegNo != null)
+                    {
+                        WeightBridgeQueue queue = await _context.WeightBridgeQueue.FromSqlRaw("SELECT * FROM WeightBridgeQueue WHERE RegNo=@id", new SqlParameter("@id", info.QRegNo)).SingleOrDefaultAsync();
+                        queue.Status = "Done";
+                        queue.WeightDateTime = info.ServiceBillDate;
+
+
+                    }
+
+                    #endregion
+
+
+                    #region Update ICD_TruckProcess
+                    if (info.CheckInRegNo != null)
+                    {
+                        ICD_TruckProcess truck = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id", new SqlParameter("@id", info.CheckInRegNo)).SingleOrDefaultAsync();
+                        truck.InWeightDateTime = info.InWeightTime;
+                    }
+                    #endregion
+
+
+                    sBill.OutWeightTime = info.InWeightTime;
+                    sBill.OutWeight = info.OutWeight;
+                    sBill.NetWeight = Math.Abs((decimal)(sBill.OutWeight - sBill.InWeight));
+
+                    sBill.UpdatedDate = GetLocalStdDT();
+
+                }
+
+
+                
+                await _context.SaveChangesAsync();
+                msg.Status = true;
+                msg.MessageContent = "Successfully updated!";
 
 
             }
