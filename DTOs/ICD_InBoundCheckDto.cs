@@ -31,6 +31,7 @@
         public Boolean? IsUseWB { get; set; }//IsUseWeightBridge
         public string? InWBBillOption { get; set; }//Credit,Cash,None
         public string? OutWBBillOption { get; set; }//Credit,Cash,None
+        public string? GroupName { get; set; }//mandatory
         public List<ICD_InBoundCheck_DocumentDto>? DocumentList { get; set; }
 
     }

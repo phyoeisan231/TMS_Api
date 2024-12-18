@@ -33,17 +33,17 @@ namespace TMS_Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOperationAreaDataList(string yard)
+        public async Task<IActionResult> GetOperationAreaDataList(string yard,string gpName)
         {
-            DataTable dt = await _queryDAL.GetOperationAreaList(yard);
+            DataTable dt = await _queryDAL.GetOperationAreaList(yard, gpName);
             return Ok(dt);
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> GetCardICDList(string yard)
+        public async Task<IActionResult> GetCardList(string yard,string gpName)
         {
-            DataTable dt = await _queryDAL.GetCardICDList(yard);
+            DataTable dt = await _queryDAL.GetCardList(yard,gpName);
             return Ok(dt);
         }
 
@@ -198,6 +198,13 @@ namespace TMS_Api.Controllers
             TMS_ProposalDto data = await _queryDAL.GetTMSProposalById(id);
             return Ok(data);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetTruckDataListByProposal(string id, int poNo)
+        {
+            DataTable dt = await _queryDAL.GetTruckDataListByProposal(id, poNo);
+            return Ok(dt);
+        }
+        
         #endregion
     }
 }

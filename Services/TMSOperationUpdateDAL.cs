@@ -307,6 +307,7 @@ namespace TMS_Api.Services
                         process.OutPCCode = info.OutPCCode;
                         process.OutYardID = info.OutYardID;
                         process.OutGateID = info.OutGateID;
+                        process.OutType = info.OutType;
                         process.UpdatedDate = GetLocalStdDT();
                         process.UpdatedUser = info.CreatedUser;
                         process.Status = "Out(Check)";
