@@ -24,6 +24,9 @@ namespace TMS_Api.DTOs
         public string? CreatedUser { get; set; }
         public string? Customer { get; set; }
         public string? InYardID { get; set; }
+        public string? PCCode { get; set; }
+        public string? AreaID { get; set; }
+        public string? BLNo { get; set; }
         public List<TMS_ProposalDetailDto>? DetailList { get; set; }
         public DataTable? ProposalDetailList { get; set; }
         
