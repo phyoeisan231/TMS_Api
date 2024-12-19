@@ -149,8 +149,12 @@ namespace TMS_Api.Services
                 #endregion
 
 
+                Truck t = await _context.Truck.FromSqlRaw("SELECT * FROM Truck WHERE VehicleRegNo=@id", new SqlParameter("@id", info.TruckNo)).SingleOrDefaultAsync();
+
+
                 WeightServiceBill sBill = _mapper.Map<WeightServiceBill>(info);
                 sBill.CreatedDate = GetLocalStdDT();
+                sBill.TransporterID = t.TransporterID;
                 _context.WeightServiceBill.Add(sBill);
                 await _context.SaveChangesAsync();
                 msg.Status = true;

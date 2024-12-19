@@ -83,8 +83,8 @@ namespace TMS_Api.Services
 
         public async Task<DataTable> GetTruckList(string active, string isBlack)
         {
-            string sql = "SELECT VehicleRegNo FROM Truck Where Active=1 And (IsBlack<>1 OR IsBlack is null)";
-            DataTable dt = await GetDataTableAsync(sql);
+            string sql = "SELECT VehicleRegNo,TransporterID FROM Truck Where Active=@active And (IsBlack<>@black OR IsBlack is null)";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@active", active), new SqlParameter("@black", isBlack));
             return dt;
         }
 
