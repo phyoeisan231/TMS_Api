@@ -94,9 +94,9 @@ namespace TMS_Api.Services
         #endregion
 
         #region Truck Status Dec_12_2024
-        public async Task<DataTable> GetTruckStatusReport(string yard, string gate, string fDate, string tDate)
+        public async Task<DataTable> GetTruckStatusReport(string yard, string gate, string fDate, string tDate,string status)
         {
-            string sql = @"SELECT * from ICD_TruckProcess where InYardID=@yard And InGateID=@gate  And Cast(InCheckDateTime as Date) Between @fDate And @tDate";
+            string sql = @"SELECT * from ICD_TruckProcess where InYardID=@yard And InGateID=@gate And Status in (" + status + ")  And Cast(InCheckDateTime as Date) Between @fDate And @tDate";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate), new SqlParameter("@fDate", fDate), new SqlParameter("@tDate", tDate));
             return dt;
         }

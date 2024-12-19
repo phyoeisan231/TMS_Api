@@ -65,9 +65,9 @@ namespace TMS_Api.Controllers
 
         #region Truck Status Dec_12_2024
         [HttpGet]
-        public async Task<IActionResult> GetTruckStatusReport(string yard, string gate, string fDate, string tDate)
+        public async Task<IActionResult> GetTruckStatusReport(string yard, string gate, string fDate, string tDate,string status)
         {
-            DataTable dt = await _queryDAL.GetTruckStatusReport(yard, gate, fDate, tDate);
+            DataTable dt = await _queryDAL.GetTruckStatusReport(yard, gate, fDate, tDate, status);
             return Ok(dt);
         }
         #endregion
