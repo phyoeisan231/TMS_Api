@@ -204,9 +204,10 @@ namespace TMS_Api.Services
                     #endregion
 
 
-                    sBill.OutWeightTime = info.InWeightTime;
+                    sBill.OutWeightTime = info.OutWeightTime;
                     sBill.OutWeight = info.OutWeight;
                     sBill.NetWeight = Math.Abs((decimal)(sBill.OutWeight - sBill.InWeight));
+                 
 
                     sBill.UpdatedDate = GetLocalStdDT();
 
