@@ -147,6 +147,11 @@ namespace TMS_Api.Services
                                 wbQ.WeightBridgeID = data.InWeightBridgeID;
                                 wbQ.BillOption = data.InWBBillOption;
                                 wbQ.Customer = data.Customer;
+                                wbQ.ContainerNo = data.InContainerNo;
+                                wbQ.JobCode = data.JobCode;
+                                wbQ.JobDescription = data.JobDept;
+                                wbQ.WBOption = "Both";
+                                wbQ.BlNo = data.BlNo;
                                 wbQ.Status = "Queue";
                                 wbQ.CreatedDate = GetLocalStdDT();
                                 wbQ.CreatedUser = data.InYardID;
@@ -175,6 +180,11 @@ namespace TMS_Api.Services
                                 outWbQ.TrailerVehicleRegNo = data.TrailerVehicleRegNo;
                                 outWbQ.WeightBridgeID = data.OutWeightBridgeID;
                                 outWbQ.Customer = data.Customer;
+                                wbQ.ContainerNo = data.InContainerNo;
+                                wbQ.JobCode = data.JobCode;
+                                wbQ.JobDescription = data.JobDept;
+                                wbQ.WBOption = "Both";
+                                wbQ.BlNo = data.BlNo;
                                 outWbQ.Status = "Queue";
                                 outWbQ.CreatedDate = GetLocalStdDT();
                                 outWbQ.CreatedUser = data.InYardID;
