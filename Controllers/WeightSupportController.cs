@@ -21,9 +21,9 @@ namespace TMS_Api.Controllers
 
         #region In Weight 11_Dec_2024
         [HttpGet]
-        public async Task<IActionResult> GetWeightBridgeQueueList(string yard, string gate)
+        public async Task<IActionResult> GetWeightBridgeQueueList()
         {
-            DataTable dt = await _queryDAL.GetWeightBridgeQueueList(yard, gate);
+            DataTable dt = await _queryDAL.GetWeightBridgeQueueList();
             return Ok(dt);
         }
 
@@ -78,9 +78,9 @@ namespace TMS_Api.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetServiceBillList(DateTime fromDate, DateTime toDate, string yard, string gate)
+        public async Task<IActionResult> GetServiceBillList(DateTime fromDate)
         {
-            DataTable dt = await _queryDAL.GetServiceBillList(fromDate, toDate, yard, gate);
+            DataTable dt = await _queryDAL.GetServiceBillList(fromDate);
             return Ok(dt);
         }
         #endregion

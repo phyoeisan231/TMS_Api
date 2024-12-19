@@ -103,7 +103,16 @@ namespace TMS_Api.Controllers
             ResponseMessage msg = await _updateDAL.CompleteProposal(id,user);
             return Ok(msg);
         }
+
+        [HttpGet]
+        [HttpGet]
+        public async Task<IActionResult> GetBLNoList(string code,string dept)
+        {
+            DataTable dt = await _queryDAL.GetBLNoList(code,dept);
+            return Ok(dt);
+        }
         
+
         #endregion
 
 

@@ -31,6 +31,7 @@ namespace TMS_Api.DTOs
         public string? Customer { get; set; }
         public string? InYardID { get; set; }
         public string? InPCCode { get; set; }
+     
         
     }
 }

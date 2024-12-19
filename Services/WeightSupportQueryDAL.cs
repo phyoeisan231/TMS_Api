@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using TMS_Api.DBModels;
 
 namespace TMS_Api.Services
 {
@@ -61,10 +62,14 @@ namespace TMS_Api.Services
             });
         }
         #region In Weight 11_Dec_2024
-        public async Task<DataTable> GetWeightBridgeQueueList(string yard, string gate)
+        public async Task<DataTable> GetWeightBridgeQueueList()
         {
-            string sql = @"SELECT * FROM WeightBridgeQueue WHERE YardID=@yard AND GateID=@gate AND Status='Queue'";
-            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate));
+            //string sql = @"SELECT * FROM WeightBridgeQueue WHERE YardID=@yard AND GateID=@gate AND Status='Queue'";
+            //DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", yard), new SqlParameter("@gate", gate));
+            //return dt;
+
+            string sql = @"SELECT * FROM WeightBridgeQueue WHERE Status='Queue'";
+            DataTable dt = await GetDataTableAsync(sql);
             return dt;
         }
 
@@ -78,8 +83,8 @@ namespace TMS_Api.Services
 
         public async Task<DataTable> GetTruckList(string active, string isBlack)
         {
-            string sql = "SELECT VehicleRegNo FROM Truck Where Active=1 And (IsBlack<>1 OR IsBlack is null)";
-            DataTable dt = await GetDataTableAsync(sql);
+            string sql = "SELECT VehicleRegNo,TransporterID FROM Truck Where Active=@active And (IsBlack<>@black OR IsBlack is null)";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@active", active), new SqlParameter("@black", isBlack));
             return dt;
         }
 
@@ -92,10 +97,10 @@ namespace TMS_Api.Services
         }
 
 
-        public async Task<DataTable> GetServiceBillList(DateTime fromDate, DateTime toDate, string yard, string gate)
+        public async Task<DataTable> GetServiceBillList(DateTime fromDate)
         {
-            string sql = @"SELECT * FROM WeightServiceBill WHERE Cast(ServiceBillDate as Date) Between @fDate and @tDate AND GateID=@gate AND YardID=@yard  ORDER BY ServiceBillDate DESC";
-            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@fDate", fromDate), new SqlParameter("@tDate", toDate), new SqlParameter("@gate", gate), new SqlParameter("@yard", yard));
+            string sql = @"SELECT * FROM WeightServiceBill WHERE Cast(ServiceBillDate as Date)=@fDate ORDER BY ServiceBillDate DESC";
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@fDate", fromDate));
             return dt;
         }
 
