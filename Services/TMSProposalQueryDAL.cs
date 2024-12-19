@@ -166,6 +166,20 @@ namespace TMS_Api.Services
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@propNo", id));
             return dt;
         }
+
+        public async Task<DataTable> GetBLNoList(string code,string dept)
+        {
+            string sql = null;
+            if (dept == "CCA") sql = @"select BLNo From DetailBookings d Left Join CCADailyJobs c On d.DetailBookingNo=c.DetailBookingNo where c.JobCode=@jobCode";
+
+            else if (dept == "Warehouse") sql = @"select * From DetailBookings d Left Join WarehouseDailyJobs w On d.DetailBookingNo=w.DetailBookingNo where w.JobCode=@jobCode";
+
+            else sql = @"select BLNo From DetailBookings d Left Join RailDailyJobs r On d.DetailBookingNo=r.DetailBookingNo where r.JobCode=@jobCode";
+            DataTable dt = await GetPortalDataTableAsync(sql, new SqlParameter("@jobCode", code));
+
+            return dt;
+            
+        }
         #endregion
 
 
