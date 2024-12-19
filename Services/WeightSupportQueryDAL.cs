@@ -104,25 +104,18 @@ namespace TMS_Api.Services
             return dt;
         }
 
-        //public async Task<DataTable> GetServiceBillListOne(DateTime fromDate, DateTime toDate, string gate)
-        //{
-        //    string sql = @"
-        //SELECT 
-        //    ServiceBillNo,CONVERT(varchar, ServiceBillDate, 120) AS ServiceBillDate,CONVERT(varchar, InWeightTime, 120) AS InWeightTime,CONVERT(varchar, OutWeightTime, 120) AS OutWeightTime,
-        //    WeightBridgeID,TruckNo,TrailerNo,QRegNo,InWeight,OutWeight,NetWeight,WeightType,CargoInfo,WeightOption,BillOption,CustomerId,CustomerName,
-        //    CashAmt,CheckInRegNo,WeightCategory,DriverName,DriverLicense,ContainerNo,DONo,BLNo,VesselName,TransporterID,YardID,GateID,Remark
-        //FROM 
-        //    WeightServiceBill
-        //WHERE 
-        //    CAST(ServiceBillDate AS DATE) BETWEEN @fDate AND @tDate
-        //    AND GateID = @gate
-        //ORDER BY 
-        //    ServiceBillNo DESC";
+        public async Task<DataTable> GetWeightServiceBillList(DateTime startDate, DateTime endDate, string yard, string gate)
+        {
+            string sql = @"SELECT ServiceBillNo,CONVERT(varchar, ServiceBillDate, 29) AS ServiceBillDate,
+                    CONVERT(varchar, InWeightTime, 29) AS InWeightTime,CONVERT(varchar, OutWeightTime, 29) AS OutWeightTime,
+                    WeightBridgeID, TruckNo, TrailerNo, QRegNo, InWeight, OutWeight, NetWeight,WeightType, CargoInfo, WeightOption,
+                    BillOption, CustomerId, CustomerName,CashAmt, CheckInRegNo, WeightCategory, DriverName, DriverLicense, ContainerNo,
+                    DONo, BLNo, VesselName, TransporterID, YardID, GateID, Remark
+                    FROM WeightServiceBill WHERE YardID=@yard AND GateID=@gate AND Cast(ServiceBillDate as Date) Between @sDate and @eDate ORDER BY ServiceBillDate DESC";
 
-        //    DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@fDate", fromDate),new SqlParameter("@tDate", toDate),new SqlParameter("@gate", gate));
-
-        //    return dt;
-        //}
+            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@sDate", startDate), new SqlParameter("@eDate", endDate), new SqlParameter("@yard", yard), new SqlParameter("@gate", gate));
+            return dt;
+        }
 
 
         #endregion

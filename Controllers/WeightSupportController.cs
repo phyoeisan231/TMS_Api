@@ -83,6 +83,13 @@ namespace TMS_Api.Controllers
             DataTable dt = await _queryDAL.GetServiceBillList(fromDate);
             return Ok(dt);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetWeightServiceBillList(DateTime startDate, DateTime endDate, string yard, string gate)
+        {
+            DataTable dt = await _queryDAL.GetWeightServiceBillList(startDate, endDate, yard, gate);
+            return Ok(dt);
+        }
         #endregion
     }
 }
