@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Syncfusion.XlsIO;
 using System.Data;
 using System.Data.Common;
 using TMS_Api.DBModels;
 using TMS_Api.DTOs;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TMS_Api.Services
 {
@@ -78,8 +81,10 @@ namespace TMS_Api.Services
                 proposal.CreatedUser = info.CreatedUser;
                 _context.TMS_Proposal.Add(proposal);
                 await _context.SaveChangesAsync();
+
                 msg.Status = true;
                 msg.MessageContent = "Successfully Created!";
+                msg.Message = Convert.ToString(proposal.PropNo);
             }
             catch (Exception e)
             {
@@ -187,6 +192,7 @@ namespace TMS_Api.Services
                 proposal.NoOfFEU = info.NoOfFEU;
                 proposal.LCLQty = info.LCLQty;
                 proposal.CargoInfo = info.CargoInfo;
+                proposal.WeightOption = info.WeightOption;
                 proposal.UpdatedDate = GetLocalStdDT();
                 proposal.UpdatedUser = info.UpdatedUser;
 
@@ -251,6 +257,64 @@ namespace TMS_Api.Services
                 msg.MessageContent = e.Message;
                 
             }
+            return msg;
+        }
+
+        public async Task<ResponseMessage> StatusChange(FileUploadDTO info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // var excelDataList = new List<TruckSpecialCaseDetail>();
+                using (var stream = new MemoryStream())
+                {
+                    await info.UploadedFile.CopyToAsync(stream);
+                    int i = 0;
+
+                    using (ExcelEngine excelEngine = new ExcelEngine())
+                    {
+                        IApplication application = excelEngine.Excel;
+                        application.DefaultVersion = ExcelVersion.Xlsx;
+
+                        stream.Position = 0;
+                        IWorkbook workbook = application.Workbooks.Open(stream);
+                        IWorksheet worksheet = workbook.Worksheets[0];
+
+                        int rowCount = worksheet.UsedRange.LastRow;
+                        for (int row = 2; row <= rowCount; row++) // Assuming the first row is the header
+                        {
+
+                            string jobCode = worksheet[row, 1].Text;
+
+                            TMS_Proposal proposal = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE JobCode=@jobCode AND Status='Open' AND JobDept=@jobDept",new SqlParameter("@jobCode",jobCode),new SqlParameter("jobDept",info.JobDept)).SingleOrDefaultAsync();
+                            if(proposal!=null)
+                            {
+                                proposal.Status = "Close";
+                                await _context.SaveChangesAsync();
+                                i++;
+                            }
+                           
+                        }
+                    }
+                    await transaction.CommitAsync();
+
+                    msg.Status = true;
+                    msg.Message = Convert.ToString(i);
+                    msg.MessageContent = "Successfully imported!";
+                }
+
+              
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+
+                msg.MessageContent = ex.Message;
+                return msg;
+            }
+
             return msg;
         }
         #endregion

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Linq;
 using TMS_Api.DTOs;
 using TMS_Api.Services;
 
@@ -111,7 +112,29 @@ namespace TMS_Api.Controllers
             DataTable dt = await _queryDAL.GetBLNoList(code,dept);
             return Ok(dt);
         }
-        
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> StatusChange([FromForm] FileUploadDTO info)
+        {
+            ResponseMessage msg = new();
+            if (info.UploadedFile == null || info.UploadedFile.Length == 0)
+            {
+                msg.MessageContent = "Please upload a valid Excel file.";
+                return Ok(msg);
+            }
+
+            var allowedExtensions = new[] { ".xls", ".xlsx" };
+            var extension = Path.GetExtension(info.UploadedFile.FileName).ToLower();
+            if (!allowedExtensions.Contains(extension))
+            {
+                msg.MessageContent = "Invalid file type. Please upload an Excel file.";
+                return Ok(msg);
+            }
+
+            msg = await _updateDAL.StatusChange(info);
+            return Ok(msg);
+        }
 
         #endregion
 
