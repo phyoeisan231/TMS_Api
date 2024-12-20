@@ -265,10 +265,8 @@ namespace TMS_Api.Services
         {
             ResponseMessage msg = new ResponseMessage { Status = false };
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // var excelDataList = new List<TruckSpecialCaseDetail>();
                 using (var stream = new MemoryStream())
                 {
                     await info.UploadedFile.CopyToAsync(stream);
@@ -289,28 +287,34 @@ namespace TMS_Api.Services
 
                             string jobCode = worksheet[row, 1].Text;
 
-                            TMS_Proposal proposal = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE JobCode=@jobCode AND Status='Open' AND JobDept=@jobDept",new SqlParameter("@jobCode",jobCode),new SqlParameter("jobDept",info.JobDept)).SingleOrDefaultAsync();
-                            if(proposal!=null)
+                            List<TMS_Proposal> proposal = await _context.TMS_Proposal.FromSqlRaw("SELECT * FROM TMS_Proposal WHERE JobCode=@jobCode AND Status='Open' AND JobDept=@jobDept",new SqlParameter("@jobCode",jobCode),new SqlParameter("jobDept",info.JobDept)).ToListAsync();
+                            foreach(TMS_Proposal p in proposal)
                             {
-                                proposal.Status = "Close";
+                                p.Status = "Close";
                                 await _context.SaveChangesAsync();
                                 i++;
                             }
                            
                         }
                     }
-                    await transaction.CommitAsync();
 
-                    msg.Status = true;
-                    msg.Message = Convert.ToString(i);
-                    msg.MessageContent = "Successfully imported!";
+                    if (i > 0)
+                    {
+                        msg.Status = true;
+                        msg.Message = Convert.ToString(i);
+                        msg.MessageContent = "Successfully imported!";
+                    }
+                    else
+                    {
+                        msg.MessageContent = "JobCode Not Found!";
+                    }
+                    
                 }
 
               
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
 
                 msg.MessageContent = ex.Message;
                 return msg;
