@@ -19,9 +19,9 @@ namespace TMS_Api.Controllers
 
         #region ICD/Other InBound Check Doc Nov_27_2024
         [HttpGet]
-        public async Task<IActionResult> GetCategoryInList(string type)
+        public async Task<IActionResult> GetCategoryList(string type)
         {
-            DataTable dt = await _queryDAL.GetCategoryInList(type);
+            DataTable dt = await _queryDAL.GetCategoryList(type);
             return Ok(dt);
         }
         
@@ -139,13 +139,6 @@ namespace TMS_Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategoryOutList(string type)
-        {
-            DataTable dt = await _queryDAL.GetCategoryOutList(type);
-            return Ok(dt);
-        }
-
-        [HttpGet]
         public async Task<IActionResult> GetOutBoundCheckList(DateTime startDate, DateTime endDate, string yard)
         {
             DataTable dt = await _queryDAL.GetOutBoundCheckList(startDate, endDate, yard);
@@ -206,9 +199,9 @@ namespace TMS_Api.Controllers
             return Ok(data);
         }
         [HttpGet]
-        public async Task<IActionResult> GetTruckDataListByProposal(string id, int poNo)
+        public async Task<IActionResult> GetTruckDataListByProposal(string id, int poNo,string type)
         {
-            DataTable dt = await _queryDAL.GetTruckDataListByProposal(id, poNo);
+            DataTable dt = await _queryDAL.GetTruckDataListByProposal(id, poNo, type);
             return Ok(dt);
         }
 

@@ -12,12 +12,6 @@ namespace TMS_Api.DBModels
         [Column(TypeName ="varchar(50)")]
         public string? CategoryName { get; set; }//mandatory
 
-        [Column(TypeName ="bit")]
-        public Boolean? InboundWeight {  get; set; }
-
-        [Column(TypeName ="bit")]
-        public Boolean? OutboundWeight { get; set; }
-
         [Column(TypeName ="varchar(10)")]
         public string? GroupName {  get; set; }//mandatory
 
