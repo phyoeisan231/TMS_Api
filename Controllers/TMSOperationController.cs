@@ -222,5 +222,21 @@ namespace TMS_Api.Controllers
             return Ok(dt);
         }
         #endregion
+
+        #region Operation Dec_20_2024
+        [HttpPut]
+        public async Task<IActionResult> StartOperation(OperationDto info)
+        {
+            ResponseMessage msg = await _updateDAL.StartOperation(info);
+            return Ok(msg);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> EndOperation(OperationDto info)
+        {
+            ResponseMessage msg = await _updateDAL.EndOperation(info);
+            return Ok(msg);
+        }
+        #endregion
     }
 }

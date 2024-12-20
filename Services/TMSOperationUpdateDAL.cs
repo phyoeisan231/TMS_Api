@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using TMS_Api.DBModels;
 using TMS_Api.DTOs;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace TMS_Api.Services
 {
     public class TMSOperationUpdateDAL
@@ -132,6 +133,13 @@ namespace TMS_Api.Services
             {
                 try
                 {
+                    ICD_TruckProcess? truckOther = await _context.ICD_TruckProcess.FromSqlRaw("SELECT Top 1 * FROM ICD_TruckProcess WHERE TruckVehicleRegNo=@id And Status <>'Out'", new SqlParameter("@id", info.TruckVehicleRegNo)).SingleOrDefaultAsync();
+                    if (truckOther != null)
+                    {
+                        msg.Status = false;
+                        msg.MessageContent = "Truck is already exist!";
+                        return msg;
+                    }                 
                     ICD_InBoundCheck inBound = _mapper.Map<ICD_InBoundCheck>(info);
                     inBound.CreatedDate = GetLocalStdDT();
                     inBound.Status = true;
@@ -305,8 +313,15 @@ namespace TMS_Api.Services
 
                     card.UpdatedUser = info.UpdatedUser;
                     card.UpdatedDate = GetLocalStdDT();
-
-                    ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id And Status='In'", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
+                    ICD_TruckProcess? process = new ICD_TruckProcess();
+                    if (info.GroupName == "TMS")
+                    {
+                        process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id And Status='Out(Weight)' And GroupName='TMS'", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
+                    }
+                    else
+                    {
+                        process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id And Status='In' And GroupName<>'TMS'", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
+                    }
                     if (process==null){
                         // Rollback the transaction if any exception occurs
                         await transaction.RollbackAsync();
@@ -353,6 +368,67 @@ namespace TMS_Api.Services
                 }
             }
             return msg;
+        }
+        #endregion
+
+        #region Operation Dec_20_2024
+        public async Task<ResponseMessage> StartOperation(OperationDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id And InYard=1 And Status='In(Weight)' ", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
+                if (process == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Truck Process data not found!";
+                    return msg;
+                }
+                process.OptStartDate = info.OptStartDate;
+                process.GDNNo = info.GDNNo;
+                process.GRNNo = info.GRNNo;
+                process.UpdatedDate = GetLocalStdDT();
+                process.UpdatedUser = info.UpdatedUser;
+                await _context.SaveChangesAsync();
+                msg.Status = true;
+                msg.MessageContent = "Successfuly started!";
+                return msg;
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
+        }
+
+        public async Task<ResponseMessage> EndOperation(OperationDto info)
+        {
+            ResponseMessage msg = new ResponseMessage { Status = false };
+            try
+            {
+                ICD_TruckProcess? process = await _context.ICD_TruckProcess.FromSqlRaw("SELECT * FROM ICD_TruckProcess WHERE InRegNo=@id And InYard=1 And Status='In(Weight)' And  OptStartDate is not null", new SqlParameter("@id", info.InRegNo)).SingleOrDefaultAsync();
+                if (process == null)
+                {
+                    msg.Status = false;
+                    msg.MessageContent = "Truck Process data not found!";
+                    return msg;
+                }
+                process.OptEndDate = info.OptEndDate;
+                process.Status = "Operation";
+                process.GDNNo = info.GDNNo;
+                process.GRNNo = info.GRNNo;
+                process.UpdatedDate = GetLocalStdDT();
+                process.UpdatedUser = info.UpdatedUser;
+                await _context.SaveChangesAsync();
+                msg.Status = true;
+                msg.MessageContent = "Successfuly ended!";
+                return msg;
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                msg.MessageContent += e.Message;
+                return msg;
+            }
         }
         #endregion
     }

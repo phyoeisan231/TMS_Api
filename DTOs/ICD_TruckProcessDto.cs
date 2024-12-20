@@ -1,4 +1,5 @@
-﻿namespace TMS_Api.DTOs
+﻿
+namespace TMS_Api.DTOs
 {
     public class ICD_TruckProcessDto
     {
@@ -54,6 +55,10 @@
         public string? JobType { get; set; }
         public string? BlNo { get; set; }
         public string? GroupName { get; set; }//mandatory"ICD","TMS","Others"
+        public int? GRNNo { get; set; }
+        public int? GDNNo { get; set; }
+        public DateTime? OptStartDate { get; set; }//OperationStart
+        public DateTime? OptEndDate { get; set; }
         public string? UpdatedUser { get; set; }
         public string? CreatedUser { get; set; }
         public IFormFile? UploadPhoto { get; set; }

@@ -101,7 +101,7 @@ namespace TMS_Api.DBModels
         public DateTime? OutWeightDateTime { get; set; }
         [ConcurrencyCheck]
         [Column(TypeName = "varchar(20)")]
-        public string? Status { get; set; }//['In(Check)', 'In','In(Weight)','Out(Weight)', 'Out(Check)', 'Out'];
+        public string? Status { get; set; }//['In(Check)', 'In','In(Weight)','Operation','Out(Weight)', 'Out(Check)', 'Out'];
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
         [Column(TypeName = "varchar(50)")]

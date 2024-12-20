@@ -231,20 +231,23 @@ namespace TMS_Api.Services
                             }
                         }
 
-                        if (!string.IsNullOrEmpty(data.TrailerVehicleRegNo))
+                        if (data.TruckType != "RGL")
                         {
-                            Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT * FROM Trailer WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TrailerVehicleRegNo)).SingleOrDefaultAsync();
-                            if (trailer == null)
+                            if (!string.IsNullOrEmpty(data.TrailerVehicleRegNo))
                             {
-                                // Rollback the transaction if any exception occurs
-                                await transaction.RollbackAsync();
-                                msg.Status = false;
-                                msg.MessageContent = "Trailer Data not found!";
-                                return msg;
+                                Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT * FROM Trailer WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TrailerVehicleRegNo)).SingleOrDefaultAsync();
+                                if (trailer == null)
+                                {
+                                    // Rollback the transaction if any exception occurs
+                                    await transaction.RollbackAsync();
+                                    msg.Status = false;
+                                    msg.MessageContent = "Trailer Data not found!";
+                                    return msg;
+                                }
+                                trailer.LastPassedDate = GetLocalStdDT();
+                                trailer.UpdatedDate = GetLocalStdDT();
+                                trailer.UpdatedUser = data.InYardID;
                             }
-                            trailer.LastPassedDate = GetLocalStdDT();
-                            trailer.UpdatedDate = GetLocalStdDT();
-                            trailer.UpdatedUser = data.InYardID;
                         }
                         await _context.SaveChangesAsync();
                         await transaction.CommitAsync();
@@ -362,21 +365,25 @@ namespace TMS_Api.Services
                             card.UpdatedDate = GetLocalStdDT();
                             card.UpdatedUser = data.OutYardID;
                             card.CardReturnDate = GetLocalStdDT();
-                            if (!string.IsNullOrEmpty(data.TrailerVehicleRegNo))
+                            if (data.TruckType != "RGL")
                             {
-                                Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT * FROM Trailer WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TrailerVehicleRegNo)).SingleOrDefaultAsync();
-                                if (trailer == null)
+                                if (!string.IsNullOrEmpty(data.TrailerVehicleRegNo))
                                 {
-                                    // Rollback the transaction if any exception occurs
-                                    await transaction.RollbackAsync();
-                                    msg.Status = false;
-                                    msg.MessageContent = "Trailer Data not found!";
-                                    return msg;
+                                    Trailer? trailer = await _context.Trailer.FromSqlRaw("SELECT * FROM Trailer WHERE VehicleRegNo=@id", new SqlParameter("@id", data.TrailerVehicleRegNo)).SingleOrDefaultAsync();
+                                    if (trailer == null)
+                                    {
+                                        // Rollback the transaction if any exception occurs
+                                        await transaction.RollbackAsync();
+                                        msg.Status = false;
+                                        msg.MessageContent = "Trailer Data not found!";
+                                        return msg;
+                                    }
+                                    trailer.LastPassedDate = GetLocalStdDT();
+                                    trailer.UpdatedDate = GetLocalStdDT();
+                                    trailer.UpdatedUser = data.OutYardID;
                                 }
-                                trailer.LastPassedDate = GetLocalStdDT();
-                                trailer.UpdatedDate = GetLocalStdDT();
-                                trailer.UpdatedUser = data.OutYardID;
                             }
+                           
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
                             msg.Status = true;
