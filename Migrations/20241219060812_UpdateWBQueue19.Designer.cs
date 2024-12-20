@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241219060812_UpdateWBQueue19")]
+    partial class UpdateWBQueue19
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -705,12 +708,6 @@ namespace TMS_Api.Migrations
                     b.Property<string>("DriverName")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int?>("GDNNo")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GRNNo")
-                        .HasColumnType("int");
-
                     b.Property<string>("GroupName")
                         .HasColumnType("varchar(10)");
 
@@ -770,14 +767,6 @@ namespace TMS_Api.Migrations
 
                     b.Property<string>("JobType")
                         .HasColumnType("varchar(10)");
-
-                    b.Property<DateTime?>("OptEndDate")
-                        .IsConcurrencyToken()
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime?>("OptStartDate")
-                        .IsConcurrencyToken()
-                        .HasColumnType("datetime");
 
                     b.Property<string>("OutCargoInfo")
                         .HasColumnType("varchar(50)");
@@ -968,6 +957,12 @@ namespace TMS_Api.Migrations
                     b.Property<string>("GroupName")
                         .HasColumnType("varchar(10)");
 
+                    b.Property<bool?>("InboundWeight")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("OutboundWeight")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime");
 
@@ -1047,9 +1042,6 @@ namespace TMS_Api.Migrations
 
                     b.Property<string>("UpdatedUser")
                         .HasColumnType("varchar(50)");
-
-                    b.Property<string>("WeightOption")
-                        .HasColumnType("varchar(25)");
 
                     b.Property<string>("Yard")
                         .HasColumnType("varchar(25)");

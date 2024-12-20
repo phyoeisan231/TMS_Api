@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS_Api;
 
@@ -11,9 +12,11 @@ using TMS_Api;
 namespace TMS_Api.Migrations
 {
     [DbContext(typeof(TMSDBContext))]
-    partial class TMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241220033759_UpdateTruckProcessCategory")]
+    partial class UpdateTruckProcessCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1047,9 +1050,6 @@ namespace TMS_Api.Migrations
 
                     b.Property<string>("UpdatedUser")
                         .HasColumnType("varchar(50)");
-
-                    b.Property<string>("WeightOption")
-                        .HasColumnType("varchar(25)");
 
                     b.Property<string>("Yard")
                         .HasColumnType("varchar(25)");

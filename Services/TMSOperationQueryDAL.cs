@@ -87,9 +87,9 @@ namespace TMS_Api.Services
 
         #region ICD/Other InBound Check Nov_27_2024
 
-        public async Task<DataTable> GetCategoryInList(string type)
+        public async Task<DataTable> GetCategoryList(string type)
         {
-            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName=@type And Active=1 And (InboundWeight=1 Or InboundWeight is null)";
+            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName=@type And Active=1";
             DataTable dt = await GetDataTableAsync(sql,new SqlParameter("@type",type));
             return dt;
         }
@@ -117,12 +117,12 @@ namespace TMS_Api.Services
             DataTable dt = new DataTable();
             if (type == "RGL")
             {
-                sql = @"Select TruckNo as VehicleRegNo from Trucks where TruckNo like '%" + id + "%' And Status='Active' And TruckNo not in (select TruckVehicleRegNo as TruckNo from ICD_TruckProcess where Status<>'Out')";
+                sql = @"Select TruckNo as VehicleRegNo,Trailer,'' as ContainerType,'' as ContainerSize,'' as TypeID,'' as TransporterID,'' as DriverLicenseNo,'' as TruckType from Trucks  where TruckNo like '%" + id + "%' And Status='Active' And TruckNo not in (select TruckVehicleRegNo as TruckNo from ICD_TruckProcess where Status<>'Out')";
                 dt = await GetPortalDataTableAsync(sql);
             }
             else
             {
-                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%" + id + "%' And (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TruckVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
+                sql = @"Select VehicleRegNo,ContainerType,'' as Trailer,ContainerSize,TypeID,TransporterID,DriverLicenseNo from Truck where VehicleRegNo like '%" + id + "%' And (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TruckVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
                 dt = await GetDataTableAsync(sql);
             }           
             return dt;
@@ -233,12 +233,12 @@ namespace TMS_Api.Services
             return dt;
         }
 
-        public async Task<DataTable> GetCategoryOutList(string type)
-        {
-            string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName=@type And Active=1 And (OutboundWeight=1 Or OutboundWeight is null)";
-            DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@type", type));
-            return dt;
-        }      
+        //public async Task<DataTable> GetCategoryOutList(string type)
+        //{
+        //    string sql = @"Select PCCode,CategoryName,GroupName from PCategory where  GroupName=@type And Active=1";
+        //    DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@type", type));
+        //    return dt;
+        //}      
 
         public async Task<DataTable> GetDocumentSettingOutList(string id)
         {
@@ -334,7 +334,7 @@ namespace TMS_Api.Services
             return info;
         }
 
-        public async Task<DataTable> GetTruckDataListByProposal(string id, int poNo)
+        public async Task<DataTable> GetTruckDataListByProposal(string id, int poNo,string type)
         {
             string sql = "";
             DataTable dt = new DataTable();
@@ -342,8 +342,16 @@ namespace TMS_Api.Services
             dt = await GetDataTableAsync(sql, new SqlParameter("@poNo", poNo));
             if (dt.Rows.Count == 0)
             {
-                sql = @"Select VehicleRegNo,ContainerType,ContainerSize,TypeID,TransporterID,DriverLicenseNo,'' as TruckType from Truck where VehicleRegNo like '%" + id + "%' And (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TruckVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
-                dt = await GetDataTableAsync(sql);
+                if (type == "RGL")
+                {
+                    sql = @"Select TruckNo as VehicleRegNo,Trailer,'' as ContainerType,'' as ContainerSize,'' as TypeID,'' as TransporterID,'' as DriverLicenseNo,'' as TruckType from Trucks  where TruckNo like '%" + id + "%' And Status='Active' And TruckNo not in (select TruckVehicleRegNo as TruckNo from ICD_TruckProcess where Status<>'Out')";
+                    dt = await GetPortalDataTableAsync(sql);
+                }
+                else
+                {
+                    sql = @"Select VehicleRegNo,ContainerType,'' as Trailer,ContainerSize,TypeID,TransporterID,DriverLicenseNo,'' as TruckType from Truck where VehicleRegNo like '%" + id + "%' And (IsBlack<>1 OR IsBlack is null) And Active=1 And VehicleRegNo not in (select TruckVehicleRegNo as VehicleRegNo from ICD_TruckProcess where Status<>'Out')";
+                    dt = await GetDataTableAsync(sql);
+                }
             }
             return dt;
         }
@@ -364,7 +372,7 @@ namespace TMS_Api.Services
         public async Task<DataTable> GetCardTMSInList(string card, string id)
         {
             //string sql = @"SELECT CardNo,TruckVehicleRegNo,DriverLicenseNo,DriverContactNo,DriverName,TrailerVehicleRegNo,Customer,InCargoInfo,InCargoType,OutWeightBridgeID,InRegNo,IsUseWB,OutWeightBridgeID,TruckType,AreaID,GroupName  from ICD_TruckProcess Where  Status='In' And GroupName='TMS' And InYardID=@yard And CardNo like '%" + card + "%'";
-            string sql = @"SELECT *  from ICD_TruckProcess Where  Status='In' And GroupName='TMS' And InYardID=@yard And CardNo like '%" + card + "%'";
+            string sql = @"SELECT *  from ICD_TruckProcess Where  Status='Out(Weight)' And GroupName='TMS' And InYardID=@yard And CardNo like '%" + card + "%'";
             DataTable dt = await GetDataTableAsync(sql, new SqlParameter("@yard", id));
             return dt;
         }

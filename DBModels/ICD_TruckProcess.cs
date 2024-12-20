@@ -101,7 +101,7 @@ namespace TMS_Api.DBModels
         public DateTime? OutWeightDateTime { get; set; }
         [ConcurrencyCheck]
         [Column(TypeName = "varchar(20)")]
-        public string? Status { get; set; }
+        public string? Status { get; set; }//['In(Check)', 'In','In(Weight)','Out(Weight)', 'Out(Check)', 'Out'];
         [Column(TypeName = "varchar(max)")]
         public string? Remark { get; set; }
         [Column(TypeName = "varchar(50)")]
@@ -116,6 +116,16 @@ namespace TMS_Api.DBModels
         public string? GroupName { get; set; }//mandatory"ICD","TMS","Others"
         [Column(TypeName = "int")]
         public int? PropNo { get; set; }
+        [Column(TypeName = "int")]
+        public int? GRNNo { get; set; }
+        [Column(TypeName = "int")]
+        public int? GDNNo { get; set; }
+        [ConcurrencyCheck]
+        [Column(TypeName = "datetime")]
+        public DateTime? OptStartDate { get; set; }//OperationStart
+        [ConcurrencyCheck]
+        [Column(TypeName = "datetime")]
+        public DateTime? OptEndDate { get; set; }//OperationEnd
         [ConcurrencyCheck]
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }

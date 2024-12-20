@@ -1745,8 +1745,6 @@ namespace TMS_Api.Services
                 {
                     pCategory.PCCode = info.PCCode;
                     pCategory.CategoryName = info.CategoryName;
-                    pCategory.InboundWeight = info.InboundWeight;
-                    pCategory.OutboundWeight = info.OutboundWeight;
                     pCategory.Active = info.Active;
                     pCategory.GroupName = info.GroupName;
                     pCategory.UpdatedDate = GetLocalStdDT();

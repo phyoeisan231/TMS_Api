@@ -58,6 +58,8 @@ namespace TMS_Api.DBModels
         public DateTime? WeightDateTime { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? Status { get; set; }//Queue,Done
+        [Column(TypeName = "varchar(10)")]
+        public string? PCCode { get; set; }//Category//mandatory
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]

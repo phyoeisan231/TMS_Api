@@ -79,6 +79,7 @@ namespace TMS_Api.Services
                 TMS_Proposal proposal = _mapper.Map<TMS_Proposal>(info);
                 proposal.CreatedDate = GetLocalStdDT();
                 proposal.CreatedUser = info.CreatedUser;
+                proposal.Status = "Open";
                 _context.TMS_Proposal.Add(proposal);
                 await _context.SaveChangesAsync();
 
