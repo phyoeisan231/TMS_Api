@@ -43,6 +43,8 @@ namespace TMS_Api.DBModels
         public string? AreaID { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string? BLNo { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string? WeightOption { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "varchar(50)")]
