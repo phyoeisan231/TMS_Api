@@ -53,6 +53,7 @@ builder.Services.AddScoped<TMSProposalQueryDAL>();
 builder.Services.AddScoped<TMSProposalUpdateDAL>();
 builder.Services.AddScoped<WeightSupportQueryDAL>();
 builder.Services.AddScoped<WeightSupportUpdateDAL>();
+builder.Services.AddScoped<ReportQueryDAL>();
 builder.Services.AddAutoMapper(typeof(Program));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
